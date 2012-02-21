@@ -32,5 +32,4 @@ from . import pois
 
 
 def passim_pois(plugins_conf, section):
-    print plugins_conf, section
     model.Poi = pois.Poi

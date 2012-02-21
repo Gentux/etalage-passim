@@ -24,7 +24,7 @@
 
 
 <%!
-    from etalage import ramdb
+    from etalage import model, ramdb
 %>
 
 
