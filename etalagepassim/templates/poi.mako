@@ -31,17 +31,21 @@
 <%inherit file="/generic/poi.mako"/>
 
 
-<%def name="field(field)" filter="trim">
+<%def name="field(field, depth = 0)" filter="trim">
 <%
     if field.relation == 'parent':
         # Avoid infinite recursion.
         return u''
 %>\
-        <%parent:field field="${field}"/>
+        <%parent:field depth="${depth}" field="${field}"/>
 </%def>
 
 
-<%def name="field_value_link(field)" filter="trim">
+<%def name="field_last_update(poi, depth = 0)" filter="trim">
+</%def>
+
+
+<%def name="field_value_link(field, depth = 0)" filter="trim">
 <%
     target = ramdb.pois_by_id.get(field.value)
 %>\
@@ -49,17 +53,17 @@
             <em class="field-value">Lien manquant</em>
     % else:
             <span class="field-value">${target.name}</span>
-            <div class="offset1"><%self:fields poi="${target}"/></div>
+            <div class="offset1"><%self:fields depth="${depth + 1}" poi="${target}"/></div>
     % endif
 </%def>
 
 
-<%def name="field_value_links(field)" filter="trim">
+<%def name="field_value_links(field, depth = 0)" filter="trim">
     % if len(field.value) == 1:
 <%
         single_field = model.Field(id = 'link', value = field.value[0])
 %>\
-<%self:field_value field="${single_field}"/>
+<%self:field_value depth="${depth}" field="${single_field}"/>
     % else:
             <ul class="field-value">
         % for target_id in field.value:
@@ -70,14 +74,10 @@
 %>\
                 <li>
                     <span class="field-value">${target.name}</span>
-                    <div class="offset1"><%self:fields poi="${target}"/></div>
+                    <div class="offset1"><%self:fields depth="${depth + 1}" poi="${target}"/></div>
                 </li>
         % endfor
             </ul>
     % endif
-</%def>
-
-
-<%def name="fields_last_update(poi)" filter="trim">
 </%def>
 
