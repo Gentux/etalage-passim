@@ -31,16 +31,6 @@
 <%inherit file="/generic/poi.mako"/>
 
 
-<%def name="field(field, depth = 0)" filter="trim">
-<%
-    if field.relation == 'parent':
-        # Avoid infinite recursion.
-        return u''
-%>\
-        <%parent:field depth="${depth}" field="${field}"/>
-</%def>
-
-
 <%def name="field_last_update(poi, depth = 0)" filter="trim">
 </%def>
 
@@ -52,8 +42,7 @@
     % if target is None:
             <em class="field-value">Lien manquant</em>
     % else:
-            <span class="field-value">${target.name}</span>
-            <div class="offset1"><%self:fields depth="${depth + 1}" poi="${target}"/></div>
+            <div class="field-value offset1"><%self:fields depth="${depth + 1}" poi="${target}"/></div>
     % endif
 </%def>
 
@@ -73,8 +62,7 @@
                 continue
 %>\
                 <li>
-                    <span class="field-value">${target.name}</span>
-                    <div class="offset1"><%self:fields depth="${depth + 1}" poi="${target}"/></div>
+                    <div class="field-value"><%self:fields depth="${depth + 1}" poi="${target}"/></div>
                 </li>
         % endfor
             </ul>
