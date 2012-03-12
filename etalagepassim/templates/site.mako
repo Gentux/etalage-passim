@@ -30,3 +30,36 @@
             <p>Un service proposé par TODO, réalisé par <a href="http://www.easter-eggs.com/" rel="external" title="Easter-eggs, société de services en logiciels libres">Easter-eggs</a>.</p>
 </%def>
 
+
+<%def name="site_header()" filter="trim">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <img src="/passim-images/logo-ministere.png" style="float: left">
+            <div class="page-header">
+                <h1>
+                    PASSIM-Plus
+                </h1>
+                <h2>
+                    <small>Portail annuaire des sites et des services sur la mobilité</small>
+                </h2>
+            </div>
+        </div>
+    </div>
+</%def>
+
+
+<%def name="topbar()" filter="trim">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="brand" href="http://etalage.passim.comarquage.fr/">PASSIM-Plus</a>
+                <ul class="nav">
+                    <li><a href="http://petitpois.passim.comarquage.fr/">Back-office</a></li>
+                    <li><a href="http://passim.comarquage.fr/">Développement</a></li>
+                    <li><a href="http://www.passim.info/">PASSIM</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</%def>
+
