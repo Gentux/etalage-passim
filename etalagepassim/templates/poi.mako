@@ -42,7 +42,10 @@
     % if target is None:
             <em class="field-value">Lien manquant</em>
     % else:
-            <div class="field-value offset1"><%self:fields depth="${depth + 1}" poi="${target}"/></div>
+<%
+        target_fields = target.fields[:] if target.fields is not None else None
+%>\
+            <div class="field-value offset1"><%self:fields depth="${depth + 1}" fields="${target_fields}" poi="${target}"/></div>
     % endif
 </%def>
 
@@ -60,12 +63,37 @@
             target = ramdb.pois_by_id.get(target_id)
             if target is None:
                 continue
+            target_fields = target.fields[:] if target.fields is not None else None
 %>\
                 <li>
-                    <div class="field-value"><%self:fields depth="${depth + 1}" poi="${target}"/></div>
+                    <div class="field-value"><%self:fields depth="${depth + 1}" fields="${target_fields}" poi="${target}"/></div>
                 </li>
         % endfor
             </ul>
+    % endif
+</%def>
+
+
+<%def name="poi_header(poi, fields, depth = 0)" filter="trim">
+        <div class="page-header">
+<%
+    names = [poi.name]
+    alias_fields = list(
+        field
+        for field in model.iter_fields(fields, 'text-inline', label = u'Alias')
+        )
+    for field in alias_fields:
+        if field.value is not None:
+            names.append(field.value)
+        fields.remove(field)
+%>\
+            <h2>${u', '.join(names)} <small>${ramdb.schemas_title_by_name[poi.schema_name]}</small></h2>
+        </div>
+<%
+    field = model.pop_first_field(fields, 'image', u'Logo')
+%>\
+    % if field is not None and field.value is not None:
+        <img alt="" class="logo" src="${field.value}" style="display: block;   margin-left: auto;   margin-right: auto">
     % endif
 </%def>
 
