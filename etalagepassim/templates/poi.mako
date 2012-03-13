@@ -44,6 +44,17 @@
     % else:
 <%
         target_fields = target.fields[:] if target.fields is not None else None
+        children = sorted(
+            (
+                child
+                for child in ramdb.pois_by_id.itervalues()
+                if child.parent_id == target._id
+                ),
+            key = lambda child: child.name,
+            )
+        for child in children:
+            target_fields.append(model.Field(id = 'link', label = ramdb.schemas_title_by_name[child.schema_name],
+                value = child._id))
 %>\
             <div class="field-value offset1"><%self:fields depth="${depth + 1}" fields="${target_fields}" poi="${target}"/></div>
     % endif
@@ -64,6 +75,17 @@
             if target is None:
                 continue
             target_fields = target.fields[:] if target.fields is not None else None
+            children = sorted(
+                (
+                    child
+                    for child in ramdb.pois_by_id.itervalues()
+                    if child.parent_id == target._id
+                    ),
+                key = lambda child: child.name,
+                )
+            for child in children:
+                target_fields.append(model.Field(id = 'link', label = ramdb.schemas_title_by_name[child.schema_name],
+                    value = child._id))
 %>\
                 <li>
                     <div class="field-value"><%self:fields depth="${depth + 1}" fields="${target_fields}" poi="${target}"/></div>
@@ -94,6 +116,78 @@
 %>\
     % if field is not None and field.value is not None:
         <img alt="" class="logo" src="${field.value}" style="display: block;   margin-left: auto;   margin-right: auto">
+    % endif
+<%
+    field = model.pop_first_field(fields, 'links', u'Offres de transport')
+%>\
+    % if field.value is not None:
+        <div class="page-header">
+            <h3>Couverture du service</h3>
+        </div>
+        <ul>
+        % for offer_id in field.value:
+<%
+            offer = ramdb.pois_by_id.get(offer_id)
+            if offer is None:
+                continue
+            covered_territories_field = offer.get_first_field(u'territories', u'Territoire couvert')
+            transport_type_field = offer.get_first_field(u'select', u'Type de transport')
+            transport_modes_field = offer.get_first_field(u'checkboxes', u'Mode de transport')
+%>\
+            <li>
+            % if covered_territories_field is not None and covered_territories_field.value is not None:
+                ${u', '.join(
+                    territory.main_postal_distribution_str
+                    for territory in (
+                        ramdb.territories_by_id.get(territory_id)
+                        for territory_id in covered_territories_field.value
+                        )
+                    if territory is not None
+                    )}
+                /
+            % endif
+            % if transport_type_field is not None and transport_type_field.value is not None:
+                ${transport_type_field.value}
+            % endif
+            % if transport_modes_field is not None and transport_modes_field.value is not None:
+                (${u', '.join(mode for mode in transport_modes_field.value)})
+            % endif
+            </li>
+        % endfor
+        </ul>
+    % endif
+<%
+    values = []
+    while True:
+        field = model.pop_first_field(fields, 'link', u'Site web')
+        if field is None:
+            break
+        if field.value is not None:
+            values.append(field.value)
+%>\
+    % if values:
+        <div class="page-header">
+            <h3>Site web</h3>
+        </div>
+        <ul>
+        % for web_site_id in values:
+<%
+            web_site = ramdb.pois_by_id.get(web_site_id)
+            if web_site is None:
+                continue
+            url_field = web_site.get_first_field(u'url', u'URL')
+            if url_field is None or url_field.value is None:
+                continue
+            infos_types_field = web_site.get_first_field(u'checkboxes', u"Types d'informations")
+%>\
+                <li>
+                    <a href="${url_field.value}">${url_field.value}</a>
+            % if infos_types_field is not None and infos_types_field.value is not None:
+                    (${u', '.join(infos_types_field.value)})
+            % endif
+                </li>
+        % endfor
+        </ul>
     % endif
 </%def>
 
