@@ -153,7 +153,7 @@
                     Cet organisme est positionné <strong>approximativement dans la rue</strong>.
                 </div>
     % endif
-                <div class="single-marker-map" id="map-poi" style="height: 250px; width: 250px;"></div>
+                <div class="single-marker-map" id="map-poi" style="height: 300px; width: 424px;"></div>
                 <script>
 etalage.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]});
                 </script>
