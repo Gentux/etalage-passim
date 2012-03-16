@@ -58,3 +58,7 @@ class Poi(pois.Poi):
                                 for poi in linked_poi.iter_descendant_or_self_pois(visited_pois_id):
                                     yield poi
 
+    def generate_all_fields(self):
+        fields = super(Poi, self).generate_all_fields()
+        pois.pop_first_field(fields, 'last-update')
+        return fields
