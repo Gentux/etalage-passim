@@ -190,7 +190,6 @@ etalage.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]});
     % if field is not None and field.value is not None:
         <img alt="" class="logo" src="${field.value}" style="display: block;   margin-left: auto;   margin-right: auto">
     % endif
-        <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'link', u'Opérateur')}"/>
         <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
         <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'link', u'Site web')}"/>
         <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'link', u'Application mobile')}"/>
@@ -199,6 +198,8 @@ etalage.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]});
         <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'link', u'Open data')}"/>
     % while True:
 <%
+        model.pop_first_field(fields, 'link', u'Opérateur')
+
         field = model.pop_first_field(fields, 'link')
         if field is None:
             break
