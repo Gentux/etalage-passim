@@ -142,6 +142,33 @@
 </%def>
 
 
+<%def name="field_value_geo(field, depth = 0)" filter="trim">
+            <div class="field-value">
+    % if field.value[2] <= 6:
+                <div class="alert alert-error">
+                    Cet organisme est positionné <strong>très approximativement</strong>.
+                </div>
+    % elif field.value[2] <= 6:
+                <div class="alert alert-warning">
+                    Cet organisme est positionné <strong>approximativement dans la rue</strong>.
+                </div>
+    % endif
+                <div class="single-marker-map" id="map-poi" style="height: 250px; width: 250px;"></div>
+                <script>
+etalage.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]});
+                </script>
+                <div class="bigger-map-link">
+                    Voir sur une carte plus grande avec
+                    <a href="${u'http://www.openstreetmap.org/?mlat={0}&mlon={1}&zoom=15&layers=M'.format(
+                            field.value[0], field.value[1])}" rel="external">OpenStreetMap</a>
+                    ou
+                    <a href="${u'http://maps.google.com/maps?q={0},{1}'.format(field.value[0], field.value[1]
+                            )}" rel="external">Google Maps</a>
+                </div>
+            </div>
+</%def>
+
+
 <%def name="poi_header(poi, fields, depth = 0)" filter="trim">
         <div class="page-header">
 <%
