@@ -40,7 +40,9 @@
                     PASSIM-Plus
                 </h1>
                 <h2>
-                    <small>Portail annuaire des sites et des services sur la mobilité</small>
+                    <small>Prototype 2012 en vue d’améliorer le
+                        <br>
+                        Portail annuaire des sites et des services sur la mobilité</small>
                 </h2>
             </div>
         </div>
@@ -54,9 +56,11 @@
             <div class="container-fluid">
                 <a class="brand" href="http://etalage.passim.comarquage.fr/">PASSIM-Plus</a>
                 <ul class="nav">
-                    <li><a href="http://petitpois.passim.comarquage.fr/">Back-office</a></li>
-                    <li><a href="http://passim.comarquage.fr/">Développement</a></li>
-                    <li><a href="http://www.passim.info/">PASSIM</a></li>
+                    <li><a href="http://www.cete-mediterranee.fr/tt13/www/article.php3?id_article=316">À propos</a></li>
+                    <li><a href="http://passim.comarquage.fr/site-statique/">Contenu du jour</a></li>
+                </ul>
+                <ul class="nav pull-right">
+                    <li><a href="http://www.passim.info/">Site actuel PASSIM</a></li>
                 </ul>
             </div>
         </div>
