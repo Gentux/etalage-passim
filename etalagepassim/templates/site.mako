@@ -27,7 +27,12 @@
 
 
 <%def name="footer_service()" filter="trim">
-            <p>Un service proposé par TODO, réalisé par <a href="http://www.easter-eggs.com/" rel="external" title="Easter-eggs, société de services en logiciels libres">Easter-eggs</a>.</p>
+            <p>
+                Un service proposé par le CETE Méditerranée pour
+                l’<a href="http://www.developpement-durable.gouv.fr/Presentation-de-l-AFIMB.html" rel="external">AFIMB</a>
+                et la DGITM,
+                réalisé par <a href="http://www.easter-eggs.com/" rel="external" title="Easter-eggs, société de services en logiciels libres">Easter-eggs</a>.
+            </p>
 </%def>
 
 
