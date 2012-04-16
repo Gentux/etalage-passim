@@ -28,9 +28,11 @@
 
 <%def name="footer_service()" filter="trim">
             <p>
-                Un service proposé par le CETE Méditerranée pour
+                Un service proposé par le
+                <a href="http://www.cete-mediterranee.fr/tt13/www/rubrique.php3?id_rubrique=27" rel="external">CETE Méditerranée</a>
+                pour
                 l’<a href="http://www.developpement-durable.gouv.fr/Presentation-de-l-AFIMB.html" rel="external">AFIMB</a>
-                et la DGITM,
+                et la <a href="http://www.predim.org/">Mission Transports Intelligents de la DGITM</a>,
                 réalisé par <a href="http://www.easter-eggs.com/" rel="external" title="Easter-eggs, société de services en logiciels libres">Easter-eggs</a>.
             </p>
 </%def>
