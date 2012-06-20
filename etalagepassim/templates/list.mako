@@ -56,7 +56,7 @@ from biryani import strings
             transport_offers = [
                 transport_offer
                 for transport_offer in (
-                    ramdb.pois_by_id.get(transport_offer_id)
+                    ramdb.poi_by_id.get(transport_offer_id)
                     for transport_offer_id in field.value
                     )
                 if transport_offer is not None
@@ -73,7 +73,7 @@ from biryani import strings
                 coverages.add(field.value)
             elif field.id == 'territories' and field_slug == 'territoire-couvert' and field.value is not None:
                 for territory_id in field.value:
-                    territory = ramdb.territories_by_id.get(territory_id)
+                    territory = ramdb.territory_by_id.get(territory_id)
                     if territory is not None:
                         covered_territories_postal_distribution_str.add(territory.main_postal_distribution_str)
 %>\

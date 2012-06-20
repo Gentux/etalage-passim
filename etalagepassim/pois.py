@@ -29,12 +29,12 @@ from etalage import pois, ramdb
 class Poi(pois.Poi):
     @classmethod
     def index_pois(cls):
-        for self in ramdb.pois_by_id.itervalues():
+        for self in ramdb.poi_by_id.itervalues():
             if self.schema_name == 'ServiceInfo':
                 ramdb.indexed_pois_id.add(self._id)
                 for poi in self.iter_descendant_or_self_pois():
                     poi.index(self._id)
-        for self in ramdb.pois_by_id.itervalues():
+        for self in ramdb.poi_by_id.itervalues():
             del self.bson
 
     def iter_descendant_or_self_pois(self, visited_pois_id = None):
@@ -46,14 +46,14 @@ class Poi(pois.Poi):
             for field in self.fields:
                 if field.id == 'link':
                     if field.value is not None:
-                        linked_poi = ramdb.pois_by_id.get(field.value)
+                        linked_poi = ramdb.poi_by_id.get(field.value)
                         if linked_poi is not None:
                             for poi in linked_poi.iter_descendant_or_self_pois(visited_pois_id):
                                 yield poi
                 elif field.id == 'links':
                     if field.value is not None:
                         for linked_poi_id in field.value:
-                            linked_poi = ramdb.pois_by_id.get(linked_poi_id)
+                            linked_poi = ramdb.poi_by_id.get(linked_poi_id)
                             if linked_poi is not None:
                                 for poi in linked_poi.iter_descendant_or_self_pois(visited_pois_id):
                                     yield poi

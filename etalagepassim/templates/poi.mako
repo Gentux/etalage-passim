@@ -36,7 +36,7 @@ from etalage import model, ramdb
     if field.relation == 'parent' and depth > 0:
         # Avoid infinite recursion.
         return u''
-    target = ramdb.pois_by_id.get(field.value)
+    target = ramdb.poi_by_id.get(field.value)
     if target is None:
         return u''
     target_fields = target.generate_all_fields()
@@ -70,7 +70,7 @@ from etalage import model, ramdb
     targets = [
         target
         for target in (
-            ramdb.pois_by_id.get(target_id)
+            ramdb.poi_by_id.get(target_id)
             for target_id in field.value
             if target_id is not None
             )
@@ -92,7 +92,7 @@ from etalage import model, ramdb
                 offer_fragments.append(u', '.join(
                     territory.main_postal_distribution_str
                     for territory in (
-                        ramdb.territories_by_id.get(territory_id)
+                        ramdb.territory_by_id.get(territory_id)
                         for territory_id in covered_territories_field.value
                         )
                     if territory is not None
