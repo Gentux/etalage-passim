@@ -37,6 +37,14 @@ class Poi(pois.Poi):
         for self in ramdb.poi_by_id.itervalues():
             del self.bson
 
+#    @classmethod
+#    def index_pois(cls):
+#        for self in ramdb.poi_by_id.itervalues():
+#            if self.schema_name == 'ServiceInfo':
+#                ramdb.indexed_pois_id.add(self._id)
+#            self.index(self._id)
+#            del self.bson
+
     def iter_descendant_or_self_pois(self, visited_pois_id = None):
         if visited_pois_id is None:
             visited_pois_id = set()
