@@ -27,6 +27,15 @@ from etalage import pois, ramdb
 
 
 class Poi(pois.Poi):
+    def index(self, indexed_poi_id):
+        super(Poi, self).index(indexed_poi_id)
+
+        if self.schema_name == 'OffreTransport':
+            if not self.competence_territories_id:
+                france_id = ramdb.territory_id_by_kind_code[(u'Country', u'FR')]
+                self.competence_territories_id = set([france_id])
+                ramdb.pois_id_by_competence_territory_id.setdefault(france_id, set()).add(indexed_poi_id)
+
     @classmethod
     def index_pois(cls):
         for self in ramdb.poi_by_id.itervalues():
