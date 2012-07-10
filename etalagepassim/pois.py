@@ -23,21 +23,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from biryani import strings
+
 from etalage import conv, pois, ramdb
 
 
 class Poi(pois.Poi):
-    pois_id_by_coverage = {}  # class attribute
-    pois_id_by_schema_name = {}  # class attribute
-    pois_id_by_transport_type = {}  # class attribute
+    ids_by_coverage = {}  # class attribute
+    ids_by_schema_name = {}  # class attribute
+    ids_by_transport_type = {}  # class attribute
 
     @classmethod
     def clear_indexes(cls):
         super(Poi, cls).clear_indexes()
 
-        cls.pois_id_by_coverage.clear()
-        cls.pois_id_by_schema_name.clear()
-        cls.pois_id_by_transport_type.clear()
+        cls.ids_by_coverage.clear()
+        cls.ids_by_schema_name.clear()
+        cls.ids_by_transport_type.clear()
 
     @classmethod
     def extract_non_territorial_search_data(cls, ctx, data):
@@ -66,26 +68,26 @@ class Poi(pois.Poi):
             if not self.competence_territories_id:
                 france_id = ramdb.territory_id_by_kind_code[(u'Country', u'FR')]
                 self.competence_territories_id = set([france_id])
-                ramdb.pois_id_by_competence_territory_id.setdefault(france_id, set()).add(indexed_poi_id)
+                self.ids_by_competence_territory_id.setdefault(france_id, set()).add(indexed_poi_id)
 
             coverage_field = self.get_first_field(u'select', u'Couverture territoriale')
             if coverage_field is not None and coverage_field.value is not None:
-                self.pois_id_by_coverage.setdefault(coverage_field.value, set()).add(indexed_poi_id)
+                self.ids_by_coverage.setdefault(coverage_field.value, set()).add(indexed_poi_id)
 
             transport_type_field = self.get_first_field(u'select', u'Type de transport')
             if transport_type_field is not None and transport_type_field.value is not None:
-                self.pois_id_by_transport_type.setdefault(transport_type_field.value, set()).add(indexed_poi_id)
+                self.ids_by_transport_type.setdefault(transport_type_field.value, set()).add(indexed_poi_id)
 
-        self.pois_id_by_schema_name.setdefault(self.schema_name, set()).add(indexed_poi_id)
+        self.ids_by_schema_name.setdefault(self.schema_name, set()).add(indexed_poi_id)
 
     @classmethod
     def index_pois(cls):
-        for self in ramdb.poi_by_id.itervalues():
+        for self in cls.instance_by_id.itervalues():
             if self.schema_name == 'ServiceInfo':
-                ramdb.indexed_pois_id.add(self._id)
+                cls.indexed_ids.add(self._id)
                 for poi in self.iter_descendant_or_self_pois():
                     poi.index(self._id)
-        for self in ramdb.poi_by_id.itervalues():
+        for self in cls.instance_by_id.itervalues():
             del self.bson
 
     def iter_descendant_or_self_pois(self, visited_pois_id = None):
@@ -97,19 +99,19 @@ class Poi(pois.Poi):
             for field in self.fields:
                 if field.id == 'link':
                     if field.value is not None:
-                        linked_poi = ramdb.poi_by_id.get(field.value)
+                        linked_poi = self.instance_by_id.get(field.value)
                         if linked_poi is not None:
                             for poi in linked_poi.iter_descendant_or_self_pois(visited_pois_id):
                                 yield poi
                 elif field.id == 'links':
                     if field.value is not None:
                         for linked_poi_id in field.value:
-                            linked_poi = ramdb.poi_by_id.get(linked_poi_id)
+                            linked_poi = self.instance_by_id.get(linked_poi_id)
                             if linked_poi is not None:
                                 for poi in linked_poi.iter_descendant_or_self_pois(visited_pois_id):
                                     yield poi
-            for child_id in (self.pois_id_by_parent_id.get(self._id) or set()):
-                child = ramdb.poi_by_id.get(child_id)
+            for child_id in (self.ids_by_parent_id.get(self._id) or set()):
+                child = self.instance_by_id.get(child_id)
                 if child is not None:
                     for poi in child.iter_descendant_or_self_pois(visited_pois_id):
                         yield poi
@@ -121,7 +123,7 @@ class Poi(pois.Poi):
 
         if competence_territories_id is not None:
             territory_competent_pois_id = ramdb.union_set(
-                ramdb.pois_id_by_competence_territory_id.get(competence_territory_id)
+                cls.ids_by_competence_territory_id.get(competence_territory_id)
                 for competence_territory_id in competence_territories_id
                 )
             if not territory_competent_pois_id:
@@ -129,19 +131,19 @@ class Poi(pois.Poi):
             intersected_sets.append(territory_competent_pois_id)
 
         if coverage is not None:
-            coverage_pois_id = cls.pois_id_by_coverage.get(coverage)
+            coverage_pois_id = cls.ids_by_coverage.get(coverage)
             if not coverage_pois_id:
                 return set()
             intersected_sets.append(coverage_pois_id)
 
         if presence_territory is not None:
-            territory_present_pois_id = ramdb.pois_id_by_presence_territory_id.get(presence_territory._id)
+            territory_present_pois_id = cls.ids_by_presence_territory_id.get(presence_territory._id)
             if not territory_present_pois_id:
                 return set()
             intersected_sets.append(territory_present_pois_id)
 
         for schema_name in set(schemas_name or []):
-            schema_pois_id = cls.pois_id_by_schema_name.get(schema_name)
+            schema_pois_id = cls.ids_by_schema_name.get(schema_name)
             if not schema_pois_id:
                 return set()
             intersected_sets.append(schema_pois_id)
@@ -158,20 +160,20 @@ class Poi(pois.Poi):
                     continue
                 pois_id_by_prefix[prefix] = ramdb.union_set(
                     pois_id
-                    for word, pois_id in ramdb.pois_id_by_word.iteritems()
+                    for word, pois_id in cls.ids_by_word.iteritems()
                     if word.startswith(prefix)
                     ) or set()
             intersected_sets.extend(pois_id_by_prefix.itervalues())
 
         if transport_type is not None:
-            transport_type_pois_id = cls.pois_id_by_transport_type.get(transport_type)
+            transport_type_pois_id = cls.ids_by_transport_type.get(transport_type)
             if not transport_type_pois_id:
                 return set()
             intersected_sets.append(transport_type_pois_id)
 
         found_pois_id = ramdb.intersection_set(intersected_sets)
         if found_pois_id is None:
-            return ramdb.indexed_pois_id
+            return cls.indexed_ids
         return found_pois_id
 
     def generate_all_fields(self):
@@ -185,7 +187,7 @@ class Poi(pois.Poi):
             dict(
                 coverage = conv.pipe(
                     conv.cleanup_line,
-                    conv.test_in(cls.pois_id_by_coverage),
+                    conv.test_in(cls.ids_by_coverage),
                     ),
                 filter = conv.input_to_filter,
                 schemas_name = conv.uniform_sequence(conv.pipe(
@@ -196,9 +198,15 @@ class Poi(pois.Poi):
                 territory = conv.input_to_postal_distribution_to_geolocated_territory,
                 transport_type = conv.pipe(
                     conv.cleanup_line,
-                    conv.test_in(cls.pois_id_by_transport_type),
+                    conv.test_in(cls.ids_by_transport_type),
                     ),
                 ),
             default = 'drop',
             keep_none_values = True,
             )
+
+    @classmethod
+    def rename_input_to_param(cls, input_name):
+        return dict(
+            schemas_name = u'schema',
+            ).get(input_name, input_name)

@@ -26,7 +26,7 @@
 <%!
 import markupsafe
 
-from etalage import ramdb, urls
+from etalage import model, ramdb, urls
 
 from biryani import strings
 %>
@@ -56,7 +56,7 @@ from biryani import strings
             transport_offers = [
                 transport_offer
                 for transport_offer in (
-                    ramdb.poi_by_id.get(transport_offer_id)
+                    model.Poi.instance_by_id.get(transport_offer_id)
                     for transport_offer_id in field.value
                     )
                 if transport_offer is not None

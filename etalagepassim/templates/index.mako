@@ -55,7 +55,7 @@ from etalage import model, ramdb
                     }.get(coverage1, 100),
                 coverage1,
                 )
-            for coverage1 in model.Poi.pois_id_by_coverage.iterkeys()
+            for coverage1 in model.Poi.ids_by_coverage.iterkeys()
             )
         ]
 %>\
@@ -100,7 +100,7 @@ from etalage import model, ramdb
         for schema_slug, schema_name, schema_title in sorted(
             (strings.slugify(schema_title), schema_name, schema_title)
             for schema_name, schema_title in ramdb.schema_title_by_name.iteritems()
-            if schema_name not in (schemas_name or []) and 0 < len(model.Poi.pois_id_by_schema_name.get(schema_name, [])) < len(ramdb.indexed_pois_id)
+            if schema_name not in (schemas_name or []) and 0 < len(model.Poi.ids_by_schema_name.get(schema_name, [])) < len(model.Poi.indexed_ids)
             )
         ]
 %>\
@@ -130,7 +130,7 @@ from etalage import model, ramdb
         transport_type1
         for slug, transport_type1 in sorted(
             (strings.slugify(transport_type), transport_type1)
-            for transport_type1 in model.Poi.pois_id_by_transport_type.iterkeys()
+            for transport_type1 in model.Poi.ids_by_transport_type.iterkeys()
             )
         ]
 %>\

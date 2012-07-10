@@ -36,7 +36,7 @@ from etalage import model, ramdb
     if field.relation == 'parent' and depth > 0:
         # Avoid infinite recursion.
         return u''
-    target = ramdb.poi_by_id.get(field.value)
+    target = model.Poi.instance_by_id.get(field.value)
     if target is None:
         return u''
     target_fields = target.generate_all_fields()
@@ -70,7 +70,7 @@ from etalage import model, ramdb
     targets = [
         target
         for target in (
-            ramdb.poi_by_id.get(target_id)
+            model.Poi.instance_by_id.get(target_id)
             for target_id in field.value
             if target_id is not None
             )
