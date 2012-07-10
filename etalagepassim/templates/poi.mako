@@ -182,7 +182,7 @@ etalage.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]});
             names.append(field.value)
         fields.remove(field)
 %>\
-            <h2>${u', '.join(names)} <small>${ramdb.schemas_title_by_name[poi.schema_name]}</small></h2>
+            <h2>${u', '.join(names)} <small>${ramdb.schema_title_by_name[poi.schema_name]}</small></h2>
         </div>
 <%
     field = model.pop_first_field(fields, 'image', u'Logo')

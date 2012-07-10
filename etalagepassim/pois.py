@@ -23,10 +23,42 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from etalage import pois, ramdb
+from etalage import conv, pois, ramdb
 
 
 class Poi(pois.Poi):
+    pois_id_by_coverage = {}  # class attribute
+    pois_id_by_schema_name = {}  # class attribute
+    pois_id_by_transport_type = {}  # class attribute
+
+    @classmethod
+    def clear_indexes(cls):
+        super(Poi, cls).clear_indexes()
+
+        cls.pois_id_by_coverage.clear()
+        cls.pois_id_by_schema_name.clear()
+        cls.pois_id_by_transport_type.clear()
+
+    @classmethod
+    def extract_non_territorial_search_data(cls, ctx, data):
+        return dict(
+            coverage = data['coverage'],
+            schemas_name = data['schemas_name'],
+            term = data['term'],
+            transport_type = data['transport_type'],
+            )
+
+    @classmethod
+    def extract_search_inputs_from_params(cls, ctx, params):
+        return dict(
+            coverage = params.get('coverage'),
+            schemas_name = params.getall('schema'),
+            filter = params.get('filter'),
+            term = params.get('term'),
+            territory = params.get('territory'),
+            transport_type = params.get('transport_type'),
+            )
+
     def index(self, indexed_poi_id):
         super(Poi, self).index(indexed_poi_id)
 
@@ -35,6 +67,16 @@ class Poi(pois.Poi):
                 france_id = ramdb.territory_id_by_kind_code[(u'Country', u'FR')]
                 self.competence_territories_id = set([france_id])
                 ramdb.pois_id_by_competence_territory_id.setdefault(france_id, set()).add(indexed_poi_id)
+
+            coverage_field = self.get_first_field(u'select', u'Couverture territoriale')
+            if coverage_field is not None and coverage_field.value is not None:
+                self.pois_id_by_coverage.setdefault(coverage_field.value, set()).add(indexed_poi_id)
+
+            transport_type_field = self.get_first_field(u'select', u'Type de transport')
+            if transport_type_field is not None and transport_type_field.value is not None:
+                self.pois_id_by_transport_type.setdefault(transport_type_field.value, set()).add(indexed_poi_id)
+
+        self.pois_id_by_schema_name.setdefault(self.schema_name, set()).add(indexed_poi_id)
 
     @classmethod
     def index_pois(cls):
@@ -45,14 +87,6 @@ class Poi(pois.Poi):
                     poi.index(self._id)
         for self in ramdb.poi_by_id.itervalues():
             del self.bson
-
-#    @classmethod
-#    def index_pois(cls):
-#        for self in ramdb.poi_by_id.itervalues():
-#            if self.schema_name == 'ServiceInfo':
-#                ramdb.indexed_pois_id.add(self._id)
-#            self.index(self._id)
-#            del self.bson
 
     def iter_descendant_or_self_pois(self, visited_pois_id = None):
         if visited_pois_id is None:
@@ -74,8 +108,97 @@ class Poi(pois.Poi):
                             if linked_poi is not None:
                                 for poi in linked_poi.iter_descendant_or_self_pois(visited_pois_id):
                                     yield poi
+            for child_id in (self.pois_id_by_parent_id.get(self._id) or set()):
+                child = ramdb.poi_by_id.get(child_id)
+                if child is not None:
+                    for poi in child.iter_descendant_or_self_pois(visited_pois_id):
+                        yield poi
+
+    @classmethod
+    def iter_ids(cls, ctx, competence_territories_id = None, coverage = None, presence_territory = None,
+            schemas_name = None, term = None, transport_type = None):
+        intersected_sets = []
+
+        if competence_territories_id is not None:
+            territory_competent_pois_id = ramdb.union_set(
+                ramdb.pois_id_by_competence_territory_id.get(competence_territory_id)
+                for competence_territory_id in competence_territories_id
+                )
+            if not territory_competent_pois_id:
+                return set()
+            intersected_sets.append(territory_competent_pois_id)
+
+        if coverage is not None:
+            coverage_pois_id = cls.pois_id_by_coverage.get(coverage)
+            if not coverage_pois_id:
+                return set()
+            intersected_sets.append(coverage_pois_id)
+
+        if presence_territory is not None:
+            territory_present_pois_id = ramdb.pois_id_by_presence_territory_id.get(presence_territory._id)
+            if not territory_present_pois_id:
+                return set()
+            intersected_sets.append(territory_present_pois_id)
+
+        for schema_name in set(schemas_name or []):
+            schema_pois_id = cls.pois_id_by_schema_name.get(schema_name)
+            if not schema_pois_id:
+                return set()
+            intersected_sets.append(schema_pois_id)
+
+        # We should filter on term *after* having looked for competent organizations. Otherwise, when no organization
+        # matching term is found, the nearest organizations will be used even when there are competent organizations
+        # (that don't match the term).
+        if term:
+            prefixes = strings.slugify(term).split(u'-')
+            pois_id_by_prefix = {}
+            for prefix in prefixes:
+                if prefix in pois_id_by_prefix:
+                    # TODO? Handle pois with several words sharing the same prefix?
+                    continue
+                pois_id_by_prefix[prefix] = ramdb.union_set(
+                    pois_id
+                    for word, pois_id in ramdb.pois_id_by_word.iteritems()
+                    if word.startswith(prefix)
+                    ) or set()
+            intersected_sets.extend(pois_id_by_prefix.itervalues())
+
+        if transport_type is not None:
+            transport_type_pois_id = cls.pois_id_by_transport_type.get(transport_type)
+            if not transport_type_pois_id:
+                return set()
+            intersected_sets.append(transport_type_pois_id)
+
+        found_pois_id = ramdb.intersection_set(intersected_sets)
+        if found_pois_id is None:
+            return ramdb.indexed_pois_id
+        return found_pois_id
 
     def generate_all_fields(self):
         fields = super(Poi, self).generate_all_fields()
         pois.pop_first_field(fields, 'last-update')
         return fields
+
+    @classmethod
+    def make_inputs_to_search_data(cls):
+        return conv.struct(
+            dict(
+                coverage = conv.pipe(
+                    conv.cleanup_line,
+                    conv.test_in(cls.pois_id_by_coverage),
+                    ),
+                filter = conv.input_to_filter,
+                schemas_name = conv.uniform_sequence(conv.pipe(
+                    conv.cleanup_line,
+                    conv.test_in(ramdb.schema_title_by_name),
+                    )),
+                term = conv.input_to_slug,
+                territory = conv.input_to_postal_distribution_to_geolocated_territory,
+                transport_type = conv.pipe(
+                    conv.cleanup_line,
+                    conv.test_in(cls.pois_id_by_transport_type),
+                    ),
+                ),
+            default = 'drop',
+            keep_none_values = True,
+            )
