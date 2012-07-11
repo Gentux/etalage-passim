@@ -103,6 +103,12 @@ from etalage import model, ramdb
             for schema_slug, schema_name, schema_title in sorted(
                 (strings.slugify(schema_title), schema_name, schema_title)
                 for schema_name, schema_title in ramdb.schema_title_by_name.iteritems()
+                if schema_name not in (
+                    u'CalculDItineraires',
+                    u'OffreTransport',
+                    u'OperateurServiceInformation',
+                    u'PageWeb',
+                    )
                 if schema_name not in (schemas_name or []) and 0 < len(model.Poi.ids_by_schema_name.get(schema_name, [])) < len(model.Poi.indexed_ids)
                 )
             ]
