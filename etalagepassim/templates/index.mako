@@ -33,18 +33,32 @@ from etalage import model, ramdb
 <%inherit file="/generic/index.mako"/>
 
 
-<%def name="search_form_field_coverage()" filter="trim">
+<%def name="search_form_field_coverages()" filter="trim">
     % if model.Poi.is_search_param_visible(ctx, 'coverage'):
 <%
-        error = errors.get('coverage') if errors is not None else None
+        error = errors.get('coverages') if errors is not None else None
+        if error and isinstance(error, dict):
+            error_index, error_message = sorted(error.iteritems())[0]
+        else:
+            error_index = None
+            error_message = error
 %>\
                 <div class="control-group${' error' if error else ''}">
                     <label class="control-label" for="coverage">Couverture territoriale :</label>
                     <div class="controls">
+        % if coverages:
+            % for coverage_index, coverage in enumerate(coverages):
+                % if (error is None or coverage_index not in error):
+                        <label class="checkbox"><input checked name="coverage" type="checkbox" value="${coverage}">
+                            <span class="label label-success"><i class="icon-tag icon-white"></i>
+                            ${coverage}</span></label>
+                % endif
+            % endfor
+        % endif
                         <select id="coverage" name="coverage">
                             <option value=""></option>
 <%
-        coverages = [
+        coverages1 = [
             coverage1
             for weight, coverage1 in sorted(
                 (
@@ -52,11 +66,12 @@ from etalage import model, ramdb
                     coverage1,
                     )
                 for coverage1 in model.Poi.ids_by_coverage.iterkeys()
+                if coverage1 not in (coverages or [])
                 )
             ]
 %>\
-            % for coverage1 in coverages:
-                            <option${u' selected' if coverage1 == coverage else u''}>${coverage1}</option>
+            % for coverage in coverages1:
+                            <option>${coverage}</option>
             % endfor
                         </select>
             % if error_message:
@@ -121,27 +136,42 @@ from etalage import model, ramdb
 </%def>
 
 
-<%def name="search_form_field_transport_type()" filter="trim">
+<%def name="search_form_field_transport_types()" filter="trim">
     % if model.Poi.is_search_param_visible(ctx, 'transport_type'):
 <%
-        error = errors.get('transport_type') if errors is not None else None
+        error = errors.get('transport_types') if errors is not None else None
+        if error and isinstance(error, dict):
+            error_index, error_message = sorted(error.iteritems())[0]
+        else:
+            error_index = None
+            error_message = error
 %>\
                 <div class="control-group${' error' if error else ''}">
-                    <label class="control-label" for="transport_type">Type de transport :</label>
+                    <label class="control-label" for="transport_type">Type(s) de transport(s) :</label>
                     <div class="controls">
+        % if transport_types:
+            % for transport_type_index, transport_type in enumerate(transport_types):
+                % if (error is None or transport_type_index not in error):
+                        <label class="checkbox"><input checked name="transport_type" type="checkbox" value="${transport_type}">
+                            <span class="label label-success"><i class="icon-tag icon-white"></i>
+                            ${transport_type}</span></label>
+                % endif
+            % endfor
+        % endif
                         <select id="transport_type" name="transport_type">
                             <option value=""></option>
 <%
-        transport_types = [
+        transport_types1 = [
             transport_type1
             for slug, transport_type1 in sorted(
-                (strings.slugify(transport_type), transport_type1)
+                (strings.slugify(transport_type1), transport_type1)
                 for transport_type1 in model.Poi.ids_by_transport_type.iterkeys()
                 )
+            if transport_type1 not in (transport_types or [])
             ]
 %>\
-            % for transport_type1 in transport_types:
-                            <option${u' selected' if transport_type1 == transport_type else u''}>${transport_type1}</option>
+            % for transport_type in transport_types1:
+                            <option>${transport_type}</option>
             % endfor
                         </select>
             % if error_message:
@@ -155,8 +185,8 @@ from etalage import model, ramdb
 
 <%def name="search_form_fields()" filter="trim">
                 <%self:search_form_field_schemas_name/>
-                <%self:search_form_field_coverage/>
-                <%self:search_form_field_transport_type/>
+                <%self:search_form_field_coverages/>
+                <%self:search_form_field_transport_types/>
                 <%self:search_form_field_term/>
                 <%self:search_form_field_territory/>
                 <%self:search_form_field_filter/>

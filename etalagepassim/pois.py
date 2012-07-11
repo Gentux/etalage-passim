@@ -52,21 +52,21 @@ class Poi(pois.Poi):
     @classmethod
     def extract_non_territorial_search_data(cls, ctx, data):
         return dict(
-            coverage = data['coverage'],
+            coverages = data['coverages'],
             schemas_name = data['schemas_name'],
             term = data['term'],
-            transport_type = data['transport_type'],
+            transport_types = data['transport_types'],
             )
 
     @classmethod
     def extract_search_inputs_from_params(cls, ctx, params):
         return dict(
-            coverage = params.get('coverage'),
+            coverages = params.getall('coverage'),
             schemas_name = params.getall('schema'),
             filter = params.get('filter'),
             term = params.get('term'),
             territory = params.get('territory'),
-            transport_type = params.get('transport_type'),
+            transport_types = params.getall('transport_type'),
             )
 
     def index(self, indexed_poi_id):
@@ -78,13 +78,13 @@ class Poi(pois.Poi):
                 self.competence_territories_id = set([france_id])
                 self.ids_by_competence_territory_id.setdefault(france_id, set()).add(indexed_poi_id)
 
-            coverage_field = self.get_first_field(u'select', u'Couverture territoriale')
-            if coverage_field is not None and coverage_field.value is not None:
-                self.ids_by_coverage.setdefault(coverage_field.value, set()).add(indexed_poi_id)
-
-            transport_type_field = self.get_first_field(u'select', u'Type de transport')
-            if transport_type_field is not None and transport_type_field.value is not None:
-                self.ids_by_transport_type.setdefault(transport_type_field.value, set()).add(indexed_poi_id)
+            for field in self.fields:
+                field_slug = strings.slugify(field.label)
+                if field.id == 'select':
+                    if field_slug == 'couverture-territoriale' and field.value is not None:
+                        self.ids_by_coverage.setdefault(field.value, set()).add(indexed_poi_id)
+                    elif field_slug == 'type-de-transport' and field.value is not None:
+                        self.ids_by_transport_type.setdefault(field.value, set()).add(indexed_poi_id)
 
         self.ids_by_schema_name.setdefault(self.schema_name, set()).add(indexed_poi_id)
 
@@ -125,8 +125,8 @@ class Poi(pois.Poi):
                         yield poi
 
     @classmethod
-    def iter_ids(cls, ctx, competence_territories_id = None, coverage = None, presence_territory = None,
-            schemas_name = None, term = None, transport_type = None):
+    def iter_ids(cls, ctx, competence_territories_id = None, coverages = None, presence_territory = None,
+            schemas_name = None, term = None, transport_types = None):
         intersected_sets = []
 
         if competence_territories_id is not None:
@@ -138,7 +138,7 @@ class Poi(pois.Poi):
                 return set()
             intersected_sets.append(territory_competent_pois_id)
 
-        if coverage is not None:
+        for coverage in (coverages or []):
             coverage_pois_id = cls.ids_by_coverage.get(coverage)
             if not coverage_pois_id:
                 return set()
@@ -173,7 +173,7 @@ class Poi(pois.Poi):
                     ) or set()
             intersected_sets.extend(pois_id_by_prefix.itervalues())
 
-        if transport_type is not None:
+        for transport_type in (transport_types or []):
             transport_type_pois_id = cls.ids_by_transport_type.get(transport_type)
             if not transport_type_pois_id:
                 return set()
@@ -209,10 +209,10 @@ class Poi(pois.Poi):
     def make_inputs_to_search_data(cls):
         return conv.struct(
             dict(
-                coverage = conv.pipe(
+                coverages = conv.uniform_sequence(conv.pipe(
                     conv.cleanup_line,
                     conv.test_in(cls.ids_by_coverage),
-                    ),
+                    )),
                 filter = conv.input_to_filter,
                 schemas_name = conv.uniform_sequence(conv.pipe(
                     conv.cleanup_line,
@@ -220,10 +220,10 @@ class Poi(pois.Poi):
                     )),
                 term = conv.input_to_slug,
                 territory = conv.input_to_postal_distribution_to_geolocated_territory,
-                transport_type = conv.pipe(
+                transport_types = conv.uniform_sequence(conv.pipe(
                     conv.cleanup_line,
                     conv.test_in(cls.ids_by_transport_type),
-                    ),
+                    )),
                 ),
             default = 'drop',
             keep_none_values = True,
@@ -232,7 +232,9 @@ class Poi(pois.Poi):
     @classmethod
     def rename_input_to_param(cls, input_name):
         return dict(
+            coverages = u'coverage',
             schemas_name = u'schema',
+            transport_types = u'transport_type',
             ).get(input_name, input_name)
 
     @classmethod
