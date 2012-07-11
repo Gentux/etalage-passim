@@ -100,19 +100,19 @@ class Poi(pois.Poi):
                 if field.id == 'link':
                     if field.value is not None:
                         linked_poi = self.instance_by_id.get(field.value)
-                        if linked_poi is not None:
+                        if linked_poi is not None and linked_poi.schema_name != 'ServiceInfo':
                             for poi in linked_poi.iter_descendant_or_self_pois(visited_pois_id):
                                 yield poi
                 elif field.id == 'links':
                     if field.value is not None:
                         for linked_poi_id in field.value:
                             linked_poi = self.instance_by_id.get(linked_poi_id)
-                            if linked_poi is not None:
+                            if linked_poi is not None and linked_poi.schema_name != 'ServiceInfo':
                                 for poi in linked_poi.iter_descendant_or_self_pois(visited_pois_id):
                                     yield poi
             for child_id in (self.ids_by_parent_id.get(self._id) or set()):
                 child = self.instance_by_id.get(child_id)
-                if child is not None:
+                if child is not None and child.schema_name != 'ServiceInfo':
                     for poi in child.iter_descendant_or_self_pois(visited_pois_id):
                         yield poi
 
