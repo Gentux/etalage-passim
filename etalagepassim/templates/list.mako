@@ -40,6 +40,7 @@ from biryani import strings
             <thead>
                 <tr>
                     <th>Nom</th>
+                    <th>Type de transport</th>
                     <th>Couverture territoriale</th>
                     <th>Territoire couvert</th>
                 </tr>
@@ -66,17 +67,22 @@ from biryani import strings
         transport_offers = None
     coverages = set()
     covered_territories_postal_distribution_str = set()
+    transport_types = set()
     for transport_offer in (transport_offers or []):
         for field in transport_offer.fields:
             field_slug = strings.slugify(field.label)
-            if field.id == 'select' and field_slug == 'couverture-territoriale' and field.value is not None:
-                coverages.add(field.value)
+            if field.id == 'select':
+                if field_slug == 'couverture-territoriale' and field.value is not None:
+                    coverages.add(field.value)
+                elif field_slug == 'type-de-transport' and field.value is not None:
+                    transport_types.add(field.value)
             elif field.id == 'territories' and field_slug == 'territoire-couvert' and field.value is not None:
                 for territory_id in field.value:
                     territory = ramdb.territory_by_id.get(territory_id)
                     if territory is not None:
                         covered_territories_postal_distribution_str.add(territory.main_postal_distribution_str)
 %>\
+                    <td>${u', '.join(sorted(transport_types))}</td>
                     <td>${u', '.join(sorted(coverages))}</td>
                     <td>${u', '.join(sorted(covered_territories_postal_distribution_str))}</td>
                 </tr>
