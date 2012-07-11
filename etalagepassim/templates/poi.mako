@@ -182,14 +182,16 @@ etalage.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]});
             names.append(field.value)
         fields.remove(field)
 %>\
-            <h2>${u', '.join(names)} <small>${ramdb.schema_title_by_name[poi.schema_name]}</small></h2>
-        </div>
+            <h2>
+                ${u', '.join(names)} <small>${ramdb.schema_title_by_name[poi.schema_name]}</small>
 <%
     field = model.pop_first_field(fields, 'image', u'Logo')
 %>\
     % if field is not None and field.value is not None:
-        <img alt="" class="logo" src="${field.value}" style="display: block;   margin-left: auto;   margin-right: auto">
+                <img alt="" class="logo" height="50" src="${field.value}">
     % endif
+            </h2>
+        </div>
         <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
         <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'link', u'Site web')}"/>
         <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'link', u'Application mobile')}"/>
