@@ -48,12 +48,7 @@ from etalage import model, ramdb
             coverage1
             for weight, coverage1 in sorted(
                 (
-                    {
-                        u'Départementale': 1,
-                        u'Locale': 0,
-                        u'Nationale': 3,
-                        u'Régionale': 2,
-                        }.get(coverage1, 100),
+                    model.Poi.weight_by_coverage.get(coverage1, 100),
                     coverage1,
                     )
                 for coverage1 in model.Poi.ids_by_coverage.iterkeys()

@@ -23,6 +23,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import itertools
+
 from biryani import strings
 
 from etalage import conv, pois, ramdb
@@ -32,6 +34,12 @@ class Poi(pois.Poi):
     ids_by_coverage = {}  # class attribute
     ids_by_schema_name = {}  # class attribute
     ids_by_transport_type = {}  # class attribute
+    weight_by_coverage = {
+        u'Départementale': 1,
+        u'Locale': 0,
+        u'Nationale': 3,
+        u'Régionale': 2,
+        }
 
     @classmethod
     def clear_indexes(cls):
@@ -182,6 +190,22 @@ class Poi(pois.Poi):
         return fields
 
     @classmethod
+    def iter_sort_pois_list(cls, ctx, poi_by_id):
+        encountered_pois_id = set()
+        for weight, coverage in sorted(
+                (weight, coverage)
+                for coverage, weight in cls.weight_by_coverage.iteritems()
+                ):
+            for poi_id in (cls.ids_by_coverage.get(coverage) or []):
+                poi = poi_by_id.get(poi_id)
+                if poi is None:
+                    continue
+                if poi_id in encountered_pois_id:
+                    continue
+                encountered_pois_id.add(poi_id)
+                yield poi
+
+    @classmethod
     def make_inputs_to_search_data(cls):
         return conv.struct(
             dict(
@@ -210,3 +234,8 @@ class Poi(pois.Poi):
         return dict(
             schemas_name = u'schema',
             ).get(input_name, input_name)
+
+    @classmethod
+    def sort_and_paginate_pois_list(cls, ctx, pager, poi_by_id, **other_search_data):
+        return list(itertools.islice(cls.iter_sort_pois_list(ctx, poi_by_id), pager.first_item_index,
+            pager.last_item_number))
