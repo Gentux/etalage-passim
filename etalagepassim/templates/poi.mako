@@ -24,7 +24,9 @@
 
 
 <%!
-from etalage import model, ramdb
+import urlparse
+
+from etalage import conf, model, ramdb, urls
 %>
 
 
@@ -166,6 +168,37 @@ etalage.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]});
                             )}" rel="external">Google Maps</a>
                 </div>
             </div>
+</%def>
+
+
+<%def name="footer_actions()" filter="trim">
+            <p class="pull-right">
+    % if conf['data_email'] is not None:
+                <a class="label label-info" href="mailto:${u','.join(conf['data_email'])}?subject=${u'Correction fiche Passim+ : {name}'.format(
+                        name = poi.name,
+                        ).replace(u' ', u'%20')}&body=${u'''
+Veuillez effectuer les modifications suivantes sur la fiche :
+    {name}
+{url}
+
+Nom : ...
+Offre de transport: ....
+Site web: ...
+Application mobile: ...
+Centre d'appel: ...
+Guichet d'information: ...
+OpenData: ...
+Notes : ...
+'''.format(
+                        name = poi.name,
+                        url = urls.get_full_url(ctx, 'organismes', poi._id),
+                        ).strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">Modifier la fiche</a>
+                &mdash;
+    % endif
+    % if conf.get('petitpois_url'):
+                <a href="${urlparse.urljoin(conf['petitpois_url'], '/poi/view/{0}'.format(poi._id))}" rel="external">Accès back-office</a>
+    % endif
+            </p>
 </%def>
 
 

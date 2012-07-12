@@ -26,11 +26,31 @@
 <%!
 from biryani import strings
 
-from etalage import model, ramdb
+from etalage import conf, model, ramdb
 %>
 
 
 <%inherit file="/generic/index.mako"/>
+
+
+<%def name="footer_actions()" filter="trim">
+    % if conf['data_email'] is not None:
+            <p class="pull-right">
+                <a class="label label-info" href="mailto:${u','.join(conf['data_email'])}?subject=${u'Nouvelle fiche Passim+'.replace(u' ', u'%20')}&body=${u'''
+Veuillez ajouter dans l'annuaire Passim+ le service d'information suivant :
+
+Nom : ...
+Offre de transport: ....
+Site web: ...
+Application mobile: ...
+Centre d'appel: ...
+Guichet d'information: ...
+OpenData: ...
+Notes : ...
+'''.strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">Ajouter une fiche</a>
+            </p>
+    % endif
+</%def>
 
 
 <%def name="search_form_field_coverages()" filter="trim">
