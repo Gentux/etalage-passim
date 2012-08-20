@@ -86,38 +86,52 @@ from etalage import conf, model, ramdb, urls
             <h3>Couverture du service</h3>
         </div>
 <%
-        offers_str = []
+        offers_infos_by_type_and_modes = {}
         for offer in targets:
-            offer_fragments = []
-            covered_territories_field = offer.get_first_field(u'territories', u'Territoire couvert')
-            if covered_territories_field is not None and covered_territories_field.value is not None:
-                offer_fragments.append(u', '.join(
-                    territory.main_postal_distribution_str
-                    for territory in (
-                        ramdb.territory_by_id.get(territory_id)
-                        for territory_id in covered_territories_field.value
-                        )
-                    if territory is not None
-                    ))
-            transport_type_field = offer.get_first_field(u'select', u'Type de transport')
-            if transport_type_field is not None and transport_type_field.value is not None:
-                if offer_fragments:
-                    offer_fragments.append(u'/')
-                offer_fragments.append(transport_type_field.value)
-            transport_modes_field = offer.get_first_field(u'checkboxes', u'Mode de transport')
-            if transport_modes_field is not None and transport_modes_field.value is not None:
-                offer_fragments.append(u'({})'.format(u', '.join(mode for mode in transport_modes_field.value)))
-            offers_str.append(u' '.join(offer_fragments))
+            offer_territories_field = offer.get_first_field(u'territories', u'Territoire couvert')
+            offer_territories_str = u', '.join(sorted(
+                territory.main_postal_distribution_str
+                for territory in (
+                    ramdb.territory_by_id.get(territory_id)
+                    for territory_id in offer_territories_field.value
+                    )
+                if territory is not None
+                )) if offer_territories_field is not None and offer_territories_field.value is not None else None
+            offer_type_field = offer.get_first_field(u'select', u'Type de transport')
+            offer_type = offer_type_field.value \
+                if offer_type_field is not None and offer_type_field.value is not None \
+                else u'Type de transport non précisé'
+            offer_modes_field = offer.get_first_field(u'checkboxes', u'Mode de transport')
+            offer_modes = u', '.join(mode for mode in offer_modes_field.value) \
+                if offer_modes_field is not None and offer_modes_field.value is not None \
+                else None
+            offer_type_and_modes = u'{0} ({1})'.format(offer_type, offer_modes) \
+                if offer_modes is not None \
+                else offer_type
+            offer_commercial_name_field = offer.get_first_field(u'text-inline', u'Nom commercial')
+            offer_commercial_name = offer_commercial_name_field.value \
+                if offer_commercial_name_field is not None and offer_commercial_name_field.value is not None \
+                else None
+            offers_infos_by_type_and_modes.setdefault(offer_type_and_modes, []).append((
+                offer_commercial_name,
+                offer_territories_str,
+                ))
 %>\
         <div class="offset1">
-        % if len(offers_str) == 1:
-            ${offers_str[0]}
-        % else:
             <ul>
-            % for offer_str in offers_str:
-                <li>${offer_str}</li>
+        % for offer_type_and_modes, offers_infos in sorted(offers_infos_by_type_and_modes.iteritems()):
+                <li>${offer_type_and_modes}
+                    <ul>
+            % for offer_infos in offers_infos:
+                        <li>${u' / '.join(
+                                fragment
+                                for fragment in offer_infos
+                                if fragment is not None
+                                )}</li>
             % endfor
-        % endif
+                    </ul>
+                </li>
+        % endfor
             </ul>
         </div>
     % else:
