@@ -122,7 +122,7 @@ from etalage import conf, model, ramdb, urls
         % for offer_type_and_modes, offers_infos in sorted(offers_infos_by_type_and_modes.iteritems()):
                 <li>${offer_type_and_modes}
                     <ul>
-            % for offer_infos in offers_infos:
+            % for offer_infos in sorted(offers_infos):
                         <li>${u' / '.join(
                                 fragment
                                 for fragment in offer_infos
