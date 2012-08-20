@@ -108,7 +108,7 @@ from etalage import conf, model, ramdb, urls
             offer_type_and_modes = u'{0} ({1})'.format(offer_type, offer_modes) \
                 if offer_modes is not None \
                 else offer_type
-            offer_commercial_name_field = offer.get_first_field(u'text-inline', u'Nom commercial')
+            offer_commercial_name_field = offer.get_first_field(u'name', u'Nom commercial')
             offer_commercial_name = offer_commercial_name_field.value \
                 if offer_commercial_name_field is not None and offer_commercial_name_field.value is not None \
                 else None
