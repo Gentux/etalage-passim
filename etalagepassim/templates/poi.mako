@@ -107,22 +107,22 @@ from etalage import conf, model, ramdb, urls
             offer_modes = u', '.join(mode for mode in offer_modes_field.value) \
                 if offer_modes_field is not None and offer_modes_field.value is not None \
                 else None
-            offer_type_and_modes = u'{0} ({1})'.format(offer_type, offer_modes) \
-                if offer_modes is not None \
-                else offer_type
             offer_commercial_name_field = offer.get_first_field(u'name', u'Nom commercial')
             offer_commercial_name = offer_commercial_name_field.value \
                 if offer_commercial_name_field is not None and offer_commercial_name_field.value is not None \
                 else None
-            offers_infos_by_type_and_modes.setdefault(offer_type_and_modes, []).append((
+            offers_infos_by_type_and_modes.setdefault((offer_type, offer_modes), []).append((
                 offer_commercial_name,
                 offer_territories_str,
                 ))
 %>\
         <div class="offset1">
             <ul>
-        % for offer_type_and_modes, offers_infos in sorted(offers_infos_by_type_and_modes.iteritems()):
-                <li>${offer_type_and_modes}
+        % for (offer_type, offer_modes), offers_infos in sorted(offers_infos_by_type_and_modes.iteritems()):
+                <li><strong>${offer_type}</strong>
+            % if offer_modes is not None:
+                    (${offer_modes})
+            % endif
                     <ul>
             % for offer_infos in sorted(offers_infos, key = lambda infos: (strings.slugify(infos[0]), infos[1])):
                         <li>${u' / '.join(
