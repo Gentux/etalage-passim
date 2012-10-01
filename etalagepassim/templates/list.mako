@@ -55,6 +55,7 @@ from biryani import strings
     covered_territories_postal_distribution_str = set()
     transport_offers = None
     for field in info_service.fields:
+        field_slug = strings.slugify(field.label)
         if field.id == 'links' and strings.slugify(field.label) == 'offres-de-transport':
             transport_offers = [
                 transport_offer
