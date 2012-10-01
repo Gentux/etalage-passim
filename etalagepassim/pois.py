@@ -94,7 +94,18 @@ class Poi(pois.Poi):
             if self.schema_name == 'ServiceInfo':
                 cls.indexed_ids.add(self._id)
                 for poi in self.iter_descendant_or_self_pois():
-                    poi.index(self._id)
+                    if self.competence_territories_id is not None and poi.schema_name != 'ServiceInfo' \
+                            and poi.bson['metadata'].get('territories'):
+                        # When "ServiceInfo" contains a field "territories" (named "Territoire couvert") use it as
+                        # competence territories and ignore the "territories" in children (especially of schema
+                        # "OffreTransport").
+                        poi_territories_metadata = poi.bson['metadata'].pop('territories')
+                        poi_territories = poi.bson.pop('territories')
+                        poi.index(self._id)
+                        poi.bson['metadata']['territories'] = poi_territories_metadata
+                        poi.bson['territories'] = poi_territories
+                    else:
+                        poi.index(self._id)
         for self in cls.instance_by_id.itervalues():
             del self.bson
 

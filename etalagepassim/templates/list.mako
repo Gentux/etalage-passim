@@ -52,6 +52,8 @@ from biryani import strings
                         <a class="internal" href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">${info_service.name}</a>
                     </td>
 <%
+    covered_territories_postal_distribution_str = set()
+    transport_offers = None
     for field in info_service.fields:
         if field.id == 'links' and strings.slugify(field.label) == 'offres-de-transport':
             transport_offers = [
@@ -62,12 +64,15 @@ from biryani import strings
                     )
                 if transport_offer is not None
                 ] or None if field.value is not None else None
-            break
-    else:
-        transport_offers = None
+        elif field.id == 'territories' and field_slug == 'territoire-couvert' and field.value is not None:
+            for territory_id in field.value:
+                territory = ramdb.territory_by_id.get(territory_id)
+                if territory is not None:
+                    covered_territories_postal_distribution_str.add(territory.main_postal_distribution_str)
+
     coverages = set()
-    covered_territories_postal_distribution_str = set()
     transport_types = set()
+    use_transport_offers_covered_territories = not covered_territories_postal_distribution_str
     for transport_offer in (transport_offers or []):
         for field in transport_offer.fields:
             field_slug = strings.slugify(field.label)
@@ -76,7 +81,8 @@ from biryani import strings
                     coverages.add(field.value)
                 elif field_slug == 'type-de-transport' and field.value is not None:
                     transport_types.add(field.value)
-            elif field.id == 'territories' and field_slug == 'territoire-couvert' and field.value is not None:
+            elif use_transport_offers_covered_territories and field.id == 'territories' \
+                    and field_slug == 'territoire-couvert' and field.value is not None:
                 for territory_id in field.value:
                     territory = ramdb.territory_by_id.get(territory_id)
                     if territory is not None:
