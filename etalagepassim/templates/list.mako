@@ -26,7 +26,7 @@
 <%!
 import markupsafe
 
-from etalage import model, ramdb, urls
+from etalage import conf, model, ramdb, urls
 
 from biryani import strings
 %>
@@ -81,7 +81,9 @@ from biryani import strings
                 if field_slug == 'couverture-territoriale' and field.value is not None:
                     coverages.add(field.value)
                 elif field_slug == 'type-de-transport' and field.value is not None:
-                    transport_types.add(field.value)
+                    transport_types.add(markupsafe.Markup(
+                        u'<a href="#" rel="tooltip" title="{0}"><img alt="{0}" src="/passim-images/types-de-transports/{1}.png"></a>'
+                        ).format(field.value, strings.slugify(field.value)))
             elif use_transport_offers_covered_territories and field.id == 'territories' \
                     and field_slug == 'territoire-couvert' and field.value is not None:
                 for territory_id in field.value:
@@ -89,12 +91,23 @@ from biryani import strings
                     if territory is not None:
                         covered_territories_postal_distribution_str.add(territory.main_postal_distribution_str)
 %>\
-                    <td>${u', '.join(sorted(transport_types))}</td>
+                    <td>${markupsafe.escape(u' ').join(sorted(transport_types))}</td>
                     <td>${u', '.join(sorted(coverages))}</td>
                     <td>${u', '.join(sorted(covered_territories_postal_distribution_str))}</td>
                 </tr>
         % endfor
             </tbody>
         </table>
+</%def>
+
+
+<%def name="scripts()" filter="trim">
+    <%parent:scripts/>
+    <script src="${conf['bootstrap.js']}"></script>
+    <script>
+$(function () {
+    $("[rel=tooltip]").tooltip();
+});
+    </script>
 </%def>
 
