@@ -106,7 +106,11 @@ from biryani import strings
     <script src="${conf['bootstrap.js']}"></script>
     <script>
 $(function () {
-    $("[rel=tooltip]").tooltip();
+    $("[rel=tooltip]")
+        .tooltip()
+        .on('click', function (event) {
+            event.preventDefault();
+        });
 });
     </script>
 </%def>
