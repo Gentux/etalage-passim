@@ -73,7 +73,7 @@ class Poi(pois.Poi):
         super(Poi, self).index(indexed_poi_id)
 
         if self.schema_name == 'OffreTransport':
-            if not self.competence_territories_id:
+            if not self.competence_territories_id and not self.instance_by_id[indexed_poi_id].competence_territories_id:
                 france_id = ramdb.territory_id_by_kind_code[(u'Country', u'FR')]
                 self.competence_territories_id = set([france_id])
                 self.ids_by_competence_territory_id.setdefault(france_id, set()).add(indexed_poi_id)
