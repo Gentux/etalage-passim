@@ -58,7 +58,7 @@
 
 
 <%def name="topbar()" filter="trim">
-    <div class="navbar navbar-fixed-top">
+    <div class="navbar navbar-fixed-top navbar-inverse">
         <div class="navbar-inner">
             <div class="container-fluid">
                 <a class="brand" href="http://etalage.passim.comarquage.fr/">PASSIM-Plus</a>
