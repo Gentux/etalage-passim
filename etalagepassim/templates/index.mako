@@ -157,6 +157,53 @@ Notes : ...
 </%def>
 
 
+<%def name="search_form_field_transport_modes()" filter="trim">
+    % if model.Poi.is_search_param_visible(ctx, 'transport_mode'):
+<%
+        error = errors.get('transport_modes') if errors is not None else None
+        if error and isinstance(error, dict):
+            error_index, error_message = sorted(error.iteritems())[0]
+        else:
+            error_index = None
+            error_message = error
+%>\
+                <div class="control-group${' error' if error else ''}">
+                    <label class="control-label" for="transport_mode">Mode(s) de transport(s) :</label>
+                    <div class="controls">
+        % if transport_modes:
+            % for transport_mode_index, transport_mode in enumerate(transport_modes):
+                % if (error is None or transport_mode_index not in error):
+                        <label class="checkbox"><input checked name="transport_mode" type="checkbox" value="${transport_mode}">
+                            <span class="label label-success"><i class="icon-tag icon-white"></i>
+                            ${transport_mode}</span></label>
+                % endif
+            % endfor
+        % endif
+                        <select id="transport_mode" name="transport_mode">
+                            <option value=""></option>
+<%
+        transport_modes1 = [
+            transport_mode1
+            for slug, transport_mode1 in sorted(
+                (strings.slugify(transport_mode1), transport_mode1)
+                for transport_mode1 in model.Poi.ids_by_transport_mode.iterkeys()
+                )
+            if transport_mode1 not in (transport_modes or [])
+            ]
+%>\
+            % for transport_mode in transport_modes1:
+                            <option>${transport_mode}</option>
+            % endfor
+                        </select>
+            % if error_message:
+                        <span class="help-inline">${error_message}</span>
+            % endif
+                    </div>
+                </div>
+    % endif
+</%def>
+
+
 <%def name="search_form_field_transport_types()" filter="trim">
     % if model.Poi.is_search_param_visible(ctx, 'transport_type'):
 <%
@@ -208,6 +255,7 @@ Notes : ...
                 <%self:search_form_field_schemas_name/>
                 <%self:search_form_field_coverages/>
                 <%self:search_form_field_transport_types/>
+                <%self:search_form_field_transport_modes/>
                 <%self:search_form_field_term/>
                 <%self:search_form_field_territory/>
                 <%self:search_form_field_filter/>

@@ -33,6 +33,7 @@ from etalage import conv, pois, ramdb
 class Poi(pois.Poi):
     ids_by_coverage = {}  # class attribute
     ids_by_schema_name = {}  # class attribute
+    ids_by_transport_mode = {}  # class attribute
     ids_by_transport_type = {}  # class attribute
     weight_by_coverage = {
         u'Départementale': 1,
@@ -47,6 +48,7 @@ class Poi(pois.Poi):
 
         cls.ids_by_coverage.clear()
         cls.ids_by_schema_name.clear()
+        cls.ids_by_transport_mode.clear()
         cls.ids_by_transport_type.clear()
 
     @classmethod
@@ -55,6 +57,7 @@ class Poi(pois.Poi):
             coverages = data['coverages'],
             schemas_name = data['schemas_name'],
             term = data['term'],
+            transport_modes = data['transport_modes'],
             transport_types = data['transport_types'],
             )
 
@@ -66,6 +69,7 @@ class Poi(pois.Poi):
             filter = params.get('filter'),
             term = params.get('term'),
             territory = params.get('territory'),
+            transport_modes = params.getall('transport_mode'),
             transport_types = params.getall('transport_type'),
             )
 
@@ -80,6 +84,11 @@ class Poi(pois.Poi):
 
             for field in self.fields:
                 field_slug = strings.slugify(field.label)
+                if field.id == 'checkboxes':
+                    if field_slug == 'mode-de-transport' and field.value is not None:
+                        for transport_mode in field.value:
+                            self.ids_by_transport_mode.setdefault(transport_mode, set()).add(
+                                indexed_poi_id)
                 if field.id == 'select':
                     if field_slug == 'couverture-territoriale' and field.value is not None:
                         self.ids_by_coverage.setdefault(field.value, set()).add(indexed_poi_id)
@@ -137,7 +146,7 @@ class Poi(pois.Poi):
 
     @classmethod
     def iter_ids(cls, ctx, competence_territories_id = None, coverages = None, presence_territory = None,
-            schemas_name = None, term = None, transport_types = None):
+            schemas_name = None, term = None, transport_modes = None, transport_types = None):
         intersected_sets = []
 
         if competence_territories_id is not None:
@@ -183,6 +192,12 @@ class Poi(pois.Poi):
                     if word.startswith(prefix)
                     ) or set()
             intersected_sets.extend(pois_id_by_prefix.itervalues())
+
+        for transport_mode in (transport_modes or []):
+            transport_mode_pois_id = cls.ids_by_transport_mode.get(transport_mode)
+            if not transport_mode_pois_id:
+                return set()
+            intersected_sets.append(transport_mode_pois_id)
 
         for transport_type in (transport_types or []):
             transport_type_pois_id = cls.ids_by_transport_type.get(transport_type)
@@ -231,6 +246,10 @@ class Poi(pois.Poi):
                     )),
                 term = conv.input_to_slug,
                 territory = conv.input_to_postal_distribution_to_geolocated_territory,
+                transport_modes = conv.uniform_sequence(conv.pipe(
+                    conv.cleanup_line,
+                    conv.test_in(cls.ids_by_transport_mode),
+                    )),
                 transport_types = conv.uniform_sequence(conv.pipe(
                     conv.cleanup_line,
                     conv.test_in(cls.ids_by_transport_type),
@@ -245,6 +264,7 @@ class Poi(pois.Poi):
         return dict(
             coverages = u'coverage',
             schemas_name = u'schema',
+            transport_modes = u'transport_mode',
             transport_types = u'transport_type',
             ).get(input_name, input_name)
 
