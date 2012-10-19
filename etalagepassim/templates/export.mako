@@ -26,6 +26,18 @@
 <%inherit file="/generic/export.mako"/>
 
 
+<%def name="export_fields()" filter="trim">
+                <%parent:export_fields/>
+                <div class="control-group">
+                    <label class="control-label">Site statique</label>
+                    <div class="controls">
+                        Un export quotidien du site sous forme de pages HTML statiques est disponible :
+                        <a href="http://passim.comarquage.fr/site-statique/">http://passim.comarquage.fr/site-statique/</a>
+                    </div>
+                </div>
+</%def>
+
+
 <%def name="types_and_formats_radios()" filter="trim">
                         <label class="radio">
                             <input type="radio" value="annuaire-excel" name="type_and_format">
