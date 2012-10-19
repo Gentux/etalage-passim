@@ -29,10 +29,9 @@
 <%def name="export_fields()" filter="trim">
                 <%parent:export_fields/>
                 <div class="control-group">
-                    <label class="control-label">Site statique</label>
                     <div class="controls">
-                        Un export quotidien du site sous forme de pages HTML statiques est disponible :
-                        <a href="http://passim.comarquage.fr/site-statique/">http://passim.comarquage.fr/site-statique/</a>
+                        Par ailleurs, un export quotidien du site sous forme de pages HTML statiques est
+                        <a href="http://passim.comarquage.fr/passim-static-html.tar.gz">disponible en téléchargement</a>.
                     </div>
                 </div>
 </%def>
