@@ -61,9 +61,20 @@ setup(
     long_description = '\n'.join(doc_lines[2:]),
     url = 'http://gitorious.org/passim/etalage-passim',
 
+    data_files = [
+        ('share/locale/fr/LC_MESSAGES', ['etalagepassim/i18n/fr/LC_MESSAGES/etalage-passim.mo']),
+        ],
     install_requires = [
         'Etalage >= 0.1dev',
         ],
+    message_extractors = {
+        'etalagepassim': [
+            ('**.py', 'python', None),
+            ('templates/**.mako', 'mako', {'input_encoding': 'utf-8'}),
+            ('static/**', 'ignore', None),
+            ],
+        },
+#    package_data = {'etalagepassim': ['i18n/*/LC_MESSAGES/*.mo']},
     packages = find_packages(),
     zip_safe = False,
     )
