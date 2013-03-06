@@ -32,6 +32,7 @@ from etalage import conf, model, ramdb
 
 
 <%inherit file="/generic/index.mako"/>
+<%namespace file="/generic/site.mako" name="site"/>
 
 
 <%def name="footer_actions()" filter="trim">
@@ -56,7 +57,7 @@ Notes : ...
 
 
 <%def name="scripts()" filter="trim">
-    <%parent:scripts/>
+    <%site:scripts/>
     <script src="/js/bind.js"></script>
     <script src="/js/categories.js"></script>
     <script src="/js/form.js"></script>
