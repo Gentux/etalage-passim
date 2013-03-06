@@ -25,6 +25,7 @@
 
 <%!
 from biryani import strings
+import urlparse
 
 from etalage import conf, model, ramdb
 %>
@@ -51,6 +52,26 @@ Notes : ...
 '''.strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">Ajouter une fiche</a>
             </p>
     % endif
+</%def>
+
+
+<%def name="scripts()" filter="trim">
+    <%parent:scripts/>
+    <script src="/js/bind.js"></script>
+    <script src="/js/categories.js"></script>
+    <script src="/js/form.js"></script>
+    <script src="/js/territories.js"></script>
+    <script>
+var etalage = etalage || {};
+etalage.miscUrl = ${conf['images.misc.url'] | n, js};
+etalage.territories.autocompleterUrl = ${urlparse.urljoin(conf['territoria_url'],
+    '/api/v1/autocomplete-territory') | n, js};
+etalage.territories.kinds = ${ctx.autocompleter_territories_kinds | n, js};
+    % if ctx.base_territory is not None:
+etalage.territories.base_territory = ${ctx.base_territory.main_postal_distribution_str | n, js};
+    % endif
+etalage.params = ${inputs | n, js};
+    </script>
 </%def>
 
 
