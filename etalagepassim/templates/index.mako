@@ -280,5 +280,4 @@ etalage.params = ${inputs | n, js};
                 <%self:search_form_field_transport_modes/>
                 <%self:search_form_field_term/>
                 <%self:search_form_field_territory/>
-                <%self:search_form_field_filter/>
 </%def>

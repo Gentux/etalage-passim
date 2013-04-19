@@ -55,7 +55,6 @@ from etalage import conf, model, ramdb, urls
             target_field_attributes['id'] = 'text-inline'
         target_field_attributes['label'] = field.label
         target_field = model.Field(**target_field_attributes)
-        print target_field
 %>\
         <%self:field depth="${depth}" field="${target_field}"/>
     % else:

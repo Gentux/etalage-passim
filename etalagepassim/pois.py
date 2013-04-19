@@ -66,7 +66,6 @@ class Poi(pois.Poi):
         return dict(
             coverages = params.getall('coverage'),
             schemas_name = params.getall('schema'),
-            filter = params.get('filter'),
             term = params.get('term'),
             territory = params.get('territory'),
             transport_modes = params.getall('transport_mode'),
@@ -239,7 +238,6 @@ class Poi(pois.Poi):
                     conv.cleanup_line,
                     conv.test_in(cls.ids_by_coverage),
                     )),
-                filter = conv.input_to_filter,
                 schemas_name = conv.uniform_sequence(conv.pipe(
                     conv.cleanup_line,
                     conv.test_in(ramdb.schema_title_by_name),
