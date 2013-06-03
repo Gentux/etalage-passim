@@ -15,4 +15,3 @@ monpyjama.Wrapper.db = db
 
 ctx = contexts.null_ctx
 ObjectId = bson.objectid.ObjectId
-

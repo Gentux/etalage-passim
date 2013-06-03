@@ -4,7 +4,7 @@
 # Etalage-Passim -- Customization of Etalage for Passim
 # By: Emmanuel Raviart <eraviart@easter-eggs.com>
 #
-# Copyright (C) 2012 Easter-eggs
+# Copyright (C) 2011, 2012, 2013 Easter-eggs
 # http://gitorious.org/passim/etalage-passim
 #
 # This file is part of Etalage-Passim.
@@ -23,13 +23,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-"""Plugins to extend and customize Etalage"""
+"""The application's model objects"""
 
 
-from etalage import model
+from territoria2.territories import *
 
-from . import pois
+from .categories import *
+from .pois import *
+from .subscribers import *
 
 
-def passim_pois(plugins_conf, section):
-    model.Poi = pois.Poi
+db = None

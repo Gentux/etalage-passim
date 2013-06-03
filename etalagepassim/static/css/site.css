@@ -1,0 +1,43 @@
+.footer {
+    padding: 35px 0 36px;
+    border-top: 1px solid #e5e5e5;
+}
+.footer p {
+    margin-bottom: 0;
+    color: #555;
+}
+
+span.loading img{
+    height: 30px;
+    width: 30px;
+}
+
+.toolbar {
+    position: relative;
+    margin: 10px 0 0 0;
+}
+.toggle-search-form {
+    position: absolute;
+    margin-left: 10px;
+    text-align: right;
+    right: 0;
+}
+.icon-feed {
+    background: url("../images/feed-icons.png") no-repeat scroll 0 0 transparent;
+    opacity: 0.65;
+    width: 16px;
+}
+
+.jaccede-field-label {
+    text-decoration: underline;
+    padding-top: 20px;
+}
+
+th a {
+    color: black;
+}
+
+th a:hover {
+    color: #0088CC;
+    text-decoration: none;
+}

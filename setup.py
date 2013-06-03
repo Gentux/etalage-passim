@@ -5,7 +5,7 @@
 # Etalage-Passim -- Customization of Etalage for Passim
 # By: Emmanuel Raviart <eraviart@easter-eggs.com>
 #
-# Copyright (C) 2012 Easter-eggs
+# Copyright (C) 2011, 2012, 2013 Easter-eggs
 # http://gitorious.org/passim/etalage-passim
 #
 # This file is part of Etalage-Passim.

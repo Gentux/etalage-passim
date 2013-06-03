@@ -1,20 +1,20 @@
 ## -*- coding: utf-8 -*-
 
 
-## Etalage -- Open Data POIs portal
+## Etalage-Passim -- Customization of Etalage for Passim
 ## By: Emmanuel Raviart <eraviart@easter-eggs.com>
 ##
-## Copyright (C) 2011, 2012 Easter-eggs
-## http://gitorious.org/infos-pratiques/etalage
+## Copyright (C) 2011, 2012, 2013 Easter-eggs
+## http://gitorious.org/passim/etalage-passim
 ##
-## This file is part of Etalage.
+## This file is part of Etalage-Passim.
 ##
-## Etalage is free software; you can redistribute it and/or modify
+## Etalage-Passim is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU Affero General Public License as
 ## published by the Free Software Foundation, either version 3 of the
 ## License, or (at your option) any later version.
 ##
-## Etalage is distributed in the hope that it will be useful,
+## Etalage-Passim is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU Affero General Public License for more details.
@@ -25,14 +25,78 @@
 
 <%!
 import markupsafe
-
-from etalage import conf, model, ramdb, urls
-
 from biryani import strings
+
+from etalagepassim import conf, conv, model, ramdb, urls
 %>
 
 
-<%inherit file="/generic/list.mako"/>
+<%inherit file="/index.mako"/>
+
+
+<%def name="metas()" filter="trim">
+    <%parent:metas/>
+    <meta name="robots" content="noindex">
+</%def>
+
+
+<%def name="pagination()" filter="trim">
+    % if pager.page_count > 1:
+            <div class="pagination pagination-centered">
+                <ul>
+<%
+        url_args = dict(
+            (model.Poi.rename_input_to_param(name), value)
+            for name, value in inputs.iteritems()
+            if name != 'page' and name not in model.Poi.get_visibility_params_names(ctx) and value is not None
+            )
+%>\
+                    <li class="prev${' disabled' if pager.page_number <= 1 else ''}">
+                        <a class="internal" href="${urls.get_url(ctx, mode, page = max(pager.page_number - 1, 1),
+                                **url_args)}">&larr;</a>
+                    </li>
+        % for page_number in range(max(pager.page_number - 5, 1), pager.page_number):
+                    <li>
+                        <a class="internal" href="${urls.get_url(ctx, mode, page = page_number,
+                                **url_args)}">${page_number}</a>
+                    </li>
+        % endfor
+                    <li class="active">
+                        <a class="internal" href="${urls.get_url(ctx, mode, page = pager.page_number, **url_args
+                                )}">${pager.page_number}</a>
+                    </li>
+        % for page_number in range(pager.page_number + 1, min(pager.page_number + 5, pager.last_page_number) + 1):
+                    <li>
+                        <a class="internal" href="${urls.get_url(ctx, mode, page = page_number,
+                                **url_args)}">${page_number}</a>
+                    </li>
+        % endfor
+                    <li class="next${' disabled' if pager.page_number >= pager.last_page_number else ''}">
+                        <a class="internal" href="${urls.get_url(ctx, mode,
+                                page = min(pager.page_number + 1, pager.last_page_number), **url_args)}">&rarr;</a>
+                    </li>
+                </ul>
+            </div>
+    % endif
+</%def>
+
+
+<%def name="results()" filter="trim">
+    % if errors is None:
+        % if pager.item_count == 0:
+        <div>
+            <em>Aucun organisme trouvé.</em>
+        </div>
+        % else:
+        <div>
+            Organismes ${pager.first_item_number} à ${pager.last_item_number} sur ${pager.item_count}
+        </div>
+        <%self:pagination/>
+        <%self:results_table/>
+        <%self:pagination/>
+        % endif
+    % endif
+</%def>
 
 
 <%def name="results_table()" filter="trim">
@@ -113,5 +177,10 @@ $(function () {
         });
 });
     </script>
+</%def>
+
+
+<%def name="title_content()" filter="trim">
+${_(u'List')} - ${parent.title_content()}
 </%def>
 
