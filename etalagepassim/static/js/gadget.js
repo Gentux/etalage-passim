@@ -51,7 +51,7 @@ function initGadget() {
 
     $("form.internal").bind("submit", function (event) {
         event.preventDefault();
-        passim.rpc.requestNavigateTo($(this).attr("action"), $(this).serializeArray().concat({
+        etalagepassim.rpc.requestNavigateTo($(this).attr("action"), $(this).serializeArray().concat({
             name: "submit",
             value: "Submit"
         }));
@@ -59,7 +59,7 @@ function initGadget() {
 
     $("a.internal").on("click", function (event) {
         event.preventDefault();
-        passim.rpc.requestNavigateTo($(this).attr("href"));
+        etalagepassim.rpc.requestNavigateTo($(this).attr("href"));
     });
 
     $("a[href][rel=bookmark]").attr("target", "_blank");

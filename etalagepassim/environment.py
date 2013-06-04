@@ -239,7 +239,7 @@ def load_environment(global_conf, app_conf):
                 ),
             u'easyxdm.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/easyxdm/latest/easyXDM.min.js')),
             u'easyxdm.swf': conv.default(urlparse.urljoin(conf['cdn_url'], '/easyxdm/latest/easyxdm.swf')),
-            u'jquery.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/jquery/jquery-1.7.1.min.js')),
+            u'jquery.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/jquery/jquery-1.9.1.min.js')),
             u'jquery-ui.css': conv.default(
                 urlparse.urljoin(conf['cdn_url'], '/jquery-ui/1.8.16/themes/smoothness/jquery-ui.css')
                 ),
@@ -250,6 +250,8 @@ def load_environment(global_conf, app_conf):
             u'leaflet.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/leaflet/leaflet-0.5.1/leaflet.js')),
             u'pie.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/css3pie/1.0beta5/PIE.js')),
             u'prettify.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/google-code-prettify/187/prettify.js')),
+            u'typeahead.css': conv.default(urlparse.urljoin(conf['cdn_url'], '/typeahead/typeahead.css')),
+            u'typeahead.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/typeahead/typeahead.js')),
             u'images.markers.url': conv.default(urlparse.urljoin(conf['cdn_url'], '/images/markers/')),
             u'images.misc.url': conv.default(urlparse.urljoin(conf['cdn_url'], '/images/misc/')),
             },

@@ -127,8 +127,8 @@ from etalagepassim import conf
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
     <script src="${conf['jquery.js']}"></script>
-    <script src="${conf['jquery-ui.js']}"></script>
     <script src="${conf['bootstrap.js']}"></script>
+    <script src="${conf['typeahead.js']}"></script>
     % if ctx.container_base_url is not None and ctx.gadget_id is not None:
     <script src="${conf['easyxdm.js']}"></script>
     <script>
@@ -245,11 +245,11 @@ try {
     <title>${self.title_content()}</title>
     <%self:feeds/>
     <%self:css/>
-    <%self:scripts/>
-    <%self:scripts_domready/>
 </head>
 <body>
     <%self:body_content/>
+    <%self:scripts/>
+    <%self:scripts_domready/>
     <%self:trackers/>
 </body>
 </html>
