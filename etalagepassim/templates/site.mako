@@ -24,7 +24,7 @@
 
 
 <%!
-from etalagepassim import conf
+from etalagepassim import conf, urls
 %>
 
 
@@ -47,6 +47,7 @@ from etalagepassim import conf
 <%def name="css()" filter="trim">
     <link rel="stylesheet" href="${conf['bootstrap.css']}">
     <link rel="stylesheet" href="${conf['bootstrap-responsive.css']}">
+    <link rel="stylesheet" href="${conf['typeahead.css']}">
     <link rel="stylesheet" href="${conf['jquery-ui.css']}">
     <link rel="stylesheet" href="/css/site.css">
     % if ctx.container_base_url is not None and ctx.gadget_id is not None:
@@ -129,6 +130,7 @@ from etalagepassim import conf
     <script src="${conf['jquery.js']}"></script>
     <script src="${conf['bootstrap.js']}"></script>
     <script src="${conf['typeahead.js']}"></script>
+    <script src="http://twitter.github.com/hogan.js/builds/2.0.0/hogan-2.0.0.js"></script>
     % if ctx.container_base_url is not None and ctx.gadget_id is not None:
     <script src="${conf['easyxdm.js']}"></script>
     <script>
@@ -203,10 +205,26 @@ $(function () {
     <div class="navbar navbar-fixed-top navbar-inverse">
         <div class="navbar-inner">
             <div class="container-fluid">
-                <a class="brand" href="http://etalage.passim.comarquage.fr/">PASSIM-Plus</a>
+                <a class="brand" href="http://etalage.passim.comarquage.fr/">PASSIM</a>
                 <ul class="nav">
                     <li><a href="http://www.cete-mediterranee.fr/tt13/www/article.php3?id_article=316">À propos</a></li>
                     <li><a href="http://passim.comarquage.fr/site-statique/">Contenu du jour</a></li>
+    % if conf['data_email'] is not None:
+                    <li><a href="mailto:${u','.join(conf['data_email'])}?subject=${u'Nouvelle fiche Passim+'.replace(u' ', u'%20')}&body=${u'''
+Veuillez ajouter dans l'annuaire Passim+ le service d'information suivant :
+
+Nom : ...
+Couverture géographique : ....
+Modes de transport : ....
+Site web : ...
+Application mobile : ...
+Centre d'appel : ...
+Guichet d'information : ...
+OpenData : ...
+Notes : ...
+'''.strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">Ajouter une fiche</a></li>
+    % endif
+                    <li><a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv')}">Exporter les données au format CSV</a></li>
                 </ul>
                 <ul class="nav pull-right">
                     <li><a href="http://www.passim.info/">Site actuel PASSIM</a></li>

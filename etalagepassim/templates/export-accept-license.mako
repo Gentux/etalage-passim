@@ -28,10 +28,10 @@ from etalagepassim import model, urls
 %>
 
 
-<%inherit file="/index.mako"/>
+<%inherit file="/site.mako"/>
 
 
-<%def name="results()" filter="trim">
+<%def name="container_content()" filter="trim">
         <h2>${export_title}</h2>
         <div class="license">
             <img alt="${_(u"Open Licence Logo")}" class="thumbnail" src="http://a35.idata.over-blog.com/4/37/99/26/licence-ouverte-open-licence.gif" width="250">
