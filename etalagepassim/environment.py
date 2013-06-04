@@ -39,7 +39,7 @@ import pymongo
 from suq import monpyjama
 from etalagepassim import ramdb
 
-import passim
+import etalagepassim
 from . import conv, model, templates
 
 
@@ -102,7 +102,7 @@ def load_environment(global_conf, app_conf):
             u'debug': conv.pipe(conv.guess_bool, conv.default(False)),
             u'default_tab': conv.pipe(
                 conv.cleanup_line,
-                conv.test_in(['carte', 'liste']),
+                conv.test_in(['accueil', 'carte', 'liste']),
                 conv.default('carte'),
                 ),
             u'gadget-integration.js': conv.default(urlparse.urljoin('http://localhost:7002/', 'integration.js')),
@@ -111,6 +111,7 @@ def load_environment(global_conf, app_conf):
             u'hide_directory': conv.pipe(conv.guess_bool, conv.default(False)),
             u'hide_export': conv.pipe(conv.guess_bool, conv.default(False)),
             u'hide_gadget': conv.pipe(conv.guess_bool, conv.default(False)),
+            u'hide_home': conv.pipe(conv.guess_bool, conv.default(False)),
             u'hide_list': conv.pipe(conv.guess_bool, conv.default(False)),
             u'hide_map': conv.pipe(conv.guess_bool, conv.default(False)),
             u'hide_minisite': conv.pipe(conv.guess_bool, conv.default(False)),

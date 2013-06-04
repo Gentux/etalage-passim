@@ -597,11 +597,6 @@ def feed(req):
             sort_key = 'last_update_datetime',
             **non_territorial_search_data
             )
-        data['feed_id'] = urls.get_full_url(ctx, **inputs)
-        data['feed_url'] = data['feed_id']
-        data['feed_updated'] = pager.items[0].last_update_datetime if pager.items else datetime.datetime.utcnow()
-        data['author_name'] = u"Easter-eggs"
-        data['author_email'] = conf['email_to']
 
     req.response.content_type = 'application/atom+xml; charset=utf-8'
     return templates.render(ctx, '/feed-atom.mako',
@@ -773,6 +768,7 @@ def index(req):
     enabled_tabs = [
         tab_name
         for tab_key, tab_name in (
+            (u'home', u'accueil'),
             (u'map', u'carte'),
             (u'list', u'liste'),
             (u'directory', u'annuaire'),
@@ -975,6 +971,58 @@ def index_gadget(req):
         inputs = inputs,
         mode = mode,
         **data)
+
+
+@wsgihelpers.wsgify
+@ramdb.ramdb_based
+def index_home(req):
+    ctx = contexts.Ctx(req)
+
+    if conf['hide_home']:
+        return wsgihelpers.not_found(ctx, explanation = ctx._(u'Home page disabled by configuration'))
+
+    params = req.GET
+    inputs = init_base(ctx, params)
+    inputs.update(model.Poi.extract_search_inputs_from_params(ctx, params))
+    mode = u'home'
+
+    data, errors = model.Poi.make_inputs_to_search_data()(inputs, state = ctx)
+    non_territorial_search_data = model.Poi.extract_non_territorial_search_data(ctx, data)
+    if errors is not None:
+        return wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
+    else:
+        competence_territories_id = None
+        presence_territory = None
+        pois_id_iter = model.Poi.iter_ids(ctx,
+            competence_territories_id = competence_territories_id,
+            presence_territory = presence_territory,
+            **non_territorial_search_data)
+        poi_by_id = dict(
+            (poi._id, poi)
+            for poi in (
+                model.Poi.instance_by_id.get(poi_id)
+                for poi_id in pois_id_iter
+                )
+            if poi is not None
+            )
+        pager = pagers.Pager(
+            item_count = len(poi_by_id),
+            page_number = 1,
+            page_max_size = 10,
+            )
+        pager.items = model.Poi.sort_and_paginate_pois_list(
+            ctx,
+            pager,
+            poi_by_id,
+            **non_territorial_search_data
+            )
+
+    return templates.render(ctx, '/home.mako',
+        data = data,
+        errors = errors,
+        inputs = inputs,
+        pager = pager,
+        **non_territorial_search_data)
 
 
 @wsgihelpers.wsgify
@@ -1253,6 +1301,7 @@ def make_router():
         ('GET', '^/fragment/organismes/(?P<poi_id>[a-z0-9]{24})/?$', poi_embedded),
         ('GET', '^/fragment/organismes/(?P<slug>[^/]+)/(?P<poi_id>[a-z0-9]{24})/?$', poi_embedded),
         ('GET', '^/gadget/?$', index_gadget),
+        ('GET', '^/accueil?$', index_home),
         ('GET', '^/liste/?$', index_list),
         ('GET', '^/minisite/organismes/(?P<poi_id>[a-z0-9]{24})/?$', minisite),
         ('GET', '^/minisite/organismes/(?P<slug>[^/]+)/(?P<poi_id>[a-z0-9]{24})/?$', minisite),

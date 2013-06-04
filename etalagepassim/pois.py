@@ -402,7 +402,17 @@ class Poi(representations.UserRepresentable, monpyjama.Wrapper):
     @classmethod
     def get_visibility_params_names(cls, ctx):
         visibility_params = list(cls.get_search_params_name(ctx))
-        visibility_params.extend(['checkboxes', 'directory', 'export', 'gadget', 'legend', 'list', 'map', 'minisite'])
+        visibility_params.extend([
+            'checkboxes',
+            'directory',
+            'export',
+            'gadget',
+            'home',
+            'legend',
+            'list',
+            'map',
+            'minisite',
+            ])
         return [
             'hide_{0}'.format(visibility_param)
             for visibility_param in visibility_params

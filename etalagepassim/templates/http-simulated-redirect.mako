@@ -51,7 +51,7 @@ from etalagepassim import urls
 
 <%def name="scripts_domready_content()" filter="trim">
     <%parent:scripts_domready_content/>
-    passim.rpc.requestNavigateTo(${urls.get_url(ctx, *url_args, **url_kwargs) | n, js});
+    etalagepassim.rpc.requestNavigateTo(${urls.get_url(ctx, *url_args, **url_kwargs) | n, js});
 </%def>
 
 

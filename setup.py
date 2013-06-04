@@ -24,7 +24,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-"""Customization of Etalage for Passim"""
+"""Web application based on "Etalage" for Passim"""
 
 
 try:
@@ -64,8 +64,20 @@ setup(
     data_files = [
         ('share/locale/fr/LC_MESSAGES', ['etalagepassim/i18n/fr/LC_MESSAGES/etalage-passim.mo']),
         ],
+    entry_points = """
+        [paste.app_factory]
+        main = etalagepassim.application:make_app
+        """,
+    include_package_data = True,
     install_requires = [
-        'Etalage >= 0.1dev',
+        "Biryani >= 0.9dev",
+        "Mako >= 0.3.6",
+        "Suq-Monpyjama >= 0.8",
+        "Suq-Representation >= 0.4",
+        "threading2 >= 0.2.1",
+        "WebError >= 0.10",
+        "WebOb >= 1.1",
+        "xlwt >= 0.7.2",
         ],
     message_extractors = {
         'etalagepassim': [
@@ -76,5 +88,7 @@ setup(
         },
 #    package_data = {'etalagepassim': ['i18n/*/LC_MESSAGES/*.mo']},
     packages = find_packages(),
+    paster_plugins = ['PasteScript'],
+    setup_requires = ["PasteScript >= 1.6.3"],
     zip_safe = False,
     )
