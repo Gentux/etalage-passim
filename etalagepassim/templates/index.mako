@@ -130,9 +130,9 @@ etalagepassim.params = ${inputs | n, js};
                     <button class="btn btn-primary" rel="tooltip" title="${_('Passim search')}" type="submit">
                         <i class="icon-search icon-white"></i>
                     </button>
-                    <button class="btn btn-primary" rel="tooltip" title="${_('Use your GPS')}" type="submit">
+                    <a class="btn btn-primary" href="#" id="btn-geolocation" rel="tooltip" title="${_('Use your GPS')}">
                         <i class="icon-globe icon-white"></i>
-                    </button>
+                    </a>
                 </div>
             </div>
         </fieldset>
@@ -148,7 +148,7 @@ etalagepassim.params = ${inputs | n, js};
                     <label class="control-label" for="term">${_("Find a service")}</label>
                     <div class="controls">
                         <input autocomplete="off" class="input-xlarge" id="term" name="term" type="text" \
-value="${inputs['term'] or ''}">
+value="${data['geolocation'].main_postal_distribution_str if data.get('geolocation') else (inputs['term'] or '')}">
     % if error:
                         <span class="help-inline">${error}</span>
     % endif

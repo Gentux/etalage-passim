@@ -1046,9 +1046,9 @@ def index_list(req):
         pager = None
     else:
         base_territory = data.get('base_territory')
-        territory = data['territory']
         competence_territories_id = None
         presence_territory = None
+        territory = data['geolocation'] or (data['term'] if not isinstance(data['term'], basestring) else None)
         if conf['handle_competence_territories']:
             if territory and territory.__class__.__name__ not in model.communes_kinds:
                 presence_territory = territory
@@ -1098,6 +1098,7 @@ def index_list(req):
             )
 
     return templates.render(ctx, '/list.mako',
+        data = data,
         errors = errors,
         inputs = inputs,
         mode = mode,

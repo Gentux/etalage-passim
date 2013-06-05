@@ -325,22 +325,14 @@ class Poi(representations.UserRepresentable, monpyjama.Wrapper):
     @classmethod
     def extract_non_territorial_search_data(cls, ctx, data):
         return dict(
-            coverages = data['coverages'],
-            schemas_name = data['schemas_name'],
             term = data['term'],
-            transport_modes = data['transport_modes'],
-            transport_types = data['transport_types'],
             )
 
     @classmethod
     def extract_search_inputs_from_params(cls, ctx, params):
         return dict(
-            coverages = params.getall('coverage'),
-            schemas_name = params.getall('schema'),
+            geolocation = params.get('geolocation'),
             term = params.get('term'),
-            territory = params.get('territory'),
-            transport_modes = params.getall('transport_mode'),
-            transport_types = params.getall('transport_type'),
             )
 
     def generate_all_fields(self):
@@ -621,7 +613,7 @@ class Poi(representations.UserRepresentable, monpyjama.Wrapper):
         # We should filter on term *after* having looked for competent organizations. Otherwise, when no organization
         # matching term is found, the nearest organizations will be used even when there are competent organizations
         # (that don't match the term).
-        if term:
+        if term and isinstance(term, basestring):
             prefixes = strings.slugify(term).split(u'-')
             pois_id_by_prefix = {}
             for prefix in prefixes:
@@ -748,24 +740,11 @@ class Poi(representations.UserRepresentable, monpyjama.Wrapper):
     def make_inputs_to_search_data(cls):
         return conv.struct(
             dict(
-                coverages = conv.uniform_sequence(conv.pipe(
-                    conv.cleanup_line,
-                    conv.test_in(cls.ids_by_coverage),
-                    )),
-                schemas_name = conv.uniform_sequence(conv.pipe(
-                    conv.cleanup_line,
-                    conv.test_in(ramdb.schema_title_by_name),
-                    )),
-                term = conv.input_to_slug,
-                territory = conv.input_to_postal_distribution_to_geolocated_territory,
-                transport_modes = conv.uniform_sequence(conv.pipe(
-                    conv.cleanup_line,
-                    conv.test_in(cls.ids_by_transport_mode),
-                    )),
-                transport_types = conv.uniform_sequence(conv.pipe(
-                    conv.cleanup_line,
-                    conv.test_in(cls.ids_by_transport_type),
-                    )),
+                geolocation = conv.pipe(
+                    conv.input_to_coordinates,
+                    conv.coordinates_to_territory,
+                    ),
+                term = conv.first_match(conv.input_to_postal_distribution_to_geolocated_territory, conv.input_to_slug),
                 ),
             default = 'drop',
             keep_none_values = True,

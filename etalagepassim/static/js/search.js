@@ -58,8 +58,30 @@ etalagepassim.search = (function ($) {
         ]);
     }
 
+    function initGeolocation($button) {
+        $button.on("click", function() {
+            self = $(this);
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    $("#search-form")
+                        .append($("<input>", {
+                                type: "hidden",
+                                name: "geolocation",
+                                value: position.coords.latitude + "," + position.coords.longitude
+                        })).submit();
+                });
+            } else {
+                self.closest('control-group').addClass('error');
+                self.closest('controls').append(
+                    $("<span class=\"help-inline\">").text("Geolocation is not supported by this browser.")
+                    );
+            }
+        });
+    }
+
     return {
-        createAutocompleter: createAutocompleter
+        createAutocompleter: createAutocompleter,
+        initGeolocation: initGeolocation
     };
 })(jQuery);
 

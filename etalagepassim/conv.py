@@ -29,6 +29,7 @@
 from cStringIO import StringIO
 import csv
 import math
+import re
 
 from biryani.baseconv import *
 from biryani.bsonconv import *
@@ -36,12 +37,13 @@ from biryani.objectconv import *
 from biryani.frconv import *
 from biryani import states, strings
 import bson
-import xlwt
 from territoria2.conv import split_postal_distribution, input_to_postal_distribution
+import xlwt
 
 
 default_state = states.default_state
 N_ = lambda message: message
+latitude_longitude_regex = re.compile(r'^[+-]?\d+\.\d+,[+-]?\d+\.\d+$')
 
 
 # Level-1 Converters
@@ -348,6 +350,13 @@ def input_to_category_slug(value, state = None):
             error = N_(u'Invalid category')),
         function(lambda category: category.slug),
         )(value, state = state)
+
+
+input_to_coordinates = pipe(
+    cleanup_line,
+    function(lambda x: x if latitude_longitude_regex.match(x) else None),
+    function(lambda x: dict(zip(['longitude', 'latitude'], [float(v) for v in x.split(',')]))),
+    )
 
 
 def input_to_tag_slug(value, state = None):
@@ -832,6 +841,39 @@ user_to_bson = object_to_clean_dict
 
 
 # Level-2 Converters
+
+
+def coordinates_to_territory(value, state = None):
+    from . import ramdb
+    if not value:
+        return None, None
+    if state is None:
+        state = default_state
+
+    latitude_cos = math.cos(math.radians(value['latitude']))
+    latitude_sin = math.sin(math.radians(value['latitude']))
+    distance_and_territory_couples = sorted(
+        (
+            (
+                6372.8 * math.acos(
+                    round(
+                        math.sin(math.radians(territory.geo[1])) * latitude_sin
+                        + math.cos(math.radians(territory.geo[1])) * latitude_cos
+                        * math.cos(math.radians(territory.geo[0] - value['longitude'])),
+                        13,
+                    )),
+                territory,
+                )
+            for territory in ramdb.territory_by_id.itervalues()
+            if territory.geo is not None and territory.__class__.__name__ in (
+                u'ArrondissementOfCommuneOfFrance',
+                u'AssociatedCommuneOfFrance',
+                u'CommuneOfFrance'
+                )
+            ),
+            key = lambda distance_and_territory: distance_and_territory[0],
+        )
+    return distance_and_territory_couples[0][1] if distance_and_territory_couples else None, None
 
 
 input_to_postal_distribution_to_geolocated_territory = pipe(
