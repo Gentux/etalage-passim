@@ -1292,8 +1292,7 @@ def make_router():
     """Return a WSGI application that dispatches requests to controllers """
     return urls.make_router(
         ('GET', '^/?$', index),
-        ('GET', '^/a-propos/?$', about),
-        ('GET', '^/annuaire/?$', index_directory),
+        ('GET', '^/(?P<page>(about|contact|help|contribute|data))/?$', static),
         ('GET', '^/api/v1/annuaire/csv/?$', csv),
         ('GET', '^/api/v1/annuaire/excel/?$', excel),
         ('GET', '^/api/v1/annuaire/geojson/?$', geojson),
@@ -1441,3 +1440,11 @@ def poi_embedded(req):
     else:
         req.response.content_type = 'text/plain; charset={0}'.format(encoding)
         return text.encode(encoding, errors = 'xmlcharrefreplace')
+
+
+@wsgihelpers.wsgify
+def static(req):
+    ctx = contexts.Ctx(req)
+    page = req.urlvars.get('page')
+
+    return templates.render(ctx, '/{0}.mako'.format(page))
