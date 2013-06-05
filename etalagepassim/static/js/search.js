@@ -41,7 +41,6 @@ etalagepassim.search = (function ($) {
                     },
                     url: territoriaQuery + '&term=%QUERY'
                 },
-                prefetch: territoriaQuery,
                 valueKey: 'main_postal_distribution'
             },
             {
@@ -52,7 +51,6 @@ etalagepassim.search = (function ($) {
                     },
                     url: '/api/v1/categories/autocomplete?term=%QUERY'
                 },
-                prefetch: '/api/v1/categories/autocomplete?term=a',
                 valueKey: 'tag'
             }
         ]);
