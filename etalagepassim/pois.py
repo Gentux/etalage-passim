@@ -283,6 +283,7 @@ class Poi(representations.UserRepresentable, monpyjama.Wrapper):
     ids_by_transport_type = {}
     ids_by_word = {}
     indexed_ids = set()
+    multimodal_info_service_ids = set()
     instance_by_id = {}
     last_update_datetime = None
     last_update_organization = None
@@ -507,6 +508,8 @@ class Poi(representations.UserRepresentable, monpyjama.Wrapper):
     @classmethod
     def index_pois(cls):
         for self in cls.instance_by_id.itervalues():
+            if self.is_multimodal_info_service():
+                cls.multimodal_info_service_ids.add(self._id)
             if self.schema_name == 'ServiceInfo':
                 cls.indexed_ids.add(self._id)
                 for poi in self.iter_descendant_or_self_pois():
@@ -524,6 +527,11 @@ class Poi(representations.UserRepresentable, monpyjama.Wrapper):
                         poi.index(self._id)
         for self in cls.instance_by_id.itervalues():
             del self.bson
+
+    def is_multimodal_info_service(self):
+        for field in self.fields:
+            if field.id == 'boolean' and strings.slugify(field.label) == 'service-d-information-multimodale':
+                return conv.check(conv.guess_bool(field.value))
 
     @classmethod
     def is_search_param_visible(cls, ctx, name):

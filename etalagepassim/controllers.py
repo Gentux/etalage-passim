@@ -1066,22 +1066,33 @@ def index_list(req):
             presence_territory = presence_territory,
             **non_territorial_search_data)
 
-        poi_by_id = dict(
-            (poi._id, poi)
-            for poi in (
+        multimodal_info_services_by_id = dict()
+        info_services_by_id = dict()
+        for poi in (
                 model.Poi.instance_by_id.get(poi_id)
                 for poi_id in pois_id_iter
-                )
-            if poi is not None
-            )
-        pager = pagers.Pager(item_count = len(poi_by_id), page_number = data['page_number'])
-        pager.items = model.Poi.sort_and_paginate_pois_list(
+                ):
+            if poi is None:
+                continue
+            if poi._id in model.Poi.multimodal_info_service_ids:
+                multimodal_info_services_by_id[poi._id] = poi
+            else:
+                info_services_by_id[poi._id] = poi
+
+        multimodal_info_services = model.Poi.sort_and_paginate_pois_list(
             ctx,
-            pager,
-            poi_by_id,
+            None,
+            multimodal_info_services_by_id,
             related_territories_id = competence_territories_id,
             territory = territory or data.get('base_territory'),
-            sort_key = data['sort_key'],
+            **non_territorial_search_data
+            )
+        info_services = model.Poi.sort_and_paginate_pois_list(
+            ctx,
+            None,
+            info_services_by_id,
+            related_territories_id = competence_territories_id,
+            territory = territory or data.get('base_territory'),
             **non_territorial_search_data
             )
 
@@ -1089,7 +1100,8 @@ def index_list(req):
         errors = errors,
         inputs = inputs,
         mode = mode,
-        pager = pager,
+        info_services = info_services,
+        multimodal_info_services = multimodal_info_services,
         **non_territorial_search_data)
 
 

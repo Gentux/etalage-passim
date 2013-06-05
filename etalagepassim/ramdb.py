@@ -251,11 +251,12 @@ def ramdb_based(controller):
                         if poi_bson is None or poi_bson['metadata'].get('deleted', False):
                             model.Poi.instance_by_id.pop(id, None)
                             model.Poi.slug_by_id.pop(id, None)
+                            model.Poi.multimodal_info_service_ids.discard(id)
                             model.Poi.indexed_ids.discard(id)
                         else:
                             poi = model.Poi.load(poi_bson)
-                            model.Poi.indexed_ids.add(poi._id)
                             poi.index(poi._id)
+                            model.Poi.indexed_ids.add(poi._id)
                             del poi.bson
                     finally:
                         read_write_lock.release()

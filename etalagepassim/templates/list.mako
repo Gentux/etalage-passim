@@ -40,78 +40,44 @@ from etalagepassim import conf, conv, model, ramdb, urls
 </%def>
 
 
-<%def name="pagination()" filter="trim">
-    % if pager.page_count > 1:
-            <div class="pagination pagination-centered">
-                <ul>
-<%
-        url_args = dict(
-            (model.Poi.rename_input_to_param(name), value)
-            for name, value in inputs.iteritems()
-            if name != 'page' and name not in model.Poi.get_visibility_params_names(ctx) and value is not None
-            )
-%>\
-                    <li class="prev${' disabled' if pager.page_number <= 1 else ''}">
-                        <a class="internal" href="${urls.get_url(ctx, mode, page = max(pager.page_number - 1, 1),
-                                **url_args)}">&larr;</a>
-                    </li>
-        % for page_number in range(max(pager.page_number - 5, 1), pager.page_number):
-                    <li>
-                        <a class="internal" href="${urls.get_url(ctx, mode, page = page_number,
-                                **url_args)}">${page_number}</a>
-                    </li>
-        % endfor
-                    <li class="active">
-                        <a class="internal" href="${urls.get_url(ctx, mode, page = pager.page_number, **url_args
-                                )}">${pager.page_number}</a>
-                    </li>
-        % for page_number in range(pager.page_number + 1, min(pager.page_number + 5, pager.last_page_number) + 1):
-                    <li>
-                        <a class="internal" href="${urls.get_url(ctx, mode, page = page_number,
-                                **url_args)}">${page_number}</a>
-                    </li>
-        % endfor
-                    <li class="next${' disabled' if pager.page_number >= pager.last_page_number else ''}">
-                        <a class="internal" href="${urls.get_url(ctx, mode,
-                                page = min(pager.page_number + 1, pager.last_page_number), **url_args)}">&rarr;</a>
-                    </li>
-                </ul>
-            </div>
-    % endif
-</%def>
-
-
 <%def name="results()" filter="trim">
     % if errors is None:
-        % if pager.item_count == 0:
+        % if len(info_services) == 0:
         <div>
             <em>Aucun organisme trouvé.</em>
         </div>
         % else:
-        <div>
-            Organismes ${pager.first_item_number} à ${pager.last_item_number} sur ${pager.item_count}
-        </div>
-        <%self:pagination/>
-        <%self:results_table/>
-        <%self:pagination/>
+            % if len(multimodal_info_services):
+        <h3>Services d'information multimodaux</h3>
+        <%self:results_table info_services="${multimodal_info_services}"/>
+            % endif
+            % if len(info_services):
+        <h3>Services d'information</h3>
+        <%self:results_table info_services="${info_services}"/>
+            % endif
         % endif
     % endif
 </%def>
 
 
-<%def name="results_table()" filter="trim">
+<%def name="results_table(info_services)" filter="trim">
         <table class="table table-bordered table-condensed table-striped">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Nom</th>
                     <th>Type de transport</th>
-                    <th>Couverture territoriale</th>
-                    <th>Territoire couvert</th>
                 </tr>
             </thead>
             <tbody>
-        % for info_service in pager.items:
+        % for info_service in info_services:
                 <tr>
+                    <td>
+                        <a class="btn btn-primary internal" rel="tooltip" title="Site web de l'offre de transport" \
+href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">
+                            <i class="icon-globe icon-white"></i>
+                        </a>
+                    </td>
                     <td>
                         <a class="internal" href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">${info_service.name}</a>
                     </td>
@@ -156,27 +122,10 @@ from etalagepassim import conf, conv, model, ramdb, urls
                         covered_territories_postal_distribution_str.add(territory.main_postal_distribution_str)
 %>\
                     <td>${markupsafe.escape(u' ').join(sorted(transport_types))}</td>
-                    <td>${u', '.join(sorted(coverages))}</td>
-                    <td>${u', '.join(sorted(covered_territories_postal_distribution_str))}</td>
                 </tr>
         % endfor
             </tbody>
         </table>
-</%def>
-
-
-<%def name="scripts()" filter="trim">
-    <%parent:scripts/>
-    <script src="${conf['bootstrap.js']}"></script>
-    <script>
-$(function () {
-    $("[rel=tooltip]")
-        .tooltip()
-        .on('click', function (event) {
-            event.preventDefault();
-        });
-});
-    </script>
 </%def>
 
 
