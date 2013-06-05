@@ -1014,6 +1014,7 @@ def index_home(req):
             ctx,
             pager,
             poi_by_id,
+            sort_key = 'last_update_datetime',
             **non_territorial_search_data
             )
 

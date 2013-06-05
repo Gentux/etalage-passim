@@ -804,13 +804,21 @@ class Poi(representations.UserRepresentable, monpyjama.Wrapper):
         return strings.slugify(self.name)
 
     @classmethod
-    def sort_and_paginate_pois_list(cls, ctx, pager, poi_by_id, **other_search_data):
-        # FIXME: imported code
-        return list(itertools.islice(
-            cls.iter_sort_pois_list(ctx, poi_by_id),
-            pager.first_item_index,
-            pager.last_item_number,
-            ))
+    def sort_and_paginate_pois_list(cls, ctx, pager, poi_by_id, sort_key = None, **other_search_data):
+        if sort_key is not None:
+            return sorted(
+                [poi for poi in poi_by_id.itervalues()],
+                key = lambda poi: getattr(poi, sort_key, poi.name) if sort_key is not None else poi.name,
+                reverse = True,
+                )[pager.first_item_index:pager.last_item_number]
+        if pager is not None:
+            return itertools.islice(
+                cls.iter_sort_pois_list(ctx, poi_by_id),
+                pager.first_item_index,
+                pager.last_item_number,
+                )
+        else:
+            return list(cls.iter_sort_pois_list(ctx, poi_by_id))
 
 
 def get_first_field(fields, id, label = None):
