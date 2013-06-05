@@ -62,6 +62,14 @@ def is_category_autocompleter_empty(categories):
 <%def name="container_content()" filter="trim">
         <%self:search_form/>
         <%self:results/>
+        % if inputs.get('term') is None or inputs.get('term') != 'FRANCE':
+        <p>
+            <a class="btn btn-primary" href="http://localhost:8094/liste?term=FRANCE" rel="tooltip" \
+title="${_('Search service for whole France')}">
+                <i class="icon-globe icon-white"></i> ${_('Search service for whole France')}
+            </a>
+        </p>
+        % endif
 </%def>
 
 
@@ -88,9 +96,11 @@ Notes : ...
 
 <%def name="scripts()" filter="trim">
     <%parent:scripts/>
+    <script src="/js/bind.js"></script>
     <script src="/js/search.js"></script>
     <script>
 var etalagepassim = etalagepassim || {};
+etalagepassim.miscUrl = ${conf['images.misc.url'] | n, js};
 etalagepassim.search.autocompleterUrl = ${urlparse.urljoin(conf['territoria_url'], '/api/v1/autocomplete-territory') | n, js};
 etalagepassim.search.kinds = ${ctx.autocompleter_territories_kinds | n, js};
     % if ctx.base_territory is not None:
@@ -102,13 +112,16 @@ etalagepassim.params = ${inputs | n, js};
 
 
 <%def name="scripts_domready_content()" filter="trim">
+    etalagepassim.bind.loadingGif();
     etalagepassim.search.createAutocompleter($('#term'));
+    etalagepassim.search.initGeolocation($('#btn-geolocation'));
     <%parent:scripts_domready_content/>
+    $("[rel=tooltip]").tooltip()
 </%def>
 
 
 <%def name="search_form()" filter="trim">
-    <form action="${urls.get_url(ctx, mode)}" class="form-horizontal internal" id="search-form" method="get">
+    <form action="${urls.get_url(ctx, 'liste')}" class="form-horizontal internal" id="search-form" method="get">
         <%self:search_form_hidden/>
         <fieldset>
             <%self:search_form_field/>

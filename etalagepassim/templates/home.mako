@@ -49,11 +49,6 @@ from etalagepassim import conf, conv, model, ramdb, urls
         % else:
         <%self:last_updated_pois/>
         % endif
-        <p>
-            <button class="btn btn-primary" rel="tooltip" title="${_('Search service for whole France')}" type="submit">
-                <i class="icon-globe icon-white"></i> ${_('Search service for whole France')}
-            </button>
-        </p>
     % endif
 </%def>
 
@@ -119,16 +114,6 @@ from etalagepassim import conf, conv, model, ramdb, urls
         % endfor
             </tbody>
         </table>
-</%def>
-
-
-<%def name="scripts_domready_content()" filter="trim">
-    <%parent:scripts_domready_content/>
-    $("[rel=tooltip]")
-        .tooltip()
-        .on('click', function (event) {
-            event.preventDefault();
-        });
 </%def>
 
 

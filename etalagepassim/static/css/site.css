@@ -13,9 +13,15 @@
     color: #555;
 }
 
-span.loading img{
-    height: 30px;
-    width: 30px;
+.icon-feed {
+    background: url("../images/feed-icons.png") no-repeat scroll 0 0 transparent;
+    opacity: 0.65;
+    width: 16px;
+}
+
+.jaccede-field-label {
+    text-decoration: underline;
+    padding-top: 20px;
 }
 
 .toolbar {
@@ -28,15 +34,15 @@ span.loading img{
     text-align: right;
     right: 0;
 }
-.icon-feed {
-    background: url("../images/feed-icons.png") no-repeat scroll 0 0 transparent;
-    opacity: 0.65;
-    width: 16px;
+
+header img {
+    float: left;
+    margin-right: 8px;
 }
 
-.jaccede-field-label {
-    text-decoration: underline;
-    padding-top: 20px;
+span.loading img{
+    height: 30px;
+    width: 30px;
 }
 
 th a {

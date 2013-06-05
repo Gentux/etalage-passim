@@ -177,21 +177,17 @@ $(function () {
 
 
 <%def name="site_header()" filter="trim">
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <img src="/passim-images/logo-ministere.png" style="float: left">
-            <div class="page-header">
-                <h1>
-                    PASSIM-Plus
-                </h1>
-                <h2>
-                    <small>Prototype 2012 en vue d’améliorer le
-                        <br>
-                        Portail annuaire des sites et des services sur la mobilité</small>
-                </h2>
+    <header>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="span12 well">
+                    <img src="/passim-images/logo-ministere.png">
+                    <h1>PASSIM</h1>
+                    <p class="lead">Annuaire des sites et des services d'information transport.</p>
+                </div>
             </div>
         </div>
-    </div>
+    </header>
 </%def>
 
 
@@ -202,13 +198,11 @@ $(function () {
 
 <%def name="topbar()" filter="trim">
     ## FIXME: change URLs
-    <div class="navbar navbar-fixed-top navbar-inverse">
+    <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
                 <a class="brand" href="http://etalage.passim.comarquage.fr/">PASSIM</a>
                 <ul class="nav">
-                    <li><a href="http://www.cete-mediterranee.fr/tt13/www/article.php3?id_article=316">À propos</a></li>
-                    <li><a href="http://passim.comarquage.fr/site-statique/">Contenu du jour</a></li>
     % if conf['data_email'] is not None:
                     <li><a href="mailto:${u','.join(conf['data_email'])}?subject=${u'Nouvelle fiche Passim+'.replace(u' ', u'%20')}&body=${u'''
 Veuillez ajouter dans l'annuaire Passim+ le service d'information suivant :
@@ -225,9 +219,6 @@ Notes : ...
 '''.strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">Ajouter une fiche</a></li>
     % endif
                     <li><a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv')}">Exporter les données au format CSV</a></li>
-                </ul>
-                <ul class="nav pull-right">
-                    <li><a href="http://www.passim.info/">Site actuel PASSIM</a></li>
                 </ul>
             </div>
         </div>
