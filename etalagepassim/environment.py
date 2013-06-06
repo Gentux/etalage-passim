@@ -36,7 +36,6 @@ from biryani import strings
 import mako.lookup
 import pkg_resources
 import pymongo
-from suq import monpyjama
 from etalagepassim import ramdb
 
 import etalagepassim

@@ -256,7 +256,7 @@ def ramdb_based(controller):
                             if poi_bson is None or poi_bson['metadata'].get('deleted', False):
                                 model.Poi.indexed_ids.discard(id)
                                 model.Poi.instance_by_id.pop(id, None)
-	                            model.Poi.multimodal_info_service_ids.discard(id)
+                                model.Poi.multimodal_info_service_ids.discard(id)
                                 model.Poi.slug_by_id.pop(id, None)
                             else:
                                 poi = model.Poi.load(poi_bson)
