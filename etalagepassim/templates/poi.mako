@@ -418,7 +418,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
                 <div class="alert alert-error">
                     Cet organisme est positionné <strong>très approximativement</strong>.
                 </div>
-    % elif field.value[2] <= 6:
+    % elif field.value[2] <= 7:
                 <div class="alert alert-warning">
                     Cet organisme est positionné <strong>approximativement dans la rue</strong>.
                 </div>
