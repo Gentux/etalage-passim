@@ -266,8 +266,8 @@ def load_environment(global_conf, app_conf):
             u'territories_database': conv.pipe(
                 conv.default(conf['database'][0]),
                 ),
-            u'typeahead.css': conv.default(urlparse.urljoin(conf['cdn_url'], '/typeahead/typeahead.css')),
-            u'typeahead.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/typeahead/typeahead.js')),
+            u'typeahead.css': conv.default(urlparse.urljoin(conf['cdn_url'], '/twitter-typeahead/0.9.2/typeahead.css')),
+            u'typeahead.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/twitter-typeahead/0.9.2/typeahead.js')),
             },
         default = conv.noop,
         ))(conf))
@@ -327,6 +327,6 @@ def load_environment(global_conf, app_conf):
         directories = templates_dirs,
 #        error_handler = handle_mako_error,
         input_encoding = 'utf-8',
-#        module_directory = os.path.join(conf['cache_dir'], 'templates'),
+        module_directory = os.path.join(conf['cache_dir'], 'templates'),
 #        strict_undefined = True,
         )
