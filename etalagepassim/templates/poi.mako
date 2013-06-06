@@ -612,8 +612,9 @@ Notes : ...
                         ).strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">Modifier la fiche</a>
                 &mdash;
     % endif
-    % if conf.get('petitpois_url'):
-                <a href="${urlparse.urljoin(conf['petitpois_url'], '/poi/view/{0}'.format(poi._id))}" rel="external">Accès back-office</a>
+    % if poi.petitpois_url is not None:
+                <a href="${urlparse.urljoin(poi.petitpois_url, '/poi/view/{0}'.format(poi._id))
+                        }" rel="external">Accès back-office</a>
     % endif
             </p>
 </%def>
