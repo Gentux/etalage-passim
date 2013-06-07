@@ -133,8 +133,10 @@ from etalagepassim import conf, urls
     <script src="http://twitter.github.com/hogan.js/builds/2.0.0/hogan-2.0.0.js"></script>
     % if ctx.container_base_url is not None and ctx.gadget_id is not None:
     <script src="${conf['easyxdm.js']}"></script>
+<!--[if lt IE 8]>
+    <script src="${conf['json2.js']}"></script>
+<![endif]-->
     <script>
-easyXDM.DomHelper.requiresJSON("${conf['json2.js']}");
 var etalagepassim = etalagepassim || {};
 if (!etalagepassim.easyXDM) {
     etalagepassim.easyXDM = easyXDM.noConflict("etalagepassim");
