@@ -181,7 +181,7 @@ $(function () {
         <div class="container-fluid">
             <div class="row">
                 <div class="span12 well">
-                    <img src="/passim-images/logo-ministere.png">
+                    <img src="/img/logo-ministere.png">
                     <h1>PASSIM</h1>
                     <p class="lead">Annuaire des sites et des services d'information transport.</p>
                 </div>
@@ -204,7 +204,7 @@ $(function () {
                 <a class="brand" href="http://etalage.passim.comarquage.fr/">PASSIM</a>
                 <ul class="nav">
     % if conf['data_email'] is not None:
-                    <li><a href="mailto:${u','.join(conf['data_email'])}?subject=${u'Nouvelle fiche Passim+'.replace(u' ', u'%20')}&body=${u'''
+                    <li><a href="mailto:${u','.join(conf['data_email'])}?subject=${u'Nouvelle fiche Passim'.replace(u' ', u'%20')}&body=${u'''
 Veuillez ajouter dans l'annuaire Passim+ le service d'information suivant :
 
 Nom : ...

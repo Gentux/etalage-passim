@@ -65,7 +65,7 @@ def is_category_autocompleter_empty(categories):
         % if inputs.get('term') is None or inputs.get('term') != 'FRANCE':
         <p>
             <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', term = 'FRANCE')}" rel="tooltip" \
-title="${_('Search service for whole France')}">
+title="${_('Search services for whole France')}">
                 <i class="icon-globe icon-white"></i> ${_('Search service for whole France')}
             </a>
         </p>

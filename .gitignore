@@ -7,3 +7,5 @@ dist
 *.pyc
 *.pyo
 *~
+etalagepassim/static/img/
+etalagepassim/static/themes/

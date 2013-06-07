@@ -99,7 +99,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
                     coverages.add(field.value)
                 elif field_slug == 'type-de-transport' and field.value is not None:
                     transport_types.add(markupsafe.Markup(
-                        u'<a href="#" rel="tooltip" title="{0}"><img alt="{0}" src="/passim-images/types-de-transports/{1}.png"></a>'
+                        u'<a href="#" rel="tooltip" title="{0}"><img alt="{0}" src="/img/types-de-transports/{1}.png"></a>'
                         ).format(field.value, strings.slugify(field.value)))
             elif use_transport_offers_covered_territories and field.id == 'territories' \
                     and field_slug == 'territoire-couvert' and field.value is not None:
