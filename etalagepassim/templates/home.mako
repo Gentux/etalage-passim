@@ -54,6 +54,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
 
 
 <%def name="last_updated_pois()" filter="trim">
+        <h3>${_("10 last updated information services.")}</h3>
         <table class="table table-bordered table-condensed table-striped">
             <thead>
                 <tr>
