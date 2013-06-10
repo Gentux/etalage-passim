@@ -259,7 +259,8 @@ def ramdb_based(controller):
                                 model.Poi.multimodal_info_service_ids.discard(id)
                                 model.Poi.slug_by_id.pop(id, None)
                             else:
-                                poi = model.Poi.load(poi_bson)
+                                poi_subclass = model.Poi.subclass_by_database_name[db.name]
+                                poi = poi_subclass.load(poi_bson)
                                 model.Poi.indexed_ids.add(poi._id)
                                 poi.index(poi._id)
                                 del poi.bson
