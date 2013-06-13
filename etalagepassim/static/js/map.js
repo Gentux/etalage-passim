@@ -28,39 +28,11 @@ etalagepassim.map = (function ($) {
     var leafletMap;
 
     function addFeature(feature, layer) {
-        // Icon settings
-        var blueBlankIcon = createIcon(etalagepassim.map.markersUrl + '/misc/blueblank.png');
-        var blueMultipleIcon = createIcon(etalagepassim.map.markersUrl + '/misc/bluemultiple.png');
-        var greenValidIcon = createIcon(etalagepassim.map.markersUrl + '/misc/greenvalid.png');
-        var greenMultipleIcon = createIcon(etalagepassim.map.markersUrl + '/misc/greenmultiple.png');
-        var homeIcon = createIcon(etalagepassim.map.markersUrl + '/map-icons-collection-2.0/icons/home.png');
-        var redInvalidIcon = createIcon(etalagepassim.map.markersUrl + '/misc/redinvalid.png');
-        var redMultipleIcon = createIcon(etalagepassim.map.markersUrl + '/misc/redmultiple.png');
-
         var properties = feature.properties;
-        etalagepassim.map.layerByPoiId[properties.id] = layer;
 
-        if (properties.home) {
-            layer.setIcon(homeIcon);
-        } else {
-            if (properties.count > 1) {
-                if (properties.competent === true) {
-                    layer.setIcon(greenMultipleIcon);
-                } else if (properties.competent === false) {
-                    layer.setIcon(redMultipleIcon);
-                } else {
-                    layer.setIcon(blueMultipleIcon);
-                }
-            } else {
-                if (properties.competent === true) {
-                    layer.setIcon(greenValidIcon);
-                } else if (properties.competent === false) {
-                    layer.setIcon(redInvalidIcon);
-                } else {
-                    layer.setIcon(blueBlankIcon);
-                }
-            }
+        etalagepassim.map.setFeatureIcon(layer, properties);
 
+        if ( ! properties.home) {
             var nearbyPoiCount = properties.count - properties.centerPois.length;
             var poi;
             var $popupDiv = $('<div/>');
@@ -271,6 +243,7 @@ etalagepassim.map = (function ($) {
             etalagepassim.map.currentPoiId ? {current: etalagepassim.map.currentPoiId} : {},
             leafletMap.getZoom() === leafletMap.getMaxZoom() ? {enable_cluster: false} : {}
         );
+        etalage.map.bbox = geojsonParams.bbox;
         $.ajax({
             url: etalagepassim.map.geojsonUrl,
             dataType: 'json',
@@ -318,7 +291,43 @@ etalagepassim.map = (function ($) {
         return map;
     }
 
+    function setFeatureIcon(layer, properties) {
+        // Icon settings
+        var blueBlankIcon = createIcon(etalagepassim.map.markersUrl + '/misc/blueblank.png');
+        var blueMultipleIcon = createIcon(etalagepassim.map.markersUrl + '/misc/bluemultiple.png');
+        var greenValidIcon = createIcon(etalagepassim.map.markersUrl + '/misc/greenvalid.png');
+        var greenMultipleIcon = createIcon(etalagepassim.map.markersUrl + '/misc/greenmultiple.png');
+        var homeIcon = createIcon(etalagepassim.map.markersUrl + '/map-icons-collection-2.0/icons/home.png');
+        var redInvalidIcon = createIcon(etalagepassim.map.markersUrl + '/misc/redinvalid.png');
+        var redMultipleIcon = createIcon(etalagepassim.map.markersUrl + '/misc/redmultiple.png');
+
+        etalagepassim.map.layerByPoiId[properties.id] = layer;
+
+        if (properties.home) {
+            layer.setIcon(homeIcon);
+        } else {
+            if (properties.count > 1) {
+                if (properties.competent === true) {
+                    layer.setIcon(greenMultipleIcon);
+                } else if (properties.competent === false) {
+                    layer.setIcon(redMultipleIcon);
+                } else {
+                    layer.setIcon(blueMultipleIcon);
+                }
+            } else {
+                if (properties.competent === true) {
+                    layer.setIcon(greenValidIcon);
+                } else if (properties.competent === false) {
+                    layer.setIcon(redInvalidIcon);
+                } else {
+                    layer.setIcon(blueBlankIcon);
+                }
+            }
+        }
+    }
+
     return {
+        bbox: null,
         center: null,
         createMap: createMap,
         currentPoiId: null,
@@ -328,6 +337,7 @@ etalagepassim.map = (function ($) {
         geojsonUrl: null,
         layerByPoiId: null,
         markersUrl: null,
+        setFeatureIcon: setFeatureIcon,
         singleMarkerMap: singleMarkerMap,
         tileLayersOptions: null
     };

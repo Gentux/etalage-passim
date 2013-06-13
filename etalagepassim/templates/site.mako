@@ -106,6 +106,10 @@ from etalagepassim import conf, urls
 
 
 <%def name="footer_service()" filter="trim">
+</%def>
+
+
+<%def name="links()" filter="trim">
             <p>
                 Un service proposé par le
                 <a href="http://www.cete-mediterranee.fr/tt13/www/rubrique.php3?id_rubrique=27" rel="external">CETE Méditerranée</a>
@@ -229,7 +233,7 @@ Notes : ...
 
 
 <%def name="trackers()" filter="trim">
-    % if conf['markers.piwik.id']:
+    % if conf['markers.piwik.id'] is not None:
     <!-- Piwik -->
     <script type="text/javascript">
 var pkBaseURL = (("https:" == document.location.protocol) ? ${conf['markers.piwik.ssl_host'] | n, js} : ${conf['markers.piwik.host'] | n, js});
@@ -254,6 +258,7 @@ try {
 <head>
     <%self:metas/>
     <title>${self.title_content()}</title>
+    <%self:links/>
     <%self:feeds/>
     <%self:css/>
 </head>

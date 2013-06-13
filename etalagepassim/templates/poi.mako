@@ -37,6 +37,11 @@ from etalagepassim import conf, conv, model, ramdb, urls
 <%inherit file="/site.mako"/>
 
 
+<%def name="links()" filter="trim">
+<link rel="canonical" href="${urls.get_full_url(ctx, 'organismes', poi.slug, poi._id)}">
+</%def>
+
+
 <%def name="container_content()" filter="trim">
 <%
     fields = poi.generate_all_fields()

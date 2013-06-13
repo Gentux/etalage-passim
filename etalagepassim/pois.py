@@ -37,7 +37,7 @@ import urllib
 
 import bson
 from biryani import strings
-from suq import monpyjama, representations
+from suq import representations
 import webob.multidict
 
 from . import conf, conv, ramdb, urls
@@ -294,7 +294,7 @@ class Poi(representations.UserRepresentable):
     schema_name = None
     slug_by_id = {}
     street_address = None
-    subclass_by_database_name = {}
+    subclass_by_database_and_schema_name = {}
     theme_slug = None
     weight_by_coverage = {
         u'Départementale': 1,
@@ -317,7 +317,7 @@ class Poi(representations.UserRepresentable):
         cls.ids_by_presence_territory_id.clear()
         cls.ids_by_word.clear()
         cls.slug_by_id.clear()
-        cls.subclass_by_database_name.clear()
+        cls.subclass_by_database_and_schema_name.clear()
 
         # FIXME: IMPORTED CODE
         cls.ids_by_coverage.clear()
@@ -429,14 +429,14 @@ class Poi(representations.UserRepresentable):
 
                     if date_range_begin is not None:
                         for index, (begin_datetime, poi_id) in enumerate(self.ids_by_begin_datetime):
-                            if begin_datetime is not None and begin_datetime < date_range_begin:
+                            if begin_datetime is not None and begin_datetime > date_range_begin:
                                 break
                     else:
                         index = 0
                     self.ids_by_begin_datetime.insert(index, (date_range_begin, indexed_poi_id))
                     if date_range_end is not None:
                         for index, (end_datetime, poi_id) in enumerate(self.ids_by_end_datetime):
-                            if end_datetime is not None and end_datetime > date_range_end:
+                            if end_datetime is not None and end_datetime < date_range_end:
                                 break
                     else:
                         index = 0
@@ -738,11 +738,18 @@ class Poi(representations.UserRepresentable):
     def load_pois(cls):
         from . import model
         for db, petitpois_url in zip(model.dbs, conf['petitpois_url']):
-            cls.subclass_by_database_name[db.name] = poi_subclass = type('PoiWithPetitpois', (cls,), dict(
-                petitpois_url = petitpois_url,
-                ))
             for poi_bson in db.pois.find({'metadata.deleted': {'$exists': False}}):
-                poi_subclass.load(poi_bson)
+                if (db.name, poi_bson['metadata']['schema-name']) not in cls.subclass_by_database_and_schema_name:
+                    schema = db.schemas.find_one({'name': poi_bson['metadata']['schema-name']})
+                    cls.subclass_by_database_and_schema_name[(db.name, poi_bson['metadata']['schema-name'])] = type(
+                        'PoiWithPetitpois',
+                        (cls,),
+                        dict(
+                            icon_url = schema.get('icon_url') if schema is not None else None,
+                            petitpois_url = petitpois_url,
+                            ),
+                        )
+                cls.subclass_by_database_and_schema_name[(db.name, poi_bson['metadata']['schema-name'])].load(poi_bson)
 
     @classmethod
     def make_inputs_to_search_data(cls):
