@@ -106,10 +106,6 @@ from etalagepassim import conf, urls
 
 
 <%def name="footer_service()" filter="trim">
-</%def>
-
-
-<%def name="links()" filter="trim">
             <p>
                 Un service proposé par le
                 <a href="http://www.cete-mediterranee.fr/tt13/www/rubrique.php3?id_rubrique=27" rel="external">CETE Méditerranée</a>
@@ -118,6 +114,10 @@ from etalagepassim import conf, urls
                 et la <a href="http://www.predim.org/">Mission Transports Intelligents de la DGITM</a>,
                 réalisé par <a href="http://www.easter-eggs.com/" rel="external" title="Easter-eggs, société de services en logiciels libres">Easter-eggs</a>.
             </p>
+</%def>
+
+
+<%def name="links()" filter="trim">
 </%def>
 
 
@@ -203,11 +203,10 @@ $(function () {
 
 
 <%def name="topbar()" filter="trim">
-    ## FIXME: change URLs
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
-                <a class="brand" href="http://etalage.passim.comarquage.fr/">PASSIM</a>
+                <a class="brand" href="${urls.get_url(ctx)}">PASSIM</a>
                 <ul class="nav">
     % if conf['data_email'] is not None:
                     <li><a href="mailto:${u','.join(conf['data_email'])}?subject=${u'Nouvelle fiche Passim'.replace(u' ', u'%20')}&body=${u'''
@@ -225,6 +224,16 @@ Notes : ...
 '''.strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">Ajouter une fiche</a></li>
     % endif
                     <li><a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv')}">Exporter les données au format CSV</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Liens <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/about">${_('About')}</a></li>
+                            <li><a href="/contact">${_('Contact')}</a></li>
+                            <li><a href="/help">${_('Help')}</a></li>
+                            <li><a href="/contribute">${_('Contribute')}</a></li>
+                            <li><a href="/data">${_('Data')}</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -269,4 +278,3 @@ try {
     <%self:trackers/>
 </body>
 </html>
-

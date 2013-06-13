@@ -44,7 +44,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
     % if errors is None:
         % if pager.item_count == 0:
         <div>
-            <em>Aucun organisme trouvé.</em>
+            <em>${_('No organism found.')}</em>
         </div>
         % else:
         <%self:last_updated_pois/>
@@ -67,7 +67,8 @@ from etalagepassim import conf, conv, model, ramdb, urls
         % for info_service in pager.items:
                 <tr>
                     <td>
-                        <a class="internal" href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">${info_service.name}</a>
+                        <a class="internal" \
+href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">${info_service.name}</a>
                     </td>
 <%
     covered_territories_postal_distribution_str = set()

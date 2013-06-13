@@ -45,7 +45,7 @@ from etalagepassim import conf, model, urls
     <div class="well" id="map" style="height: 400px;"></div>
     % if not getattr(ctx, 'hide_legend', False):
     <div class="legend-text well">
-        <p><strong>Légende</strong> :</p>
+        <p><strong>${_('Legend')}</strong> :</p>
         <ul class="unstyled">
             <li>
                 <img class="legend-icon" src="${conf['images.markers.url'].rstrip('/')}/misc/blueblank.png">
@@ -110,4 +110,3 @@ etalagepassim.map.tileLayersOptions = ${conf['tile_layers'] | n, js};
 <%def name="title_content()" filter="trim">
 ${_(u'Map')} - ${parent.title_content()}
 </%def>
-

@@ -44,15 +44,15 @@ from etalagepassim import conf, conv, model, ramdb, urls
     % if errors is None:
         % if len(info_services) == 0:
         <div>
-            <em>Aucun organisme trouvé.</em>
+            <em>${_('No organism found.')}</em>
         </div>
         % else:
             % if len(multimodal_info_services):
-        <h3>Services d'information multimodaux</h3>
+        <h3>${_('Multimodal information services.')}</h3>
         <%self:results_table info_services="${multimodal_info_services}"/>
             % endif
             % if len(info_services):
-        <h3>Services d'information</h3>
+        <h3>${_('Information services')}</h3>
         <%self:results_table info_services="${info_services}"/>
             % endif
         % endif
@@ -65,15 +65,15 @@ from etalagepassim import conf, conv, model, ramdb, urls
             <thead>
                 <tr>
                     <th></th>
-                    <th>Nom</th>
-                    <th>Type de transport</th>
+                    <th>${_('Name')}</th>
+                    <th>${_('Transport type')}</th>
                 </tr>
             </thead>
             <tbody>
         % for info_service in info_services:
                 <tr>
                     <td>
-                        <a class="btn btn-primary internal" rel="tooltip" title="Site web de l'offre de transport" \
+                        <a class="btn btn-primary internal" rel="tooltip" title="${_('Transport offer website.')}" \
 href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">
                             <i class="icon-globe icon-white"></i>
                         </a>
