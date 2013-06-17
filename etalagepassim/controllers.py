@@ -28,6 +28,7 @@
 
 from cStringIO import StringIO
 import datetime
+import itertools
 import json
 import logging
 import math
@@ -139,6 +140,103 @@ def autocomplete_category(req):
             )
         for category_infos in categories_infos[pager.first_item_index:pager.last_item_number]
         ]
+    return wsgihelpers.respond_json(ctx,
+        dict(
+            apiVersion = '1.0',
+            context = inputs['context'],
+            data = dict(
+                currentItemCount = len(pager.items),
+                items = pager.items,
+                itemsPerPage = pager.page_size,
+                pageIndex = pager.page_number,
+                startIndex = pager.first_item_index,
+                totalItems = pager.item_count,
+                totalPages = pager.page_count,
+                ),
+            method = req.script_name,
+            params = inputs,
+            url = req.url.decode('utf-8'),
+            ),
+        headers = headers,
+        jsonp = inputs['jsonp'],
+        )
+
+
+@wsgihelpers.wsgify
+@ramdb.ramdb_based
+def autocomplete_names(req):
+    ctx = contexts.Ctx(req)
+
+    headers = []
+    params = req.GET
+    inputs = dict(
+        context = params.get('context'),
+        jsonp = params.get('jsonp'),
+        page = params.get('page'),
+        term = params.get('term'),
+        )
+    data, errors = conv.pipe(
+        conv.struct(
+            dict(
+                page = conv.pipe(
+                    conv.input_to_int,
+                    conv.test_greater_or_equal(1),
+                    conv.default(1),
+                    ),
+                term = conv.make_input_to_slug(separator = u' '),
+                ),
+            default = 'drop',
+            keep_none_values = True,
+            ),
+        conv.rename_item('page', 'page_number'),
+        )(inputs, state = ctx)
+    if errors is not None:
+        return wsgihelpers.respond_json(ctx,
+            dict(
+                apiVersion = '1.0',
+                context = inputs['context'],
+                error = dict(
+                    code = 400,  # Bad Request
+                    errors = [
+                        dict(
+                            location = key,
+                            message = error,
+                            )
+                        for key, error in sorted(errors.iteritems())
+                        ],
+                    # message will be automatically defined.
+                    ),
+                method = req.script_name,
+                params = inputs,
+                url = req.url.decode('utf-8'),
+                ),
+            headers = headers,
+            jsonp = inputs['jsonp'],
+            )
+
+    possible_words = list([
+        word_slug
+        for word_slug in model.Poi.ids_by_word.iterkeys()
+        if word_slug.startswith(data['term'])
+        ]) or None
+    if possible_words is None:
+        possible_pois_id = model.Poi.indexed_ids
+    else:
+        possible_pois_id = ramdb.union_set(
+            model.Poi.ids_by_word.get(word, set())
+            for word in possible_words
+            )
+
+    pager = pagers.Pager(item_count = len(possible_pois_id), page_number = data['page_number'])
+    pager.items = list(itertools.islice(
+        [
+            model.Poi.instance_by_id.get(poi_id).name
+            for poi_id in possible_pois_id
+            ],
+        pager.first_item_index,
+        pager.last_item_number,
+        ))
+
     return wsgihelpers.respond_json(ctx,
         dict(
             apiVersion = '1.0',
@@ -1305,6 +1403,7 @@ def make_router():
         ('GET', '^/api/v1/categories/autocomplete/?$', autocomplete_category),
         ('GET', '^/api/v1/couverture/csv/?$', geographical_coverage_csv),
         ('GET', '^/api/v1/couverture/excel/?$', geographical_coverage_excel),
+        ('GET', '^/api/v1/names/autocomplete/?$', autocomplete_names),
         ('GET', '^/carte/?$', index_map),
         ('GET', '^/export/?$', index_export),
         ('GET', '^/export/annuaire/csv/?$', export_directory_csv),
