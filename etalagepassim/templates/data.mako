@@ -29,11 +29,10 @@
 <%def name="container_content()" filter="trim">
     <h2>${_('Data')}</h2>
     <hr>
-    <p>${_('''
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed laoreet commodo augue. In hac habitasse platea dictumst.
-Ut lacinia orci posuere neque sodales cursus at sed lectus. Interdum et malesuada fames ac ante ipsum primis in
-faucibus. Curabitur et risus posuere, venenatis felis id, cursus elit. Nam ut metus varius, varius tortor et, dignissim
-ligula. Morbi tristique molestie lorem et dapibus. :
+    <p>${_('''Lorem ipsum dolor sit amet, ''')}<strong>${_('consectetur adipiscing')}</strong>${_(''' elit. Sed laoreet
+commodo augue. In hac habitasse platea dictumst. Ut lacinia orci posuere neque sodales cursus at sed lectus. Interdum et
+malesuada fames ac ante ipsum primis in faucibus. Curabitur et risus posuere, venenatis felis id, cursus elit. Nam ut
+metus varius, varius tortor et, dignissim ligula. Morbi tristique molestie lorem et dapibus. :
 ''')}
     </p>
 
@@ -50,14 +49,13 @@ ligula. Morbi tristique molestie lorem et dapibus. :
 Pellentesque tincidunt condimentum commodo. Donec luctus justo eu urna adipiscing pharetra. Nam malesuada, velit et
 vulputate feugiat, libero turpis dignissim velit, id porttitor odio urna at metus. Nulla pharetra, eros sit amet
 sollicitudin venenatis, massa ligula consectetur mauris, vel molestie nisi tellus nec dolor. Cras luctus eros sed
-sollicitudin adipiscing. Praesent eu molestie odio, sit amet mollis massa. Maecenas ac fringilla ligula.
-Nullam adipiscing quis justo eget ullamcorper. Phasellus congue ultrices ligula non facilisis. Maecenas luctus, enim
-non ultrices semper, nibh leo tempus nisl, quis convallis enim augue vel justo. Nulla lacus lectus, malesuada ac
-adipiscing sit amet, tincidunt id tellus. Integer eu nisl arcu. Phasellus dictum risus sed lectus molestie facilisis.
-Aliquam luctus lacus commodo fermentum ornare. Vestibulum suscipit, sem eu adipiscing ultrices, massa odio feugiat
-diam, vel aliquet sapien tellus sed quam. Aliquam pellentesque, massa sit amet ultricies pharetra, mauris sapien mattis
-risus, et lobortis massa nisi id urna.
-''')}
+sollicitudin adipiscing.''')} <a href='/'>${_('Praesent eu molestie')}</a> ${_('''odio, sit amet mollis massa. Maecenas
+ac fringilla ligula.  Nullam adipiscing quis justo eget ullamcorper. Phasellus congue ultrices ligula non facilisis.
+Maecenas luctus, enim non ultrices semper, nibh leo tempus nisl, quis convallis enim augue vel justo. Nulla lacus
+lectus, malesuada ac adipiscing sit amet, tincidunt id tellus. Integer eu nisl arcu. Phasellus dictum risus sed lectus
+molestie facilisis.  Aliquam luctus lacus commodo fermentum ornare. Vestibulum suscipit, sem eu adipiscing ultrices,
+massa odio feugiat diam, vel aliquet sapien tellus sed quam. Aliquam pellentesque, massa sit amet ultricies pharetra,
+mauris sapien mattis risus, et lobortis massa nisi id urna.''')}
     </p>
 
 
@@ -92,11 +90,9 @@ risus, et lobortis massa nisi id urna.
 Fusce elementum eu est a laoreet. Sed sed magna nec elit gravida dictum ac id elit. Vestibulum ante ipsum primis in
 faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum ac imperdiet orci, eget dictum augue. Quisque
 condimentum justo rhoncus accumsan feugiat. Proin id ullamcorper felis, nec mollis urna. Morbi rhoncus a est quis
-sagittis. Mauris bibendum tellus ipsum, rutrum vestibulum justo rutrum in. Aenean sagittis elit eget arcu porttitor
-auctor. Sed gravida volutpat auctor. Aliquam erat volutpat. Nam ipsum nisi, lacinia ac sodales at, semper at orci. Duis
-rhoncus congue libero, a mattis dui gravida in. Sed sodales at sapien a auctor. Quisque eleifend orci commodo nisl
-interdum, sit amet vehicula odio gravida.
-''')}
+sagittis.''')} <b>${_('''Mauris bibendum tellus ipsum''')}</b>${_(''', rutrum vestibulum justo rutrum in. Aenean
+sagittis elit eget arcu porttitor auctor. Sed gravida volutpat auctor. Aliquam erat volutpat. Nam ipsum nisi, lacinia ac
+sodales at, semper at orci. Duis rhoncus congue libero, a mattis dui gravida in. Sed sodales at sapien a auctor. Quisque
+eleifend orci commodo nisl interdum, sit amet vehicula odio gravida.''')}
     </p>
 </%def>
-

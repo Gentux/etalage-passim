@@ -237,9 +237,9 @@ Notes : ...
                             <li class="divider"></li>
                             <li><a href="/about">${_('About')}</a></li>
                             <li><a href="/contact">${_('Contact')}</a></li>
-                            <li><a href="/help">${_('Help')}</a></li>
                             <li><a href="/contribute">${_('Contribute')}</a></li>
                             <li><a href="/data">${_('Data')}</a></li>
+                            <li><a href="/help">${_('Help')}</a></li>
                         </ul>
                     </li>
                 </ul>
