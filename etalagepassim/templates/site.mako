@@ -79,13 +79,13 @@ from etalagepassim import conf, urls
                 <%self:footer_data_p_content/>
             </p>
             <p>
-                Logiciel :
-                <a href="http://gitorious.org/passim/etalage-passim" rel="external">Passim</a>
+                ${_("Software")} :
+                <a href="http://gitorious.org/passim/etalage-passim" rel="external">${_("Passim")}</a>
                 &mdash;
-                <span>Copyright © 2011, 2012, 2013 <a href="http://www.easter-eggs.com/" rel="external"
-                        title="Easter-eggs, société de services en logiciels libres">Easter-eggs</a></span>
+                <span>${_(u"Copyright © 2011, 2012, 2013 ")}<a href="http://www.easter-eggs.com/" rel="external"
+                        title="Easter-eggs, société de services en logiciels libres">${_("Easter-eggs")}</a></span>
                 &mdash;
-                Licence libre
+                ${_('Open license')}
                 <a href="http://www.gnu.org/licenses/agpl.html" rel="external">${_(
                     'GNU Affero General Public License')}</a>
             </p>
@@ -97,22 +97,20 @@ from etalagepassim import conf, urls
 
 
 <%def name="footer_data_p_content()" filter="trim">
-                Page réalisée en <a href="http://www.comarquage.fr/" rel="external"
-                        title="Comarquage.fr">co-marquage</a>
-                &mdash;
-                Données :
-                <a href="http://www.data.gouv.fr/Licence-Ouverte-Open-Licence" rel="external">Licence ouverte</a>
+                ${_('Data')} :
+                <a href="http://www.data.gouv.fr/Licence-Ouverte-Open-Licence" rel="external">${_('Open license')}</a>
 </%def>
 
 
 <%def name="footer_service()" filter="trim">
             <p>
-                Un service proposé par le
-                <a href="http://www.cete-mediterranee.fr/tt13/www/rubrique.php3?id_rubrique=27" rel="external">CETE Méditerranée</a>
-                pour
-                l’<a href="http://www.developpement-durable.gouv.fr/Presentation-de-l-AFIMB.html" rel="external">AFIMB</a>
-                et la <a href="http://www.predim.org/">Mission Transports Intelligents de la DGITM</a>,
-                réalisé par <a href="http://www.easter-eggs.com/" rel="external" title="Easter-eggs, société de services en logiciels libres">Easter-eggs</a>.
+                ${_('Service proposed by ')}
+                <a href="http://www.cete-mediterranee.fr/tt13/www/rubrique.php3?id_rubrique=27" rel="external">${_(u'CETE Méditerranée')}</a>
+                ${_('for')}
+                <a href="http://www.developpement-durable.gouv.fr/Presentation-de-l-AFIMB.html" rel="external">${_(u'AFIMB')}</a>
+                ${_('and the')} <a href="http://www.predim.org/">${_('Mission Transports Intelligents de la DGITM')}</a>,
+                ${_('made by')} <a href="http://www.easter-eggs.com/" rel="external" \
+title="${_('Easter-eggs, Free software services company')}">${_('Easter-eggs')}</a>.
             </p>
 </%def>
 
@@ -188,8 +186,8 @@ $(function () {
             <div class="row">
                 <div class="span12 well">
                     <img src="/img/logo-ministere.png">
-                    <h1>PASSIM</h1>
-                    <p class="lead">Annuaire des sites et des services d'information transport.</p>
+                    <h1>${_('PASSIM')}</h1>
+                    <p class="lead">${_('Transport information services and site directory.')}</p>
                 </div>
             </div>
         </div>
@@ -208,25 +206,35 @@ $(function () {
             <div class="container-fluid">
                 <a class="brand" href="${urls.get_url(ctx)}">PASSIM</a>
                 <ul class="nav">
-    % if conf['data_email'] is not None:
-                    <li><a href="mailto:${u','.join(conf['data_email'])}?subject=${u'Nouvelle fiche Passim'.replace(u' ', u'%20')}&body=${u'''
-Veuillez ajouter dans l'annuaire Passim+ le service d'information suivant :
+                    <li class="dropdown">
 
-Nom : ...
-Couverture géographique : ....
-Modes de transport : ....
-Site web : ...
-Application mobile : ...
-Centre d'appel : ...
-Guichet d'information : ...
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">${_('Links')} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+    % if conf['data_email'] is not None:
+                            <li>
+                                <a \
+href="mailto:${u','.join(conf['data_email'])}?subject=${u'Nouvelle fiche Passim'.replace(u' ', u'%20')}&body=${_(u'''
+Please add following information service :
+
+Name : ...
+Geographical coverage : ....
+Transport modes : ....
+Web site : ...
+Mobile Application : ...
+Call center : ...
+Information desk : ...
 OpenData : ...
 Notes : ...
-'''.strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">Ajouter une fiche</a></li>
+''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">${_('Add a POI')}</a>
+                            </li>
     % endif
-                    <li><a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv')}">Exporter les données au format CSV</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Liens <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
+
+                            <li>
+                                <a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv')}">
+                                    ${_('Export data in CSV format')}
+                                </a>
+                            </li>
+                            <li class="divider"></li>
                             <li><a href="/about">${_('About')}</a></li>
                             <li><a href="/contact">${_('Contact')}</a></li>
                             <li><a href="/help">${_('Help')}</a></li>

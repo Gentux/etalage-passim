@@ -60,7 +60,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
                 <tr>
                     <th>${_("Name")}</th>
                     <th>${_("Territory")}</th>
-                    <th>${_("Date")}</th>
+                    <th>${_("Last modification time")}</th>
                 </tr>
             </thead>
             <tbody>
