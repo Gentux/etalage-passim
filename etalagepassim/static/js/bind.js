@@ -47,6 +47,11 @@ etalagepassim.bind = (function ($) {
 
         $('a.internal').on('click', appendLoadingGif);
         $('#search-form').on('submit', appendLoadingGif);
+        $('#btn-geolocation').on('click', function (e) {
+            e.preventDefault();
+            $('#search-form').off('submit', appendLoadingGif);
+            appendLoadingGif();
+        });
     }
 
     function appendLoadingGif(event) {
