@@ -113,7 +113,14 @@ etalagepassim.params = ${inputs | n, js};
 
 <%def name="scripts_domready_content()" filter="trim">
     etalagepassim.bind.loadingGif();
-    etalagepassim.search.createAutocompleter($('#term'));
+    etalagepassim.search.createAutocompleter({
+        inputSelector: '#term',
+        wording: {
+            categories: ${_('Categories') | n, js},
+            names: ${_('Names') | n, js},
+            territories: ${_('Territories') | n, js}
+        }
+    });
     etalagepassim.search.initGeolocation($('#btn-geolocation'));
     <%parent:scripts_domready_content/>
     $("[rel=tooltip]").tooltip()

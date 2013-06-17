@@ -26,14 +26,15 @@ var etalagepassim = etalagepassim || {};
 
 
 etalagepassim.search = (function ($) {
-    function createAutocompleter($input) {
+    function createAutocompleter(options) {
+        var options = options || {};
         var territoriaQuery = etalagepassim.search.autocompleterUrl  + '?jsonp=?&' + $.param({
             parent: etalagepassim.search.base_territory,
             kind: etalagepassim.search.kinds || ''
             }, true);
-        $input.typeahead([
+        $(options.inputSelector).typeahead([
             {
-                header: '<h5 class="autocompleter-header">Territories</h5>',
+                header: '<h5 class="autocompleter-header">' + options.wording.territories + '</h5>',
                 remote: {
                     dataType: 'jsonp',
                     filter: function(json) {
@@ -44,7 +45,7 @@ etalagepassim.search = (function ($) {
                 valueKey: 'main_postal_distribution'
             },
             {
-                header: '<h5 class="autocompleter-header">Categories</h5>',
+                header: '<h5 class="autocompleter-header">' + options.wording.categories + '</h5>',
                 remote: {
                     filter: function(json) {
                         return json.data.items;
