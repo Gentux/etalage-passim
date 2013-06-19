@@ -60,9 +60,11 @@ def is_category_autocompleter_empty(categories):
 
 
 <%def name="container_content()" filter="trim">
+        % if ctx.container_base_url is None or ctx.gadget_id is None:
         <%self:search_form/>
+        % endif
         <%self:results/>
-        % if inputs.get('term') is None or inputs.get('term') != 'FRANCE':
+        % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
         <p>
             <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', term = 'FRANCE')}" rel="tooltip" \
 title="${_('Search services for whole France')}">
