@@ -27,11 +27,8 @@
 
 
 from copy import copy
-import datetime
 import itertools
 import logging
-import math
-import sys
 import urlparse
 import urllib
 
@@ -314,16 +311,14 @@ class Poi(representations.UserRepresentable):
         cls.ids_by_parent_id.clear()
         cls.ids_by_category_slug.clear()
         cls.ids_by_competence_territory_id.clear()
-        cls.ids_by_presence_territory_id.clear()
-        cls.ids_by_word.clear()
-        cls.slug_by_id.clear()
-        cls.subclass_by_database_and_schema_name.clear()
-
-        # FIXME: IMPORTED CODE
         cls.ids_by_coverage.clear()
+        cls.ids_by_presence_territory_id.clear()
         cls.ids_by_schema_name.clear()
         cls.ids_by_transport_mode.clear()
         cls.ids_by_transport_type.clear()
+        cls.ids_by_word.clear()
+        cls.slug_by_id.clear()
+        cls.subclass_by_database_and_schema_name.clear()
 
     @classmethod
     def extract_non_territorial_search_data(cls, ctx, data):

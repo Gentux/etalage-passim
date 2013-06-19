@@ -1122,6 +1122,7 @@ def index_home(req):
         data = data,
         errors = errors,
         inputs = inputs,
+        mode = mode,
         pager = pager,
         **non_territorial_search_data)
 
@@ -1144,7 +1145,7 @@ def index_list(req):
     data, errors = conv.inputs_to_pois_list_data(inputs, state = ctx)
     non_territorial_search_data = model.Poi.extract_non_territorial_search_data(ctx, data)
     if errors is not None:
-        pager = None
+        raise wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
     else:
         base_territory = data.get('base_territory')
         competence_territories_id = None

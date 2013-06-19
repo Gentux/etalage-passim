@@ -878,7 +878,7 @@ def coordinates_to_territory(value, state = None):
                 u'CommuneOfFrance'
                 )
             ),
-            key = lambda distance_and_territory: distance_and_territory[0],
+        key = lambda distance_and_territory: distance_and_territory[0],
         )
     return distance_and_territory_couples[0][1] if distance_and_territory_couples else None, None
 
