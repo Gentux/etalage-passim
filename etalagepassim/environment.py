@@ -245,6 +245,9 @@ def load_environment(global_conf, app_conf):
     conf.update(conv.check(conv.struct(
         {
             u'bootstrap.css': conv.default(urlparse.urljoin(conf['cdn_url'], '/bootstrap/2.2.1/css/bootstrap.min.css')),
+            u'bootstrap-gadget.css': conv.default(
+                urlparse.urljoin(conf['cdn_url'], '/bootstrap/2.2.1/css/bootstrap.min.css')
+                ),
             u'bootstrap.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/bootstrap/2.2.1/js/bootstrap.min.js')),
             u'bootstrap-responsive.css': conv.default(
                 urlparse.urljoin(conf['cdn_url'], '/bootstrap/2.2.1/css/bootstrap-responsive.min.css')

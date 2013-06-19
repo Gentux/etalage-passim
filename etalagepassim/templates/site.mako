@@ -132,7 +132,6 @@ title="${_('Easter-eggs, Free software services company')}">${_('Easter-eggs')}<
     <script src="${conf['jquery.js']}"></script>
     <script src="${conf['bootstrap.js']}"></script>
     <script src="${conf['typeahead.js']}"></script>
-    <script src="http://twitter.github.com/hogan.js/builds/2.0.0/hogan-2.0.0.js"></script>
     % if ctx.container_base_url is not None and ctx.gadget_id is not None:
     <script src="${conf['easyxdm.js']}"></script>
 <!--[if lt IE 8]>
@@ -204,15 +203,17 @@ $(function () {
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
                 <a class="brand" href="${urls.get_url(ctx)}">PASSIM</a>
-                <ul class="nav">
-                    <li class="dropdown">
-
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">${_('Links')} <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
     % if conf['data_email'] is not None:
-                            <li>
-                                <a \
+                        <li>
+                            <a \
 href="mailto:${u','.join(conf['data_email'])}?subject=${u'Nouvelle fiche Passim'.replace(u' ', u'%20')}&body=${_(u'''
 Please add following information service :
 
@@ -226,23 +227,21 @@ Information desk : ...
 OpenData : ...
 Notes : ...
 ''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">${_('Add a POI')}</a>
-                            </li>
+                        </li>
     % endif
 
-                            <li>
-                                <a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv')}">
-                                    ${_('Export data in CSV format')}
-                                </a>
-                            </li>
-                            <li class="divider"></li>
-                            <li><a href="/about">${_('About')}</a></li>
-                            <li><a href="/contact">${_('Contact')}</a></li>
-                            <li><a href="/contribute">${_('Contribute')}</a></li>
-                            <li><a href="/data">${_('Data')}</a></li>
-                            <li><a href="/help">${_('Help')}</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                        <li>
+                            <a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv')}">
+                                ${_('Export data in CSV format')}
+                            </a>
+                        </li>
+                        <li><a href="/about">${_('About')}</a></li>
+                        <li><a href="/contact">${_('Contact')}</a></li>
+                        <li><a href="/contribute">${_('Contribute')}</a></li>
+                        <li><a href="/data">${_('Data')}</a></li>
+                        <li><a href="/help">${_('Help')}</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

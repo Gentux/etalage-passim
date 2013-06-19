@@ -27,7 +27,7 @@ var etalagepassim = etalagepassim || {};
 
 etalagepassim.search = (function ($) {
     function createAutocompleter(options) {
-        var options = options || {};
+        options = options || {};
         var territoriaQuery = etalagepassim.search.autocompleterUrl  + '?jsonp=?&' + $.param({
             parent: etalagepassim.search.base_territory,
             kind: etalagepassim.search.kinds || ''

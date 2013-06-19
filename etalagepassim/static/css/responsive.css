@@ -22,3 +22,57 @@
         padding-top: 0px;
     }
 }
+
+
+/*
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+@media 
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+    /* Force table to not be like tables anymore */
+    table.responsive-table, table.responsive-table thead, table.responsive-table tbody, table.responsive-table th,
+    table.responsive-table td, table.responsive-table tr {
+        display: block;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    table.responsive-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    table.responsive-table tr { border: 1px solid #ccc; }
+
+    table.responsive-table td {
+        /* Behave  like a "row" */
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    table.responsive-table td:before {
+        border: red;
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+    }
+
+    /*
+    Label the data
+    */
+    table.responsive-table td:nth-of-type(1):before { content: "Web Site"; }
+    table.responsive-table td:nth-of-type(2):before { content: "Name"; }
+    table.responsive-table td:nth-of-type(3):before { content: "Transport type"; }
+    table.responsive-table td:nth-of-type(4):before { content: "Coverage"; }
+}

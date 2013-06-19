@@ -45,11 +45,11 @@ span.loading img{
     width: 30px;
 }
 
-th a {
-    color: black;
-}
-
-th a:hover {
-    color: #0088CC;
-    text-decoration: none;
+/*
+Inspired by : http://css-tricks.com/responsive-data-tables/
+ */
+th {
+    background: #333;
+    color: white;
+    font-weight: bold;
 }

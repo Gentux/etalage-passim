@@ -61,7 +61,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
 
 
 <%def name="results_table(info_services)" filter="trim">
-        <table class="table table-bordered table-condensed table-striped">
+        <table class="table table-bordered table-condensed table-striped table-responsive">
             <thead>
                 <tr>
                     <th></th>
