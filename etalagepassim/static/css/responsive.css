@@ -34,21 +34,21 @@ only screen and (max-width: 760px),
 (min-device-width: 768px) and (max-device-width: 1024px)  {
 
     /* Force table to not be like tables anymore */
-    table.responsive-table, table.responsive-table thead, table.responsive-table tbody, table.responsive-table th,
-    table.responsive-table td, table.responsive-table tr {
+    table.table-responsive, table.table-responsive thead, table.table-responsive tbody, table.table-responsive th,
+    table.table-responsive td, table.table-responsive tr {
         display: block;
     }
 
     /* Hide table headers (but not display: none;, for accessibility) */
-    table.responsive-table thead tr {
+    table.table-responsive thead tr {
         position: absolute;
         top: -9999px;
         left: -9999px;
     }
 
-    table.responsive-table tr { border: 1px solid #ccc; }
+    table.table-responsive tr { border: 1px solid #ccc; }
 
-    table.responsive-table td {
+    table.table-responsive td {
         /* Behave  like a "row" */
         border: none;
         border-bottom: 1px solid #eee;
@@ -56,7 +56,7 @@ only screen and (max-width: 760px),
         padding-left: 50%;
     }
 
-    table.responsive-table td:before {
+    table.table-responsive td:before {
         border: red;
         /* Now like a table header */
         position: absolute;
@@ -71,8 +71,8 @@ only screen and (max-width: 760px),
     /*
     Label the data
     */
-    table.responsive-table td:nth-of-type(1):before { content: "Web Site"; }
-    table.responsive-table td:nth-of-type(2):before { content: "Name"; }
-    table.responsive-table td:nth-of-type(3):before { content: "Transport type"; }
-    table.responsive-table td:nth-of-type(4):before { content: "Coverage"; }
+    table.table-responsive td:nth-of-type(1):before { content: "Web Site"; }
+    table.table-responsive td:nth-of-type(2):before { content: "Name"; }
+    table.table-responsive td:nth-of-type(3):before { content: "Transport type"; }
+    table.table-responsive td:nth-of-type(4):before { content: "Coverage"; }
 }

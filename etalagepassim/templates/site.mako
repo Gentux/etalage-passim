@@ -184,15 +184,11 @@ $(function () {
 
 
 <%def name="site_header()" filter="trim">
-    <header>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="span12 well">
-                    <img src="/img/logo-ministere.png">
-                    <h1>${_('PASSIM')}</h1>
-                    <p class="lead">${_('Transport information services and site directory.')}</p>
-                </div>
-            </div>
+    <header class="jumbotron subhead">
+        <div class="container well">
+            <img src="/img/logo-ministere.png">
+            <h1>${_('PASSIM')}</h1>
+            <p class="lead">${_('Transport information services and site directory.')}</p>
         </div>
     </header>
 </%def>
@@ -212,7 +208,7 @@ $(function () {
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="brand" href="${urls.get_url(ctx)}">PASSIM</a>
+                <a class="brand" href="${urls.get_url(ctx)}">${_('PASSIM')}</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
     % if conf['data_email'] is not None:
