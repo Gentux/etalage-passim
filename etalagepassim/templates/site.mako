@@ -277,11 +277,11 @@ try {
     <%self:links/>
     <%self:feeds/>
     <%self:css/>
+    <%self:scripts/>
+    <%self:scripts_domready/>
 </head>
 <body>
     <%self:body_content/>
-    <%self:scripts/>
-    <%self:scripts_domready/>
     <%self:trackers/>
 </body>
 </html>

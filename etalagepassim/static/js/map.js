@@ -243,7 +243,7 @@ etalagepassim.map = (function ($) {
             etalagepassim.map.currentPoiId ? {current: etalagepassim.map.currentPoiId} : {},
             leafletMap.getZoom() === leafletMap.getMaxZoom() ? {enable_cluster: false} : {}
         );
-        etalage.map.bbox = geojsonParams.bbox;
+        etalagepassim.map.bbox = geojsonParams.bbox;
         $.ajax({
             url: etalagepassim.map.geojsonUrl,
             dataType: 'json',

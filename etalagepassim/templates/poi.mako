@@ -430,7 +430,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
     % endif
                 <div class="single-marker-map" id="map-poi" style="height: 300px; width: 424px;"></div>
                 <script>
-etalage.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]});
+etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]});
                 </script>
                 <div class="bigger-map-link">
                     Voir sur une carte plus grande avec
