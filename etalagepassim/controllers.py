@@ -864,6 +864,8 @@ def index(req):
     params = req.params
     init_base(ctx, params)
 
+    default_tab = conf['default_tab'] \
+        if ctx.container_base_url is None or ctx.gadget_id is None else conf['gadget_default_tab']
     # Redirect to another page.
     enabled_tabs = [
         tab_name
@@ -879,7 +881,7 @@ def index(req):
         ]
     if not len(enabled_tabs):
         enabled_tabs = [u'carte']  # Ensure there is at least one visible tab
-    url_args = (conf['default_tab'] if conf['default_tab'] in enabled_tabs else enabled_tabs[0],)
+    url_args = (default_tab if default_tab in enabled_tabs else enabled_tabs[0],)
     url_kwargs = dict(params)
     if ctx.container_base_url is None or ctx.gadget_id is None:
         raise wsgihelpers.redirect(ctx, location = urls.get_url(ctx, *url_args, **url_kwargs))
@@ -1067,6 +1069,7 @@ def index_gadget(req):
     data, errors = conv.inputs_to_pois_list_data(inputs, state = ctx)
 
     return templates.render(ctx, '/gadget.mako',
+        data = data,
         errors = errors,
         inputs = inputs,
         mode = mode,

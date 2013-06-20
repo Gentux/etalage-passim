@@ -50,7 +50,7 @@ textarea {
         if name not in ('container_base_url', 'gadget') and value not in (None, [], '')
         )
     gadget_params = dict(
-        path = conf['default_tab'],
+        path = conf['gadget_default_tab'] or conf['default_tab'],
         )
     gadget_params.update(url_args)
 %>\

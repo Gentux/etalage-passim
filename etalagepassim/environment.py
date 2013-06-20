@@ -111,6 +111,11 @@ def load_environment(global_conf, app_conf):
                 conv.test_in(['accueil', 'carte', 'liste']),
                 conv.default('carte'),
                 ),
+            u'gadget_default_tab': conv.pipe(
+                conv.cleanup_line,
+                conv.test_in(['accueil', 'carte', 'liste']),
+                conv.default(None),
+                ),
             u'gadget-integration.js': conv.default(urlparse.urljoin('http://localhost:7002/', 'integration.js')),
             u'global_conf': conv.set_value(global_conf),
             u'handle_competence_territories': conv.pipe(conv.guess_bool, conv.default(True)),
