@@ -35,7 +35,7 @@ function adjustFrameHeight(seconds) {
         etalagepassim.adjustFrameHeightCount = seconds * 5;
     }
     if (frameNewHeight != etalagepassim.frameHeight) {
-        etalagepassim.rpc.adjustHeight(frameNewHeight);
+        comarquage.rpc.adjustHeight(frameNewHeight);
         etalagepassim.frameHeight = frameNewHeight;
     }
     if (etalagepassim.adjustFrameHeightCount-- >= 0) {
@@ -51,7 +51,7 @@ function initGadget() {
 
     $("form.internal").bind("submit", function (event) {
         event.preventDefault();
-        etalagepassim.rpc.requestNavigateTo($(this).attr("action"), $(this).serializeArray().concat({
+        comarquage.rpc.requestNavigateTo($(this).attr("action"), $(this).serializeArray().concat({
             name: "submit",
             value: "Submit"
         }));
@@ -59,7 +59,7 @@ function initGadget() {
 
     $("a.internal").on("click", function (event) {
         event.preventDefault();
-        etalagepassim.rpc.requestNavigateTo($(this).attr("href"));
+        comarquage.rpc.requestNavigateTo($(this).attr("href"));
     });
 
     $("a[href][rel=bookmark]").attr("target", "_blank");

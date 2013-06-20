@@ -150,9 +150,9 @@ title="${_('Easter-eggs, Free software services company')}">${_('Easter-eggs')}<
     <script src="${conf['json2.js']}"></script>
 <![endif]-->
     <script>
-var etalagepassim = etalagepassim || {};
-if (!etalagepassim.easyXDM) {
-    etalagepassim.easyXDM = easyXDM.noConflict("etalagepassim");
+var comarquage = comarquage || {};
+if (!comarquage.easyXDM) {
+    comarquage.easyXDM = easyXDM.noConflict("comarquage");
 }
     </script>
     <script src="/js/gadget.js"></script>
@@ -161,7 +161,7 @@ var swfUrl = ${conf['easyxdm.swf'] | n, js};
 if (swfUrl.search(/\/\//) === 0) {
     swfUrl = document.location.protocol + swfUrl;
 }
-etalagepassim.rpc = new etalagepassim.easyXDM.Rpc({
+comarquage.rpc = new comarquage.easyXDM.Rpc({
     swf: swfUrl
 },
 {
