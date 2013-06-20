@@ -58,8 +58,8 @@ from etalagepassim import conf, urls
     <link rel="stylesheet" href="/css/gadget.css">
     % else:
     <link rel="stylesheet" href="/css/standalone.css">
-    <link rel="stylesheet" href="/css/responsive.css">
     % endif
+    <link rel="stylesheet" href="/css/responsive.css">
     % if getattr(ctx, 'custom_css_url', None):
     <link rel="stylesheet" href="${ctx.custom_css_url}">
     % endif
