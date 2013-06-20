@@ -64,14 +64,6 @@ def is_category_autocompleter_empty(categories):
         <%self:search_form/>
         % endif
         <%self:results/>
-        % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
-        <p>
-            <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', term = 'FRANCE')}" rel="tooltip" \
-title="${_('Search services for whole France')}">
-                <i class="icon-globe icon-white"></i> ${_('Search service for whole France')}
-            </a>
-        </p>
-        % endif
 </%def>
 
 
@@ -160,6 +152,12 @@ etalagepassim.params = ${inputs | n, js};
                     <a class="btn btn-primary" href="#" id="btn-geolocation" rel="tooltip" title="${_('Use your GPS')}">
                         <i class="icon-globe icon-white"></i>
                     </a>
+    % if inputs['term'] or inputs['geolocation']:
+                    <a class="btn internal" href="${urls.get_url(ctx, 'gadget', **inputs)}" id="btn-share" rel="tooltip" \
+title="${_('Use these results in your website')}">
+                        <i class="icon-share"></i>
+                    </a>
+    % endif
                 </div>
             </div>
         </fieldset>
