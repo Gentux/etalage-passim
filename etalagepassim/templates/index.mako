@@ -75,6 +75,24 @@ title="${_('Search services for whole France')}">
 </%def>
 
 
+<%def name="export_link()" filter="trim">
+<%
+    url_args = {}
+    for name, value in sorted(inputs.iteritems()):
+        name = model.Poi.rename_input_to_param(name)
+        if name in ('accept', 'submit'):
+            continue
+        if value is None or value == u'':
+            continue
+        url_args[name] = value
+    url_args['accept'] = 1
+%>\
+                            <a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}">
+                                ${_('Export data in CSV format')}
+                            </a>
+</%def>
+
+
 <%def name="footer_actions()" filter="trim">
     % if conf['data_email'] is not None:
             <p class="pull-right">

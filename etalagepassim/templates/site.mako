@@ -65,6 +65,14 @@ from etalagepassim import conf, urls
     % endif
 </%def>
 
+
+<%def name="export_link()" filter="trim">
+                            <a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv')}">
+                                ${_('Export data in CSV format')}
+                            </a>
+</%def>
+
+
 <%def name="feeds()" filter="trim">
     <link rel="alternate" type="application/atom+xml" href="/feed">
 </%def>
@@ -231,9 +239,7 @@ Notes : ...
     % endif
 
                         <li>
-                            <a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv')}">
-                                ${_('Export data in CSV format')}
-                            </a>
+                            <%self:export_link/>
                         </li>
                         <li><a href="/about">${_('About')}</a></li>
                         <li><a href="/contact">${_('Contact')}</a></li>

@@ -440,7 +440,7 @@ def inputs_to_pois_csv_infos(inputs, state = None):
     if errors is not None:
         return data, errors
 
-    territory = data['territory']
+    territory = data['geolocation'] or (data['term'] if not isinstance(data['term'], basestring) else None)
     presence_territory = territory
     competence_territories_id = ramdb.get_territory_related_territories_id(
         data['base_territory'],
