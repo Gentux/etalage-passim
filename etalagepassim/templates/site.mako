@@ -222,7 +222,7 @@ $(function () {
     % if conf['data_email'] is not None:
                         <li>
                             <a \
-href="mailto:${u','.join(conf['data_email'])}?subject=${u'Nouvelle fiche Passim'.replace(u' ', u'%20')}&body=${_(u'''
+href="mailto:${u','.join(conf['data_email'])}?subject=${_('New Passim POI').replace(u' ', u'%20')}&body=${_(u'''
 Please add following information service :
 
 Name : ...

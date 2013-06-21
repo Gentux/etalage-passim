@@ -83,18 +83,18 @@ textarea {
 
 
 <%def name="results()" filter="trim">
-        <h2>Installation de l'annuaire sur votre site web</h2>
+        <h2>${_('Export results list on your web site.')}</h2>
         <p>
-            Cet annuaire vous intéresse ? Vous pouvez l'installer sur votre site web !
+            ${_('You can add this list on your web site.')}
         </p>
     % if errors is not None:
         <div class="alert alert-error">
-            Vous devez auparavant <strong>corriger les erreurs</strong> dans le formulaire de recherche ci-dessus.
+            ${_('You should')}<strong> ${_('fix errors')}</strong> ${_('in the above search form')}
         </div>
     % else:
         <ol>
-            <li>Renseignez un territoire et lancez la recherche ci-dessus.</li>
-            <li>Copiez le fragment HTML généré ci-dessous et collez-le dans une page web.</li>
+            <li>${_('Search a territory and submit your search.')}</li>
+            <li>${_('Paste the following HTML fragment into a web page.')}</li>
         </ol>
 <%
         gadget = capture(self.gadget)
@@ -108,7 +108,7 @@ textarea {
             </div>
         </div>
         <div class="form-actions">
-            <button class="btn btn-primary" id="select-text-button">Sélectionner le fragment HTML</button>
+            <button class="btn btn-primary" id="select-text-button">${_('Select HTML fragment')}</button>
         </div>
     % endif
 </%def>

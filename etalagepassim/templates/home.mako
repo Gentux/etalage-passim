@@ -128,6 +128,6 @@ href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">$
 
 
 <%def name="title_content()" filter="trim">
-${_(u'Accueil')} - ${parent.title_content()}
+${_(u'Home')} - ${parent.title_content()}
 </%def>
 
