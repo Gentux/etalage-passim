@@ -74,7 +74,7 @@ title="${_('Search services for whole France')}">
             territory = ramdb.territory_by_id[territory_id]
 %>
         <h3>${_("{0} Information services for {1}").format(coverage, territory.main_postal_distribution_str)}</h3>
-        <table class="table table-bordered table-condensed table-striped table-responsive">
+        <table class="table table-bordered table-condensed table-responsive table-result table-striped">
             <thead>
                 <tr>
                     <th></th>
@@ -108,7 +108,7 @@ href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">
 
 
 <%def name="results_table_multimodal(info_services)" filter="trim">
-        <table class="table table-bordered table-condensed table-striped table-responsive">
+        <table class="table table-bordered table-condensed table-responsive table-result table-striped">
             <thead>
                 <tr>
                     <th></th>
