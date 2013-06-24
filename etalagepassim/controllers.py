@@ -31,6 +31,7 @@ import datetime
 import itertools
 import json
 import logging
+import markupsafe
 import math
 import urllib2
 import urlparse
@@ -1167,13 +1168,18 @@ def index_list(req):
             elif base_territory:
                 presence_territory = data['base_territory']
 
+        if non_territorial_search_data.get('term') and not isinstance(non_territorial_search_data['term'], basestring):
+            non_territorial_search_data['term'] = None
         pois_id_iter = model.Poi.iter_ids(ctx,
             competence_territories_id = competence_territories_id,
             presence_territory = presence_territory,
             **non_territorial_search_data)
 
         multimodal_info_services_by_id = dict()
-        info_services_by_id = dict()
+        ids_by_territory_and_coverage = dict()
+        territories_id_by_coverage = dict()
+        transport_types_by_id = dict()
+
         for poi in (
                 model.Poi.instance_by_id.get(poi_id)
                 for poi_id in pois_id_iter
@@ -1183,7 +1189,30 @@ def index_list(req):
             if poi._id in model.Poi.multimodal_info_service_ids:
                 multimodal_info_services_by_id[poi._id] = poi
             else:
-                info_services_by_id[poi._id] = poi
+                coverages = set()
+                for field in poi.fields:
+                    if field.id == 'links' and strings.slugify(field.label) == 'offres-de-transport':
+                        for transport_offer in [
+                                transport_offer
+                                for transport_offer in (
+                                    model.Poi.instance_by_id.get(transport_offer_id)
+                                    for transport_offer_id in field.value
+                                    )
+                                if transport_offer is not None
+                                ]:
+                            for field in transport_offer.fields:
+                                field_slug = strings.slugify(field.label)
+                                if field.id == 'select' and field_slug == 'couverture-territoriale' and field.value is not None:
+                                    for territory_id in (transport_offer.competence_territories_id or []):
+                                        if isinstance(data['term'], model.Territory) and territory_id in data['term'].ancestors_id:
+                                            territories_id_by_coverage.setdefault(field.value, set()).add(territory_id)
+                                            ids_by_territory_and_coverage.setdefault(
+                                                (territory_id, field.value), set()
+                                                ).add(poi._id)
+                                elif field_slug == 'type-de-transport' and field.value is not None:
+                                    transport_types_by_id.setdefault(poi._id, set()).add(markupsafe.Markup(
+                                        u'<a href="#" rel="tooltip" title="{0}"><img alt="{0}" src="/img/types-de-transports/{1}.png"></a>'
+                                        ).format(field.value, strings.slugify(field.value)))
 
         multimodal_info_services = model.Poi.sort_and_paginate_pois_list(
             ctx,
@@ -1193,21 +1222,15 @@ def index_list(req):
             territory = territory or data.get('base_territory'),
             **non_territorial_search_data
             )
-        info_services = model.Poi.sort_and_paginate_pois_list(
-            ctx,
-            None,
-            info_services_by_id,
-            related_territories_id = competence_territories_id,
-            territory = territory or data.get('base_territory'),
-            **non_territorial_search_data
-            )
 
     return templates.render(ctx, '/list.mako',
         data = data,
         errors = errors,
+        ids_by_territory_and_coverage = ids_by_territory_and_coverage,
         inputs = inputs,
         mode = mode,
-        info_services = info_services,
+        territories_id_by_coverage = territories_id_by_coverage,
+        transport_types_by_id = transport_types_by_id,
         multimodal_info_services = multimodal_info_services,
         **non_territorial_search_data)
 

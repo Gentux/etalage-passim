@@ -42,18 +42,17 @@ from etalagepassim import conf, conv, model, ramdb, urls
 
 <%def name="results()" filter="trim">
     % if errors is None:
-        % if len(info_services) == 0:
+        % if len(ids_by_territory_and_coverage) == 0 and len(multimodal_info_services):
         <div>
             <em>${_('No organism found.')}</em>
         </div>
         % else:
             % if len(multimodal_info_services):
         <h3>${_('Multimodal information services.')}</h3>
-        <%self:results_table info_services="${multimodal_info_services}"/>
+        <%self:results_table_multimodal info_services="${multimodal_info_services}"/>
             % endif
-            % if len(info_services):
-        <h3>${_('Information services')}</h3>
-        <%self:results_table info_services="${info_services}"/>
+            % if len(ids_by_territory_and_coverage):
+        <%self:results_table/>
             % endif
         % endif
     % endif
@@ -68,7 +67,47 @@ title="${_('Search services for whole France')}">
 </%def>
 
 
-<%def name="results_table(info_services)" filter="trim">
+<%def name="results_table()" filter="trim">
+    % for coverage, territories_ids in sorted(territories_id_by_coverage.iteritems(), key = lambda t: model.Poi.weight_by_coverage[t[0]]):
+        % for territory_id in territories_ids:
+<%
+            territory = ramdb.territory_by_id[territory_id]
+%>
+        <h3>${_("{0} Information services for {1}").format(coverage, territory.main_postal_distribution_str)}</h3>
+        <table class="table table-bordered table-condensed table-striped table-responsive">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>${_('Name')}</th>
+                    <th>${_('Transport type')}</th>
+                </tr>
+            </thead>
+            <tbody>
+            % for info_service_id in ids_by_territory_and_coverage.get((territory_id, coverage)):
+<%
+                info_service = model.Poi.instance_by_id.get(info_service_id)
+%>
+                <tr>
+                    <td>
+                        <a class="btn btn-primary internal" rel="tooltip" title="${_('Transport offer website.')}" \
+href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">
+                            <i class="icon-globe icon-white"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a class="internal" href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">${info_service.name}</a>
+                    </td>
+                    <td>${markupsafe.escape(u' ').join(sorted(transport_types_by_id.get(info_service._id)))}</td>
+                </tr>
+            % endfor
+            </tbody>
+        </table>
+        % endfor
+    % endfor
+</%def>
+
+
+<%def name="results_table_multimodal(info_services)" filter="trim">
         <table class="table table-bordered table-condensed table-striped table-responsive">
             <thead>
                 <tr>
