@@ -191,6 +191,13 @@ $(function () {
 </%def>
 
 
+<%def name="share_link()" filter="trim">
+                            <a href="${urls.get_url(ctx, 'gadget', **inputs)}">
+                                ${_('Share')}
+                            </a>
+</%def>
+
+
 <%def name="site_header()" filter="trim">
     <header class="jumbotron subhead">
         <div class="container well">
@@ -246,6 +253,7 @@ Notes : ...
                         <li><a href="/contribute">${_('Contribute')}</a></li>
                         <li><a href="/data">${_('Data')}</a></li>
                         <li><a href="/help">${_('Help')}</a></li>
+                        <li><%self:share_link/></li>
                     </ul>
                 </div>
             </div>

@@ -128,12 +128,6 @@ etalagepassim.params = ${inputs | n, js};
                     <button class="btn btn-primary" rel="tooltip" title="${_('Passim search')}" type="submit">
                         <i class="icon-search icon-white"></i>
                     </button>
-    % if inputs['term'] or inputs['geolocation']:
-                    <a class="btn internal" href="${urls.get_url(ctx, 'gadget', **inputs)}" id="btn-share" rel="tooltip" \
-title="${_('Use these results in your website')}">
-                        <i class="icon-share"></i>
-                    </a>
-    % endif
                 </div>
             </div>
         </fieldset>
@@ -187,4 +181,19 @@ value="${data['geolocation'].main_postal_distribution_str if data.get('geolocati
             <input name="${name}" type="hidden" value="${value or ''}">
         % endif
     % endfor
+</%def>
+
+
+<%def name="share_link()" filter="trim">
+<%
+    url_args = {}
+    for name, value in sorted(inputs.iteritems()):
+        name = model.Poi.rename_input_to_param(name)
+        if name in ('accept', 'submit'):
+            continue
+        if value is None or value == u'':
+            continue
+        url_args[name] = value
+%>\
+                            <a href="${urls.get_url(ctx, 'gadget', **url_args)}">${_('Share')}</a>
 </%def>
