@@ -149,9 +149,6 @@ etalagepassim.params = ${inputs | n, js};
                     <button class="btn btn-primary" rel="tooltip" title="${_('Passim search')}" type="submit">
                         <i class="icon-search icon-white"></i>
                     </button>
-                    <a class="btn btn-primary" href="#" id="btn-geolocation" rel="tooltip" title="${_('Use your GPS')}">
-                        <i class="icon-globe icon-white"></i>
-                    </a>
     % if inputs['term'] or inputs['geolocation']:
                     <a class="btn internal" href="${urls.get_url(ctx, 'gadget', **inputs)}" id="btn-share" rel="tooltip" \
 title="${_('Use these results in your website')}">
@@ -172,8 +169,13 @@ title="${_('Use these results in your website')}">
                 <div class="control-group${' error' if error else ''}">
                     <label class="control-label" for="term">${_("Find a service")}</label>
                     <div class="controls">
-                        <input autocomplete="off" class="input-xlarge" id="term" name="term" type="text" \
+                        <div class="input-prepend">
+                            <a class="btn btn-primary" href="#" id="btn-geolocation" rel="tooltip" title="${_('Use your GPS')}">
+                                <i class="icon-globe icon-white"></i>
+                            </a>
+                            <input autocomplete="off" class="input-xlarge" id="term" name="term" type="text" \
 value="${data['geolocation'].main_postal_distribution_str if data.get('geolocation') else (inputs['term'] or '')}">
+                        </div>
     % if error:
                         <span class="help-inline">${error}</span>
     % endif
