@@ -226,6 +226,13 @@ $(function () {
                 <a class="brand" href="${urls.get_url(ctx)}">${_('PASSIM')}</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
+                        <li><a href="/about">${_('About')}</a></li>
+                        <li><a href="/contact">${_('Contact')}</a></li>
+                        <li><a href="/contribute">${_('Contribute')}</a></li>
+                        <li><a href="/data">${_('Data')}</a></li>
+                        <li><a href="/help">${_('Help')}</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
     % if conf['data_email'] is not None:
                         <li>
                             <a \
@@ -244,15 +251,7 @@ Notes : ...
 ''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">${_('Add service')}</a>
                         </li>
     % endif
-
-                        <li>
-                            <%self:export_link/>
-                        </li>
-                        <li><a href="/about">${_('About')}</a></li>
-                        <li><a href="/contact">${_('Contact')}</a></li>
-                        <li><a href="/contribute">${_('Contribute')}</a></li>
-                        <li><a href="/data">${_('Data')}</a></li>
-                        <li><a href="/help">${_('Help')}</a></li>
+                        <li><%self:export_link/></li>
                         <li><%self:share_link/></li>
                     </ul>
                 </div>
