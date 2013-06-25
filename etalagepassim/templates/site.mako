@@ -192,7 +192,7 @@ $(function () {
 
 
 <%def name="share_link()" filter="trim">
-                            <a href="${urls.get_url(ctx, 'gadget', **inputs)}">
+                            <a href="${urls.get_url(ctx, 'gadget')}">
                                 ${_('Share')}
                             </a>
 </%def>
