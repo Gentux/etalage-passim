@@ -83,27 +83,28 @@ textarea {
 
 
 <%def name="results()" filter="trim">
-        <h2>${_('Export results list on your web site.')}</h2>
-        <p>
-            ${_('You can add this list on your web site.')}
-        </p>
+        <div class="container-fluid">
+            <div class="span6">
+                <h2>${_('Export results list on your web site.')}</h2>
+                <p>
+                    ${_('You can add this list on your web site.')}
+                </p>
     % if errors is not None:
-        <div class="alert alert-error">
-            ${_('You should')}<strong> ${_('fix errors')}</strong> ${_('in the above search form')}
-        </div>
+                <div class="alert alert-error">
+                    ${_('You should')}<strong> ${_('fix errors')}</strong> ${_('in the above search form')}
+                </div>
     % else:
-        <ol>
-            <li>${_('Search a territory and submit your search.')}</li>
-            <li>${_('Paste the following HTML fragment into a web page.')}</li>
-        </ol>
+                <ol>
+                    <li>${_('Search a territory and submit your search.')}</li>
+                    <li>${_('Paste the following HTML fragment into a web page.')}</li>
+                </ol>
 <%
         gadget = capture(self.gadget)
 %>\
-        <div class="container-fluid">
-            <div class="span6">
                 <textarea readonly rows="${gadget.strip().count(u'\n') + 1}" wrap="off">${gadget}</textarea>
             </div>
             <div class="span6">
+                <h2>${_('Integration preview.')}</h2>
                 ${gadget | n}
             </div>
         </div>
