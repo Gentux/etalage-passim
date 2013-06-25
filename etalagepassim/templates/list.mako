@@ -48,7 +48,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
         </div>
         % else:
             % if len(multimodal_info_services):
-        <h3>${_('Multimodal information services.')}</h3>
+        <h3>${_('Multimodal Information Services')}</h3>
         <%self:results_table_multimodal info_services="${multimodal_info_services}"/>
             % endif
             % if len(ids_by_territory_and_coverage):
@@ -73,7 +73,7 @@ title="${_('Search services for whole France')}">
 <%
             territory = ramdb.territory_by_id[territory_id]
 %>
-        <h3>${_("{0} Information services for {1}").format(coverage, territory.main_postal_distribution_str)}</h3>
+        <h3>${_("{0} Information Services for {1}").format(coverage, territory.main_postal_distribution_str)}</h3>
         <table class="table table-bordered table-condensed table-responsive table-result table-striped">
             <thead>
                 <tr>

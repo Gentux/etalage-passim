@@ -68,7 +68,7 @@ from etalagepassim import conf, urls
 
 <%def name="export_link()" filter="trim">
                             <a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv')}">
-                                ${_('Export data in CSV format')}
+                                ${_('Export')}
                             </a>
 </%def>
 
@@ -234,7 +234,7 @@ Call center : ...
 Information desk : ...
 OpenData : ...
 Notes : ...
-''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">${_('Add a POI')}</a>
+''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">${_('Add service')}</a>
                         </li>
     % endif
 

@@ -80,29 +80,8 @@ def is_category_autocompleter_empty(categories):
     url_args['accept'] = 1
 %>\
                             <a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}">
-                                ${_('Export data in CSV format')}
+                                ${_('Export')}
                             </a>
-</%def>
-
-
-<%def name="footer_actions()" filter="trim">
-    % if conf['data_email'] is not None:
-            <p class="pull-right">
-                <a class="label label-info" href="mailto:${u','.join(conf['data_email'])}?subject=${_('New Passim POI').replace(u' ', u'%20')}&body=${_('''
-Please add the following informations into Passim directory :
-
-Name : ...
-Geographical coverage : ....
-Transport type : ....
-Web site : ...
-Mobile Application : ...
-Call center : ...
-Information desk : ...
-OpenData : ...
-Notes : ...
-''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">${_('Add a POI')}</a>
-            </p>
-    % endif
 </%def>
 
 

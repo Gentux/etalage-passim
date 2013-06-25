@@ -62,7 +62,7 @@ title="${_('Search services for whole France')}">
 
 
 <%def name="last_updated_pois()" filter="trim">
-        <h3>${_("10 last updated information services.")}</h3>
+        <h3>${_("10 Last Updated Information Services")}</h3>
         <table class="table table-bordered table-condensed table-striped table-responsive">
             <thead>
                 <tr>
