@@ -192,9 +192,7 @@ $(function () {
 
 
 <%def name="share_link()" filter="trim">
-                            <a href="${urls.get_url(ctx, 'gadget')}">
-                                ${_('Share')}
-                            </a>
+                            <a href="${urls.get_url(ctx, 'gadget')}">${_('Share')}</a>
 </%def>
 
 
@@ -227,30 +225,61 @@ $(function () {
                 <div class="nav-collapse collapse">
                     <ul class="nav">
                         <li><a href="/about">${_('About')}</a></li>
-                        <li><a href="/contact">${_('Contact')}</a></li>
-                        <li><a href="/contribute">${_('Contribute')}</a></li>
+    % if conf['data_email'] is not None:
+<%
+    subject = _(
+        'Contact PASSIM : [your message subject]'
+        ).replace(u' ', u'%20')
+    body = _(u'''
+Your are [an end-user, a company...]
+
+Your e-mail address: [xxx@yyy.org]
+
+Your message:
+
+Thank you advance for any remarks, questions or suggestions about PASSIM !
+''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
+%>
+                        <li>
+                            <a href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">
+                                ${_('Contact')}
+                            </a>
+                        </li>
+<%
+    subject = _(
+        'Contribution to PASSIM : [new Info Service, correction to an existing Info Service...]'
+        ).replace(u' ', u'%20')
+    body = _(u'''
+Your are [an end-user, a company...]
+
+Your e-mail address: [xxx@yyy.org]
+
+Your contribution : [new Info Service, correction to an existing Info Service...]
+
+Information Service
+
+- Info Service name
+- Info booth:
+- Call centre number :
+- Web site address :
+- Mobile site or application :
+- Transport services covered:
+   - Name, Territory (city, department, region), Transport type (public transport...):
+- Your remarks (or information about web services, open data, real time info...):
+
+Thank you advance for any remarks, questions or suggestions about PASSIM !
+''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
+%>
+                        <li>
+                            <a href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">
+                                ${_('Contribute')}
+                            </a>
+                        </li>
+    % endif
                         <li><a href="/data">${_('Data')}</a></li>
                         <li><a href="/help">${_('Help')}</a></li>
                     </ul>
                     <ul class="nav pull-right">
-    % if conf['data_email'] is not None:
-                        <li>
-                            <a \
-href="mailto:${u','.join(conf['data_email'])}?subject=${_('New Passim POI').replace(u' ', u'%20')}&body=${_(u'''
-Please add following information service :
-
-Name : ...
-Geographical coverage : ....
-Transport modes : ....
-Web site : ...
-Mobile Application : ...
-Call center : ...
-Information desk : ...
-OpenData : ...
-Notes : ...
-''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">${_('Add service')}</a>
-                        </li>
-    % endif
                         <li><%self:export_link/></li>
                         <li><%self:share_link/></li>
                     </ul>
