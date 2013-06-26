@@ -1,0 +1,627 @@
+# Translations template for Etalage-Passim.
+# Copyright (C) 2013 ORGANIZATION
+# This file is distributed under the same license as the Etalage-Passim project.
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011-2012
+# rsoufflet <rsoufflet@easter-eggs.com>, 2013
+msgid ""
+msgstr ""
+"Project-Id-Version: Passim\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2013-06-26 14:24+0200\n"
+"PO-Revision-Date: 2013-06-26 13:05+0000\n"
+"Last-Translator: rsoufflet <rsoufflet@easter-eggs.com>\n"
+"Language-Team: French <passim@listes.easter-eggs.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: etalagepassim/controllers.py:269 etalagepassim/controllers.py:303
+#: etalagepassim/controllers.py:328 etalagepassim/controllers.py:382
+#: etalagepassim/controllers.py:436 etalagepassim/controllers.py:490
+#: etalagepassim/controllers.py:544 etalagepassim/controllers.py:598
+#: etalagepassim/controllers.py:715 etalagepassim/controllers.py:749
+#: etalagepassim/controllers.py:993
+msgid "Export disabled by configuration"
+msgstr "Export désactivé par configuration"
+
+#: etalagepassim/controllers.py:280 etalagepassim/controllers.py:314
+#: etalagepassim/controllers.py:658 etalagepassim/controllers.py:726
+#: etalagepassim/controllers.py:760 etalagepassim/controllers.py:789
+#: etalagepassim/controllers.py:792 etalagepassim/controllers.py:1096
+#: etalagepassim/controllers.py:1153 etalagepassim/controllers.py:1427
+#: etalagepassim/controllers.py:1508 etalagepassim/controllers.py:1555
+msgid "Error: {0}"
+msgstr "Erreur : {0}"
+
+#: etalagepassim/controllers.py:358 etalagepassim/controllers.py:412
+#: etalagepassim/controllers.py:466 etalagepassim/controllers.py:520
+#: etalagepassim/controllers.py:574 etalagepassim/controllers.py:628
+msgid "You must accept license to be allowed to download data."
+msgstr "Vous devez accepter la licence afin de pouvoir télécharger les données."
+
+#: etalagepassim/controllers.py:367
+msgid "Directory Export in CSV Format"
+msgstr "Export de l'annuaire au format CSV"
+
+#: etalagepassim/controllers.py:421
+msgid "Directory Export in Excel Format"
+msgstr "Export de l'annuaire au format Excel"
+
+#: etalagepassim/controllers.py:475
+msgid "Directory Export in GeoJSON Format"
+msgstr "Export de l'annuaire au format GeoJSON"
+
+#: etalagepassim/controllers.py:529
+msgid "Directory Export in KML Format"
+msgstr "Export de l'annuaire au format KML"
+
+#: etalagepassim/controllers.py:583
+msgid "Geographical Coverage Export in CSV Format"
+msgstr "Export de la couverture géographique au format CSV"
+
+#: etalagepassim/controllers.py:637
+msgid "Geographical Coverage Export in Excel Format"
+msgstr "Export de la couverture géographique au format Excel"
+
+#: etalagepassim/controllers.py:902
+msgid "Directory page disabled by configuration"
+msgstr "Page annuaire désactiviée par configuration"
+
+#: etalagepassim/controllers.py:913 etalagepassim/conv.py:485
+msgid "In \"directory\" mode, a commune is required"
+msgstr "En mode \"annuaire\", la commune est nécessaire"
+
+#: etalagepassim/controllers.py:1048
+msgid "Missing value"
+msgstr "Valeur manquante"
+
+#: etalagepassim/controllers.py:1063
+msgid "Gadget page disabled by configuration"
+msgstr "Page gadget désactiviée par configuration"
+
+#: etalagepassim/controllers.py:1086
+msgid "Home page disabled by configuration"
+msgstr "Page d'accueil désactivée par configuration"
+
+#: etalagepassim/controllers.py:1259
+msgid "Map page disabled by configuration"
+msgstr "Page cartographique désactivée par configuration"
+
+#: etalagepassim/controllers.py:1316
+msgid "The gadget ID \"{0}\" doesn't exist."
+msgstr "Le gadget d'identifiant {0} n'existe pas"
+
+#: etalagepassim/controllers.py:1317 etalagepassim/controllers.py:1332
+msgid "Rebuild component and copy the generated JavaScript into your website."
+msgstr "Regénérer le composant et copier le code JavaScript dans votre site web."
+
+#: etalagepassim/controllers.py:1318 etalagepassim/controllers.py:1334
+msgid "Invalid Gadget ID"
+msgstr "Identifiant de gadget incorrect"
+
+#: etalagepassim/controllers.py:1333
+msgid "The gadget ID \"{0}\" is used by another component."
+msgstr "L'identifiant de gadget \"{0}\" est utilisé par un autre composant."
+
+#: etalagepassim/controllers.py:1349
+msgid "Error for \"{0}\" parameter: {1}"
+msgstr "Erreur sur le paramètre \"{0}\" : {1}"
+
+#: etalagepassim/controllers.py:1357
+msgid "Base Categories Error: {0}"
+msgstr "Erreur dans les catégories de base : {0}"
+
+#: etalagepassim/controllers.py:1363
+msgid "Category Tags Error: {0}"
+msgstr "Erreur dans les étiquettes de catégories : {0}"
+
+#: etalagepassim/controllers.py:1370
+msgid "Base Territory Error: {0}"
+msgstr "Erreur dans les catégories de base : {0}"
+
+#: etalagepassim/controllers.py:1374 etalagepassim/controllers.py:1380
+#: etalagepassim/conv.py:799 etalagepassim/conv.py:802
+msgid "Unknown territory"
+msgstr "Territoire inconnu"
+
+#: etalagepassim/controllers.py:1396
+msgid "Distance Error: {0}"
+msgstr "Erreur de distance : {0}"
+
+#: etalagepassim/controllers.py:1477 etalagepassim/controllers.py:1629
+msgid "Minisite disabled by configuration"
+msgstr "Minisite désactivé par configuration"
+
+#: etalagepassim/controllers.py:1515
+msgid "Access to organism failed"
+msgstr "L'accès à l'organisme a échoué"
+
+#: etalagepassim/controllers.py:1557
+msgid "Invalid POI ID"
+msgstr "Identifiant de POI incorrect"
+
+#: etalagepassim/controllers.py:1646
+msgid "POI ID Error: {0}"
+msgstr "Erreur dans l'identifiant de point d'intérêt : {0}"
+
+#: etalagepassim/controllers.py:1654
+msgid "Encoding Error: {0}"
+msgstr "Erreur d'encodage : {0}"
+
+#: etalagepassim/conv.py:338
+msgid "POI {0} doesn't exist"
+msgstr "Le point d'intérêt {0} n'existe pas"
+
+#: etalagepassim/conv.py:350 etalagepassim/conv.py:368
+msgid "Invalid category"
+msgstr "Catégorie incorrecte"
+
+#: etalagepassim/conv.py:430 etalagepassim/conv.py:457
+#: etalagepassim/conv.py:469
+msgid "Export is too big. Restrict some search criteria and try again."
+msgstr "L'export est trop gros. Réessayez en précisant certains critères de recherche."
+
+#: etalagepassim/conv.py:536
+msgid "POI has no geographical coordinates"
+msgstr "Le point d'intérêt n'a pas de coordonnées géographiques"
+
+#: etalagepassim/conv.py:846
+msgid "Searched territory not located in base territory {0}"
+msgstr "Le territoire recherché doit faire partie du territoire {0}"
+
+#: etalagepassim/conv.py:893
+msgid "Territory has no geographical coordinates"
+msgstr "Le territoire n'a pas de coordonnées géographiques"
+
+#: etalagepassim/urls.py:102
+msgid "Invalid path: {0}"
+msgstr "URL invalide: {0}"
+
+#: etalagepassim/urls.py:116
+msgid "Page not found: {0}"
+msgstr "Page non trouvée : {0}"
+
+#: etalagepassim/wsgihelpers.py:46
+msgid "Request is faulty"
+msgstr "La requête est erronée"
+
+#: etalagepassim/wsgihelpers.py:47
+msgid "Access is restricted to authorized persons."
+msgstr "L'accès est restreint aux personnes autorisées."
+
+#: etalagepassim/wsgihelpers.py:48
+msgid "Access is forbidden."
+msgstr "L'accès est interdit."
+
+#: etalagepassim/wsgihelpers.py:49
+msgid "The requested page was not found."
+msgstr "La page demandée n'a pas été trouvée."
+
+#: etalagepassim/wsgihelpers.py:52
+msgid "You must login to access this page."
+msgstr "Vous devez vous identifier pour accéder à cette page."
+
+#: etalagepassim/wsgihelpers.py:55 etalagepassim/wsgihelpers.py:58
+msgid "Unable to Access"
+msgstr "Accès impossible"
+
+#: etalagepassim/wsgihelpers.py:56 etalagepassim/wsgihelpers.py:57
+msgid "Access Denied"
+msgstr "Accès refusé"
+
+#: etalagepassim/wsgihelpers.py:135
+#: etalagepassim/templates/http-simulated-redirect.mako:45
+msgid "You'll be redirected to page"
+msgstr "Vous allez être redirigé vers la page"
+
+#: etalagepassim/wsgihelpers.py:143
+#: etalagepassim/templates/http-simulated-redirect.mako:44
+msgid "Redirection in progress..."
+msgstr "Redirection en cours..."
+
+#: etalagepassim/templates/about.mako:30 etalagepassim/templates/site.mako:227
+msgid "About"
+msgstr "À propos"
+
+#: etalagepassim/templates/about.mako:32
+msgid ""
+"The PASSIM directory lists and describes the traveller information services in France, for all modes of transport.\n"
+"PASSIM is managed by the French ministry of sustainable development .est un site géré par le ministère du développement du durable (maîtrise d'ouvrage: DGITM (lien AFIMB); maîtrise d'oeuvre : CETE Méditerranée / CEREMA (liens)).\n"
+"The web site and platform is maintained by Easter-eggs (lien). All software used for PASSIM is open source (http://gitorious.org/passim/etalage-passim).\n"
+"For more information: (http://www.cete-mediterranee.fr/tt13/www/article.php3?id_article=348)."
+msgstr ""
+
+#: etalagepassim/templates/about.mako:38 etalagepassim/templates/data.mako:32
+msgid ""
+"PASSIM content is published on http://www.data.gouv.fr/ under Etalab Open "
+"Licence (lien http://www.data.gouv.fr/Licence-Ouverte-Open-Licence)."
+msgstr ""
+
+#: etalagepassim/templates/about.mako:41
+msgid ""
+"PASSIM is frequently verified and completed but may still include errors. If you find any false or incomplete information, we thank you in advance for contacting us (contact link) or contributing to improving the content (contribute link). \n"
+"This web site includes links towards third-party sites and services, which are provided only for your convenience.\n"
+"Logos and trademarks are property of their owners."
+msgstr ""
+
+#: etalagepassim/templates/contact.mako:30
+#: etalagepassim/templates/site.mako:245
+msgid "Contact"
+msgstr "Contact"
+
+#: etalagepassim/templates/contact.mako:32
+msgid ""
+"Please complete this form (contact link; lien direct sans page intermédiaire?)\n"
+"Thank you for any question, remark or enhancement proposal."
+msgstr ""
+
+#: etalagepassim/templates/contribute.mako:30
+#: etalagepassim/templates/help.mako:30 etalagepassim/templates/site.mako:280
+msgid "Help"
+msgstr "Aide"
+
+#: etalagepassim/templates/contribute.mako:32
+msgid ""
+"PASSIM is frequently verified and completed but may still include errors. If"
+" you find any false or incomplete information, we thank you in advance for "
+"contacting us (contact link) or contributing to improving the content "
+"(contribute link)."
+msgstr ""
+
+#: etalagepassim/templates/contribute.mako:35
+msgid ""
+"You are welcome to contribute by submitting us :\n"
+"- a missing info (link)\n"
+"- any enhancement proposal (contact)\n"
+"- any correction or complement for a particular service description page (example link?)\n"
+"Thank you a lot !\n"
+"Also, if you are interested in contributing more regularly, we may create an account for you on the back-office content management site."
+msgstr ""
+
+#: etalagepassim/templates/data.mako:30
+msgid "Reuse"
+msgstr ""
+
+#: etalagepassim/templates/data.mako:35
+msgid ""
+"The PASSIM directory was created in 2004 as a means to give to public authorities a global vision on the traveller info service landscape and evolutions, and to contribute to some extent to a technical harmonisation ; the passim.info web site presents the directory content to the public so as they can find relevant services for any place in France, however\n"
+"PASSIM main goal is to provide its content for reuse in other services and applications."
+msgstr ""
+
+#: etalagepassim/templates/data.mako:39
+msgid ""
+"You may reuse PASSIM in several ways:\n"
+"- the complete content is downloadable as a ZIP folder (http://passim.mat.cst.easter-eggs.com/export/annuaire/csv); this is actuallty the complete back-office content (http://petitpois.passim.comarquage.fr/ link), which is more complete than the content shown on the passim web site\n"
+"- the content is also published in formats easier to visualise (link http://passim.comarquage.fr/data/)\n"
+"- you may also copy and paste the html/js code for displaying in your web site the response to a particular request (link) or download the corresponding list in CSV format (link)\n"
+"- also, the request can be made via the url via a REST API (example: /liste?term=13710+FUVEAU)"
+msgstr ""
+
+#: etalagepassim/templates/data.mako:46
+msgid ""
+"Please contact us for any question or remark (link)\n"
+"Thank you for using PASSIM and thank in advance for your comments!"
+msgstr ""
+
+#: etalagepassim/templates/directory.mako:90
+msgid "Directory"
+msgstr "Annuaire"
+
+#: etalagepassim/templates/export-accept-license.mako:37
+msgid "Open Licence Logo"
+msgstr "Logo de la licence ouverte"
+
+#: etalagepassim/templates/export-accept-license.mako:120
+msgid "Accept License"
+msgstr "Accepter la licence"
+
+#: etalagepassim/templates/export-accept-license.mako:133
+msgid "Download"
+msgstr "Télécharger"
+
+#: etalagepassim/templates/export.mako:39
+msgid "Export Type"
+msgstr "Type d'export"
+
+#: etalagepassim/templates/export.mako:73
+msgid "Select export options"
+msgstr "Sélectionner les options d'export"
+
+#: etalagepassim/templates/export.mako:96
+msgid "Select"
+msgstr "Sélectionner"
+
+#: etalagepassim/templates/export.mako:105
+#: etalagepassim/templates/index.mako:83 etalagepassim/templates/site.mako:71
+msgid "Export"
+msgstr "Télécharger"
+
+#: etalagepassim/templates/gadget.mako:88
+msgid "Export results list on your web site."
+msgstr "Exporter cette liste dans votre site web."
+
+#: etalagepassim/templates/gadget.mako:90
+msgid "You can add this list on your web site."
+msgstr ""
+
+#: etalagepassim/templates/gadget.mako:94
+msgid "You should"
+msgstr ""
+
+#: etalagepassim/templates/gadget.mako:94
+msgid "fix errors"
+msgstr "Veuillez corriger les erreurs suivantes."
+
+#: etalagepassim/templates/gadget.mako:94
+msgid "in the above search form"
+msgstr ""
+
+#: etalagepassim/templates/gadget.mako:98
+msgid "Search a territory and submit your search."
+msgstr ""
+
+#: etalagepassim/templates/gadget.mako:99
+msgid "Paste the following HTML fragment into a web page."
+msgstr ""
+
+#: etalagepassim/templates/gadget.mako:107
+msgid "Integration preview."
+msgstr "Exemple d'intégration"
+
+#: etalagepassim/templates/gadget.mako:112
+msgid "Select HTML fragment"
+msgstr ""
+
+#: etalagepassim/templates/gadget.mako:128
+#: etalagepassim/templates/index.mako:198
+#: etalagepassim/templates/site.mako:195
+msgid "Share"
+msgstr "Partager"
+
+#: etalagepassim/templates/help.mako:32
+msgid ""
+"The PASSIM directory lists and describes the traveller information services in France, for all modes of transport.\n"
+"The www.passim.info site works for fixed or mobile terminals on most web navigators, however if you have display problems, thank you for contacting us (link)."
+msgstr ""
+
+#: etalagepassim/templates/help.mako:36
+msgid ""
+"Please note that PASSIM does NOT provide directly transport information such"
+" as maps, schedules, or fares, ... but links towards the relevant services "
+"which provide this detailed information."
+msgstr ""
+
+#: etalagepassim/templates/help.mako:39
+msgid ""
+"You'd like to know the relevant traveler info services for any place in France?\n"
+"Type in the place name (commune, département, région : the first letters typed will show a menu where you can select your choice) or, if you are located, click on the <GPS> button (link)"
+msgstr ""
+
+#: etalagepassim/templates/help.mako:48
+msgid ""
+"You may also look for a particular information service name (if it is known,"
+" the name will appear in the menu list)."
+msgstr ""
+
+#: etalagepassim/templates/help.mako:51
+msgid ""
+"If you think a service is incomplete, false or should be delete, please click on the <contribute> button on page bottom.\n"
+"You are invited to ask any question or make any remark (contact link) or to propose a new service to be included (contribute link).\n"
+"Also, you are welcome to reuse PASSIM content in your applications or services (reuse link)."
+msgstr ""
+
+#: etalagepassim/templates/help.mako:56
+msgid "Thank you for using PASSIM and thank in advance for your comments!"
+msgstr ""
+
+#: etalagepassim/templates/home.mako:47 etalagepassim/templates/list.mako:47
+msgid "No organism found."
+msgstr ""
+
+#: etalagepassim/templates/home.mako:56 etalagepassim/templates/list.mako:62
+msgid "Search services for whole France"
+msgstr "Rechercher des services couvrant la France entiére"
+
+#: etalagepassim/templates/home.mako:57 etalagepassim/templates/list.mako:63
+msgid "Search service for whole France"
+msgstr ""
+
+#: etalagepassim/templates/home.mako:65
+msgid "10 Last Updated Information Services"
+msgstr ""
+
+#: etalagepassim/templates/home.mako:69 etalagepassim/templates/list.mako:85
+#: etalagepassim/templates/list.mako:119
+msgid "Name"
+msgstr "Nom"
+
+#: etalagepassim/templates/home.mako:70
+msgid "Territory"
+msgstr ""
+
+#: etalagepassim/templates/home.mako:71
+msgid "Last modification time"
+msgstr "Date de derniére modification"
+
+#: etalagepassim/templates/home.mako:131
+msgid "Home"
+msgstr "Accueil"
+
+#: etalagepassim/templates/http-simulated-redirect.mako:38
+#: etalagepassim/templates/http-simulated-redirect.mako:59
+msgid "Redirection"
+msgstr "Redirection"
+
+#: etalagepassim/templates/index.mako:110
+msgid "Categories"
+msgstr "Catègories"
+
+#: etalagepassim/templates/index.mako:111
+msgid "Names"
+msgstr "Noms"
+
+#: etalagepassim/templates/index.mako:112
+msgid "Territories"
+msgstr "Territoires"
+
+#: etalagepassim/templates/index.mako:128
+msgid "Passim search"
+msgstr "Recherche Passim"
+
+#: etalagepassim/templates/index.mako:143
+msgid "Find a service"
+msgstr ""
+
+#: etalagepassim/templates/index.mako:146
+msgid "Use your GPS"
+msgstr ""
+
+#: etalagepassim/templates/list.mako:51
+msgid "Multimodal Information Services"
+msgstr "Services d'information multimodaux"
+
+#: etalagepassim/templates/list.mako:80
+msgid "{0} Information Services for {1}"
+msgstr "Services d'information {0} pour {1}"
+
+#: etalagepassim/templates/list.mako:86 etalagepassim/templates/list.mako:120
+msgid "Transport type"
+msgstr ""
+
+#: etalagepassim/templates/list.mako:96 etalagepassim/templates/list.mako:127
+msgid "Transport offer website."
+msgstr ""
+
+#: etalagepassim/templates/list.mako:184
+msgid "List"
+msgstr "Liste"
+
+#: etalagepassim/templates/map.mako:48
+msgid "Legend"
+msgstr "Légende"
+
+#: etalagepassim/templates/map.mako:111
+msgid "Map"
+msgstr "Carte"
+
+#: etalagepassim/templates/site.mako:94
+msgid "Software"
+msgstr "Logiciel"
+
+#: etalagepassim/templates/site.mako:95
+msgid "Passim"
+msgstr "Passim"
+
+#: etalagepassim/templates/site.mako:97
+msgid "Copyright © 2011, 2012, 2013 "
+msgstr ""
+
+#: etalagepassim/templates/site.mako:98 etalagepassim/templates/site.mako:125
+msgid "Easter-eggs"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:100 etalagepassim/templates/site.mako:113
+msgid "Open license"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:101
+msgid "GNU Affero General Public License"
+msgstr "GNU Affero General Public License"
+
+#: etalagepassim/templates/site.mako:112 etalagepassim/templates/site.mako:279
+msgid "Data"
+msgstr "Données"
+
+#: etalagepassim/templates/site.mako:119
+msgid "Service proposed by "
+msgstr "Un service proposé par"
+
+#: etalagepassim/templates/site.mako:120
+msgid "CETE Méditerranée"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:121
+msgid "for"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:122
+msgid "AFIMB"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:123
+msgid "and the"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:123
+msgid "Mission Transports Intelligents de la DGITM"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:124
+msgid "made by"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:125
+msgid "Easter-eggs, Free software services company"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:203 etalagepassim/templates/site.mako:224
+msgid "PASSIM"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:204
+msgid "Transport information services and site directory."
+msgstr ""
+
+#: etalagepassim/templates/site.mako:230
+msgid "Contact PASSIM : [your message subject]"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:233
+msgid ""
+"\n"
+"Your are [an end-user, a company...]\n"
+"\n"
+"Your e-mail address: [xxx@yyy.org]\n"
+"\n"
+"Your message:\n"
+"\n"
+"Thank you advance for any remarks, questions or suggestions about PASSIM !\n"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:249
+msgid ""
+"Contribution to PASSIM : [new Info Service, correction to an existing Info "
+"Service...]"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:252
+msgid ""
+"\n"
+"Your are [an end-user, a company...]\n"
+"\n"
+"Your e-mail address: [xxx@yyy.org]\n"
+"\n"
+"Your contribution : [new Info Service, correction to an existing Info Service...]\n"
+"\n"
+"Information Service\n"
+"\n"
+"- Info Service name\n"
+"- Info booth:\n"
+"- Call centre number :\n"
+"- Web site address :\n"
+"- Mobile site or application :\n"
+"- Transport services covered:\n"
+"   - Name, Territory (city, department, region), Transport type (public transport...):\n"
+"- Your remarks (or information about web services, open data, real time info...):\n"
+"\n"
+"Thank you advance for any remarks, questions or suggestions about PASSIM !\n"
+msgstr ""
+
+#: etalagepassim/templates/site.mako:275
+msgid "Contribute"
+msgstr "Contribuer"

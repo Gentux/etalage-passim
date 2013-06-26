@@ -152,6 +152,7 @@ def load_environment(global_conf, app_conf):
             u'markers.piwik.ssl_host': conv.default('https://localhost/piwik'),
             u'organism_types_collection': conv.default('organism_types'),
             u'package_name': conv.default('etalagepassim'),
+            u'package_slug': conv.default('etalage-passim'),
             u'pager.page_max_size': conv.pipe(conv.input_to_int, conv.default(20)),
             u'petitpois_url': conv.pipe(  # A space-separated list of URLs
                 conv.function(lambda urls: urls.split()),
