@@ -1140,6 +1140,7 @@ def index_list(req):
     inputs = init_base(ctx, params)
     inputs.update(model.Poi.extract_search_inputs_from_params(ctx, params))
     inputs.update(dict(
+        coverage = params.get('coverage'),
         page = params.get('page'),
         poi_index = params.get('poi_index'),
         sort_key = params.get('sort_key'),
@@ -1150,78 +1151,92 @@ def index_list(req):
     non_territorial_search_data = model.Poi.extract_non_territorial_search_data(ctx, data)
     if errors is not None:
         raise wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
+
+    base_territory = data.get('base_territory')
+    competence_territories_id = None
+    presence_territory = None
+    territory = data['geolocation'] or (data['term'] if not isinstance(data['term'], basestring) else None)
+    if conf['handle_competence_territories']:
+        if territory and territory.__class__.__name__ not in model.communes_kinds:
+            presence_territory = territory
+        if territory:
+            competence_territories_id = ramdb.get_territory_related_territories_id(territory)
+        if base_territory and competence_territories_id is None:
+            competence_territories_id = ramdb.get_territory_related_territories_id(base_territory)
     else:
-        base_territory = data.get('base_territory')
-        competence_territories_id = None
-        presence_territory = None
-        territory = data['geolocation'] or (data['term'] if not isinstance(data['term'], basestring) else None)
-        if conf['handle_competence_territories']:
-            if territory and territory.__class__.__name__ not in model.communes_kinds:
-                presence_territory = territory
-            if territory:
-                competence_territories_id = ramdb.get_territory_related_territories_id(territory)
-            if base_territory and competence_territories_id is None:
-                competence_territories_id = ramdb.get_territory_related_territories_id(base_territory)
+        if territory and territory.__class__.__name__ not in model.communes_kinds:
+            presence_territory = territory
+        elif base_territory:
+            presence_territory = data['base_territory']
+
+    if non_territorial_search_data.get('term') and not isinstance(non_territorial_search_data['term'], basestring):
+        non_territorial_search_data['term'] = None
+
+    pois_id_iter = model.Poi.iter_ids(ctx,
+        competence_territories_id = competence_territories_id,
+        coverages = None if data['coverage'] is None else [data['coverage']],
+        presence_territory = presence_territory,
+        **non_territorial_search_data)
+
+    multimodal_info_services_by_id = dict()
+    ids_by_territory_and_coverage = dict()
+    territories_id_by_coverage = dict()
+    transport_types_by_id = dict()
+
+    for poi in (
+            model.Poi.instance_by_id.get(poi_id)
+            for poi_id in pois_id_iter
+            ):
+        if poi is None:
+            continue
+        if poi._id in model.Poi.multimodal_info_service_ids:
+            multimodal_info_services_by_id[poi._id] = poi
         else:
-            if territory and territory.__class__.__name__ not in model.communes_kinds:
-                presence_territory = territory
-            elif base_territory:
-                presence_territory = data['base_territory']
+            for field in poi.fields:
+                if field.id == 'links' and strings.slugify(field.label) == 'offres-de-transport':
+                    for transport_offer in [
+                            transport_offer
+                            for transport_offer in (
+                                model.Poi.instance_by_id.get(transport_offer_id)
+                                for transport_offer_id in field.value
+                                )
+                            if transport_offer is not None
+                            ]:
 
-        if non_territorial_search_data.get('term') and not isinstance(non_territorial_search_data['term'], basestring):
-            non_territorial_search_data['term'] = None
-        pois_id_iter = model.Poi.iter_ids(ctx,
-            competence_territories_id = competence_territories_id,
-            presence_territory = presence_territory,
-            **non_territorial_search_data)
+                        territories_id = set()
+                        coverages = set()
+                        for field in transport_offer.fields:
+                            field_slug = strings.slugify(field.label)
+                            if field.id == 'select' and field_slug == 'couverture-territoriale' and field.value is not None:
+                                coverages.add(field.value)
+                                for territory_id in (transport_offer.competence_territories_id or []):
+                                    if not isinstance(data['term'], model.Territory) or territory_id in data['term'].ancestors_id:
+                                        territories_id.add(territory_id)
+                            elif field_slug == 'type-de-transport' and field.value is not None:
+                                transport_types_by_id.setdefault(poi._id, set()).add(markupsafe.Markup(
+                                    u'<a href="#" rel="tooltip" title="{0}"><img alt="{0}" src="/img/types-de-transports/{1}.png"></a>'
+                                    ).format(field.value, strings.slugify(field.value)))
 
-        multimodal_info_services_by_id = dict()
-        ids_by_territory_and_coverage = dict()
-        territories_id_by_coverage = dict()
-        transport_types_by_id = dict()
+                        for coverage in coverages:
+                            if data['coverage'] is not None and data['coverage'] != coverage:
+                                continue
+                            if data['coverage'] is None and coverage == 'Nationale':
+                                continue
+                            for territory_id in territories_id:
+                                territories_id_by_coverage.setdefault(coverage, set()).add(territory_id)
+                                ids_by_territory_and_coverage.setdefault(
+                                    (territory_id, coverage),
+                                    set(),
+                                    ).add(poi._id)
 
-        for poi in (
-                model.Poi.instance_by_id.get(poi_id)
-                for poi_id in pois_id_iter
-                ):
-            if poi is None:
-                continue
-            if poi._id in model.Poi.multimodal_info_service_ids:
-                multimodal_info_services_by_id[poi._id] = poi
-            else:
-                coverages = set()
-                for field in poi.fields:
-                    if field.id == 'links' and strings.slugify(field.label) == 'offres-de-transport':
-                        for transport_offer in [
-                                transport_offer
-                                for transport_offer in (
-                                    model.Poi.instance_by_id.get(transport_offer_id)
-                                    for transport_offer_id in field.value
-                                    )
-                                if transport_offer is not None
-                                ]:
-                            for field in transport_offer.fields:
-                                field_slug = strings.slugify(field.label)
-                                if field.id == 'select' and field_slug == 'couverture-territoriale' and field.value is not None:
-                                    for territory_id in (transport_offer.competence_territories_id or []):
-                                        if isinstance(data['term'], model.Territory) and territory_id in data['term'].ancestors_id:
-                                            territories_id_by_coverage.setdefault(field.value, set()).add(territory_id)
-                                            ids_by_territory_and_coverage.setdefault(
-                                                (territory_id, field.value), set()
-                                                ).add(poi._id)
-                                elif field_slug == 'type-de-transport' and field.value is not None:
-                                    transport_types_by_id.setdefault(poi._id, set()).add(markupsafe.Markup(
-                                        u'<a href="#" rel="tooltip" title="{0}"><img alt="{0}" src="/img/types-de-transports/{1}.png"></a>'
-                                        ).format(field.value, strings.slugify(field.value)))
-
-        multimodal_info_services = model.Poi.sort_and_paginate_pois_list(
-            ctx,
-            None,
-            multimodal_info_services_by_id,
-            related_territories_id = competence_territories_id,
-            territory = territory or data.get('base_territory'),
-            **non_territorial_search_data
-            )
+    multimodal_info_services = model.Poi.sort_and_paginate_pois_list(
+        ctx,
+        None,
+        multimodal_info_services_by_id,
+        related_territories_id = competence_territories_id,
+        territory = territory or data.get('base_territory'),
+        **non_territorial_search_data
+        )
 
     return templates.render(ctx, '/list.mako',
         data = data,

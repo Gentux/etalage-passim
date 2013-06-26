@@ -52,7 +52,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
     % endif
     % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
         <p>
-            <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', term = 'FRANCE')}" rel="tooltip" \
+            <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" rel="tooltip" \
 title="${_('Search services for whole France')}">
                 <i class="icon-globe icon-white"></i> ${_('Search service for whole France')}
             </a>

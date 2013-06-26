@@ -555,6 +555,10 @@ def inputs_to_pois_list_data(inputs, state = None):
             model.Poi.make_inputs_to_search_data(),
             struct(
                 dict(
+                    coverage = pipe(
+                        cleanup_line,
+                        test_in([u'Départementale', u'Locale', u'Nationale', u'Régionale']),
+                        ),
                     page = pipe(
                         input_to_int,
                         test_greater_or_equal(1),

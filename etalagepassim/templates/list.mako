@@ -42,7 +42,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
 
 <%def name="results()" filter="trim">
     % if errors is None:
-        % if len(ids_by_territory_and_coverage) == 0 and len(multimodal_info_services):
+        % if len(ids_by_territory_and_coverage) == 0 and len(multimodal_info_services) == 0:
         <div>
             <em>${_('No organism found.')}</em>
         </div>
@@ -58,7 +58,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
     % endif
     % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
         <p>
-            <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', term = 'FRANCE')}" rel="tooltip" \
+            <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" rel="tooltip" \
 title="${_('Search services for whole France')}">
                 <i class="icon-globe icon-white"></i> ${_('Search service for whole France')}
             </a>
