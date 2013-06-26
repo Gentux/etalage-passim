@@ -168,7 +168,7 @@ value="${data['geolocation'].main_postal_distribution_str if data.get('geolocati
             continue
         if name in model.Poi.get_visibility_params_names(ctx):
             continue
-        if name in ('bbox', 'page'):
+        if name in ('bbox', 'coverage', 'page'):
             continue
         if value is None or value == u'':
             continue
