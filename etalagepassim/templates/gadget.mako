@@ -102,14 +102,14 @@ textarea {
         gadget = capture(self.gadget)
 %>\
                 <textarea readonly rows="${gadget.strip().count(u'\n') + 1}" wrap="off">${gadget}</textarea>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="select-text-button">${_('Select HTML fragment')}</button>
+                </div>
             </div>
             <div class="span6">
                 <h2>${_('Integration preview.')}</h2>
                 ${gadget | n}
             </div>
-        </div>
-        <div class="form-actions">
-            <button class="btn btn-primary" id="select-text-button">${_('Select HTML fragment')}</button>
         </div>
     % endif
 </%def>
