@@ -60,3 +60,7 @@ table.table-result td:nth-of-type(1) {
 table.table-result td:nth-of-type(3) {
     width: 172px;
 }
+
+.twitter-typeahead {
+    font-size: 14px;
+}
