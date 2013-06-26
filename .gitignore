@@ -2,8 +2,10 @@ build
 cache
 development-*local*.ini
 dist
+.tx
 *.egg-info
 *.mo
+*.pot
 *.pyc
 *.pyo
 *~
