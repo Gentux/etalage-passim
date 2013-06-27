@@ -69,10 +69,16 @@ title="${_('Search services for whole France')}">
 
 <%def name="results_table()" filter="trim">
     % for coverage, territories_ids in sorted(territories_id_by_coverage.iteritems(), key = lambda t: model.Poi.weight_by_coverage[t[0]]):
-        % for territory_id in territories_ids:
 <%
-            territory = ramdb.territory_by_id[territory_id]
+        territories = sorted(
+            [
+                ramdb.territory_by_id[territory_id]
+                for territory_id in territories_ids
+                ],
+            key = lambda territory: getattr(territory, 'population', 0),
+            )
 %>
+        % for territory in territories:
         <h3>${_("{0} Information Services for {1}").format(coverage, territory.main_postal_distribution_str)}</h3>
         <table class="table table-bordered table-condensed table-responsive table-result table-striped">
             <thead>

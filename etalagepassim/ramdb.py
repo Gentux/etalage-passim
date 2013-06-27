@@ -132,7 +132,8 @@ def load():
         'hinge_type',
         'kind',
         'main_postal_distribution',
-        'name'
+        'name',
+        'population',
         ]
     for territory_bson in territories_collection.find(territories_query, territories_fields_list):
         main_postal_distribution = territory_bson.get('main_postal_distribution')
@@ -149,6 +150,7 @@ def load():
             hinge_type = territory_bson.get('hinge_type'),
             main_postal_distribution = main_postal_distribution,
             name = territory_bson['name'],
+            population = territory_bson.get('population', 0),
             )
         territory_by_id[territory_id] = territory
         for ancestor_id in territory_bson['ancestors_id']:
