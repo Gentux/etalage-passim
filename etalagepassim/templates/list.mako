@@ -68,6 +68,28 @@ title="${_('Search services for whole France')}">
 
 
 <%def name="results_table()" filter="trim">
+<%
+    sort_order_slugs = [
+        u'transport-collectif-urbain',
+        u'transport-collectif-departemental',
+        u'transport-collectif-regional',
+        u'transport-longue-distance',
+        u'transport-a-la-demande',
+        u'transport-personnes-a-mobilite-reduite',
+        u'transport-scolaire',
+        u'velo-libre-service',
+        u'autopartage',
+        u'covoiturage',
+        u'taxi',
+        u'velo-taxi',
+        u'reseau-routier',
+        u'stationnement',
+        u'port',
+        u'aeroport',
+        u'circuit-touristique',
+        u'reseau-fluvial',
+        ]
+%>
     % for coverage, territories_ids in sorted(territories_id_by_coverage.iteritems(), key = lambda t: model.Poi.weight_by_coverage[t[0]]):
 <%
         territories = sorted(
@@ -89,10 +111,23 @@ title="${_('Search services for whole France')}">
                 </tr>
             </thead>
             <tbody>
-            % for info_service_id in ids_by_territory_and_coverage.get((territory_id, coverage)):
 <%
-                info_service = model.Poi.instance_by_id.get(info_service_id)
+            info_services = sorted(
+                [
+                    (
+                        min(
+                            sort_order_slugs.index(strings.slugify(transport_type))
+                            for transport_type in transport_types_by_id.get(info_service_id)
+                            if strings.slugify(transport_type) in sort_order_slugs
+                            ) or len(sort_order_slugs),
+                        model.Poi.instance_by_id.get(info_service_id)
+                        )
+                    for info_service_id in ids_by_territory_and_coverage.get((territory._id, coverage))
+                    ],
+                key = lambda (index, info_service): index,
+                )
 %>
+            % for index, info_service in info_services:
                 <tr>
                     <td>
                         <a class="btn btn-primary internal" rel="tooltip" title="${_('Transport offer website.')}" \
@@ -103,7 +138,13 @@ href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">
                     <td>
                         <a class="internal" href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">${info_service.name}</a>
                     </td>
-                    <td>${markupsafe.escape(u' ').join(sorted(transport_types_by_id.get(info_service._id)))}</td>
+                    <td>${markupsafe.escape(u' ').join(sorted(
+                        markupsafe.Markup(
+                            u'<a href="#" rel="tooltip" title="{0}"><img alt="{0}" src="/img/types-de-transports/{1}.png"></a>'
+                            ).format(transport_type, strings.slugify(transport_type))
+                        for transport_type in transport_types_by_id.get(info_service._id)
+                        ))}
+                    </td>
                 </tr>
             % endfor
             </tbody>

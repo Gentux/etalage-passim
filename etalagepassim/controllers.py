@@ -1213,9 +1213,7 @@ def index_list(req):
                                     if not isinstance(data['term'], model.Territory) or territory_id in data['term'].ancestors_id:
                                         territories_id.add(territory_id)
                             elif field_slug == 'type-de-transport' and field.value is not None:
-                                transport_types_by_id.setdefault(poi._id, set()).add(markupsafe.Markup(
-                                    u'<a href="#" rel="tooltip" title="{0}"><img alt="{0}" src="/img/types-de-transports/{1}.png"></a>'
-                                    ).format(field.value, strings.slugify(field.value)))
+                                transport_types_by_id.setdefault(poi._id, set()).add(field.value)
 
                         for coverage in coverages:
                             if data['coverage'] is not None and data['coverage'] != coverage:
