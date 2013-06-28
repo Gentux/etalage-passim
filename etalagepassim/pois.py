@@ -359,7 +359,6 @@ class Poi(representations.UserRepresentable):
             if fragment
             )))
 
-        pop_first_field(fields, 'last-update')
         return fields
 
     def get_first_field(self, id, label = None):
