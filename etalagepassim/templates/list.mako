@@ -124,7 +124,7 @@ title="${_('Search services for whole France')}">
                         )
                     for info_service_id in ids_by_territory_and_coverage.get((territory._id, coverage))
                     ],
-                key = lambda (index, info_service): index,
+                key = lambda info_services_tuple: info_services_tuple[0],
                 )
 %>
             % for index, info_service in info_services:
