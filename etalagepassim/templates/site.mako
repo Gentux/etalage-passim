@@ -199,9 +199,11 @@ $(function () {
 <%def name="site_header()" filter="trim">
     <header class="jumbotron subhead">
         <div class="container well">
-            <img src="/img/logo-ministere.png">
-            <h1>${_('PASSIM')}</h1>
-            <p class="lead">${_('Transport information services and site directory.')}</p>
+            <img src="/img/logo-ministere.png" style="height: 80px">
+            <h2>
+                ${_('PASSIM')}
+                <small>${_('Transport information services and site directory.')}</small>
+            </h2>
         </div>
     </header>
 </%def>
@@ -239,7 +241,7 @@ Your message:
 
 Thank you advance for any remarks, questions or suggestions about PASSIM !
 ''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
-%>
+%>\
                         <li>
                             <a href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">
                                 ${_('Contact')}
@@ -269,7 +271,7 @@ Information Service
 
 Thank you advance for any remarks, questions or suggestions about PASSIM !
 ''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
-%>
+%>\
                         <li>
                             <a href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">
                                 ${_('Contribute')}
