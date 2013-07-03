@@ -105,7 +105,7 @@ title="${_('Search services for whole France')}">
         <table class="table table-bordered table-condensed table-responsive table-result table-striped">
             <thead>
                 <tr>
-                    <th></th>
+                    <th>${_('Web site')}</th>
                     <th>${_('Name')}</th>
                     <th>${_('Transport type')}</th>
                 </tr>
@@ -158,7 +158,7 @@ href="${web_site_by_id[info_service._id]}">${_('www')}</a>
         <table class="table table-bordered table-condensed table-responsive table-result table-striped">
             <thead>
                 <tr>
-                    <th></th>
+                    <th>${_('Web site')}</th>
                     <th>${_('Name')}</th>
                     <th>${_('Transport type')}</th>
                 </tr>
@@ -167,10 +167,10 @@ href="${web_site_by_id[info_service._id]}">${_('www')}</a>
         % for info_service in info_services:
                 <tr>
                     <td>
+                % if web_site_by_id.get(info_service._id) is not None:
                         <a class="btn btn-primary internal" rel="tooltip" title="${_('Transport offer website.')}" \
-href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">
-                            <i class="icon-globe icon-white"></i>
-                        </a>
+href="${web_site_by_id[info_service._id]}">${_('www')}</a>
+                % endif
                     </td>
                     <td>
                         <a class="internal" href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">${info_service.name}</a>
