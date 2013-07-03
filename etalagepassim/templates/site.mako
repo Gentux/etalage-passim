@@ -87,20 +87,6 @@ from etalagepassim import conf, urls
 <%def name="footer_content()" filter="trim">
             <%self:footer_actions/>
             <%self:footer_service/>
-            <p>
-                <%self:footer_data_p_content/>
-            </p>
-            <p>
-                ${_("Software")} :
-                <a href="http://gitorious.org/passim/etalage-passim" rel="external">${_("Passim")}</a>
-                &mdash;
-                <span>${_(u"Copyright © 2011, 2012, 2013 ")}<a href="http://www.easter-eggs.com/" rel="external"
-                        title="Easter-eggs, société de services en logiciels libres">${_("Easter-eggs")}</a></span>
-                &mdash;
-                ${_('Open license')}
-                <a href="http://www.gnu.org/licenses/agpl.html" rel="external">${_(
-                    'GNU Affero General Public License')}</a>
-            </p>
 </%def>
 
 
@@ -115,15 +101,7 @@ from etalagepassim import conf, urls
 
 
 <%def name="footer_service()" filter="trim">
-            <p>
-                ${_('Service proposed by ')}
-                <a href="http://www.cete-mediterranee.fr/tt13/www/rubrique.php3?id_rubrique=27" rel="external">${_(u'CETE Méditerranée')}</a>
-                ${_('for')}
-                <a href="http://www.developpement-durable.gouv.fr/Presentation-de-l-AFIMB.html" rel="external">${_(u'AFIMB')}</a>
-                ${_('and the')} <a href="http://www.predim.org/">${_('Mission Transports Intelligents de la DGITM')}</a>,
-                ${_('made by')} <a href="http://www.easter-eggs.com/" rel="external" \
-title="${_('Easter-eggs, Free software services company')}">${_('Easter-eggs')}</a>.
-            </p>
+            <a href="/about">${_('Legal notice')}</a>
 </%def>
 
 
