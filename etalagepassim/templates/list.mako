@@ -28,6 +28,28 @@ import markupsafe
 from biryani import strings
 
 from etalagepassim import conf, conv, model, ramdb, urls
+
+
+sort_order_slugs = [
+    u'transport-collectif-urbain',
+    u'transport-collectif-departemental',
+    u'transport-collectif-regional',
+    u'transport-longue-distance',
+    u'transport-a-la-demande',
+    u'transport-personnes-a-mobilite-reduite',
+    u'transport-scolaire',
+    u'velo-libre-service',
+    u'autopartage',
+    u'covoiturage',
+    u'taxi',
+    u'velo-taxi',
+    u'reseau-routier',
+    u'stationnement',
+    u'port',
+    u'aeroport',
+    u'circuit-touristique',
+    u'reseau-fluvial',
+    ]
 %>
 
 
@@ -68,28 +90,6 @@ title="${_('Search services for whole France')}">
 
 
 <%def name="results_table()" filter="trim">
-<%
-    sort_order_slugs = [
-        u'transport-collectif-urbain',
-        u'transport-collectif-departemental',
-        u'transport-collectif-regional',
-        u'transport-longue-distance',
-        u'transport-a-la-demande',
-        u'transport-personnes-a-mobilite-reduite',
-        u'transport-scolaire',
-        u'velo-libre-service',
-        u'autopartage',
-        u'covoiturage',
-        u'taxi',
-        u'velo-taxi',
-        u'reseau-routier',
-        u'stationnement',
-        u'port',
-        u'aeroport',
-        u'circuit-touristique',
-        u'reseau-fluvial',
-        ]
-%>
     % for coverage, territories_ids in sorted(territories_id_by_coverage.iteritems(), key = lambda t: model.Poi.weight_by_coverage[t[0]]):
 <%
         territories = sorted(
@@ -117,7 +117,7 @@ title="${_('Search services for whole France')}">
                     (
                         min(
                             sort_order_slugs.index(strings.slugify(transport_type))
-                            for transport_type in transport_types_by_id.get(info_service_id)
+                            for transport_type in transport_types_by_id.get(info_service_id, [])
                             if strings.slugify(transport_type) in sort_order_slugs
                             ) or len(sort_order_slugs),
                         model.Poi.instance_by_id.get(info_service_id)
@@ -131,19 +131,23 @@ title="${_('Search services for whole France')}">
                 <tr>
                     <td>
                 % if web_site_by_id.get(info_service._id) is not None:
-                        <a class="btn btn-primary internal" rel="tooltip" title="${_('Transport offer website.')}" \
-href="${web_site_by_id[info_service._id]}">${_('www')}</a>
+                        <a class="btn btn-primary internal" rel="tooltip" target="_blank" \
+title="${_('Transport offer website.')}" href="${web_site_by_id[info_service._id]}">${_('www')}</a>
                 % endif
                     </td>
                     <td>
                         <a class="internal" href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">${info_service.name}</a>
                     </td>
-                    <td>${markupsafe.escape(u' ').join(sorted(
-                        markupsafe.Markup(
-                            u'<a href="#" rel="tooltip" title="{0}"><img alt="{0}" src="/img/types-de-transports/{1}.png"></a>'
-                            ).format(transport_type, strings.slugify(transport_type))
-                        for transport_type in transport_types_by_id.get(info_service._id)
-                        ))}
+                    <td>
+                        ${markupsafe.escape(u' ').join(
+                            markupsafe.Markup(
+                                u'<a href="#" rel="tooltip" title="{0}"><img alt="{0}" src="/img/types-de-transports/{1}.png"></a>'
+                                ).format(transport_type, strings.slugify(transport_type))
+                            for transport_type in sorted(
+                                transport_types_by_id.get(info_service._id, []),
+                                key = lambda transport_type: sort_order_slugs.index(strings.slugify(transport_type)),
+                                )
+                            )}
                     </td>
                 </tr>
             % endfor
@@ -168,8 +172,8 @@ href="${web_site_by_id[info_service._id]}">${_('www')}</a>
                 <tr>
                     <td>
                 % if web_site_by_id.get(info_service._id) is not None:
-                        <a class="btn btn-primary internal" rel="tooltip" title="${_('Transport offer website.')}" \
-href="${web_site_by_id[info_service._id]}">${_('www')}</a>
+                        <a class="btn btn-primary internal" rel="tooltip" target="_blank" \
+title="${_('Transport offer website.')}" href="${web_site_by_id[info_service._id]}">${_('www')}</a>
                 % endif
                     </td>
                     <td>
@@ -205,9 +209,7 @@ href="${web_site_by_id[info_service._id]}">${_('www')}</a>
                 if field_slug == 'couverture-territoriale' and field.value is not None:
                     coverages.add(field.value)
                 elif field_slug == 'type-de-transport' and field.value is not None:
-                    transport_types.add(markupsafe.Markup(
-                        u'<a href="#" rel="tooltip" title="{0}"><img alt="{0}" src="/img/types-de-transports/{1}.png"></a>'
-                        ).format(field.value, strings.slugify(field.value)))
+                    transport_types.add(field.value)
             elif use_transport_offers_covered_territories and field.id == 'territories' \
                     and field_slug == 'territoire-couvert' and field.value is not None:
                 for territory_id in field.value:
@@ -215,7 +217,17 @@ href="${web_site_by_id[info_service._id]}">${_('www')}</a>
                     if territory is not None:
                         covered_territories_postal_distribution_str.add(territory.main_postal_distribution_str)
 %>\
-                    <td>${markupsafe.escape(u' ').join(sorted(transport_types))}</td>
+                    <td>
+                        ${markupsafe.escape(u' ').join(
+                            markupsafe.Markup(
+                                u'<a href="#" rel="tooltip" title="{0}"><img alt="{0}" src="/img/types-de-transports/{1}.png"></a>'
+                                ).format(transport_type, strings.slugify(transport_type))
+                            for transport_type in sorted(
+                                transport_types,
+                                key = lambda transport_type: sort_order_slugs.index(strings.slugify(transport_type)),
+                                )
+                            )}
+                    </td>
                 </tr>
         % endfor
             </tbody>
