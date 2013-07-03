@@ -61,7 +61,9 @@ def is_category_autocompleter_empty(categories):
 
 <%def name="container_content()" filter="trim">
         % if ctx.container_base_url is None or ctx.gadget_id is None:
-        <%self:search_form/>
+        <div class="container">
+            <%self:search_form/>
+        </div>
         % endif
         <%self:results/>
 </%def>
@@ -119,19 +121,15 @@ etalagepassim.params = ${inputs | n, js};
 
 
 <%def name="search_form()" filter="trim">
-    <form action="${urls.get_url(ctx, 'liste')}" class="form-horizontal internal" id="search-form" method="get">
-        <%self:search_form_hidden/>
-        <fieldset>
-            <%self:search_form_field/>
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn btn-primary" rel="tooltip" title="${_('Passim search')}" type="submit">
+            <form action="${urls.get_url(ctx, 'liste')}" class="form-inline internal" id="search-form" method="get">
+                <%self:search_form_hidden/>
+                <fieldset>
+                    <%self:search_form_field/>
+                    <button class="btn btn-success" rel="tooltip" title="${_('Passim search')}" type="submit">
                         <i class="icon-search icon-white"></i>
                     </button>
-                </div>
-            </div>
-        </fieldset>
-    </form>
+                </fieldset>
+            </form>
 </%def>
 
 
@@ -139,21 +137,18 @@ etalagepassim.params = ${inputs | n, js};
 <%
     error = errors.get('term') if errors is not None else None
 %>\
-                <div class="control-group${' error' if error else ''}">
-                    <label class="control-label" for="term">${_("Find a service")}</label>
-                    <div class="controls">
-                        <div class="input-prepend">
-                            <a class="btn btn-primary" href="#" id="btn-geolocation" rel="tooltip" title="${_('Use your GPS')}">
-                                <i class="icon-globe icon-white"></i>
-                            </a>
-                            <input autocomplete="off" class="input-xlarge" id="term" name="term" type="text" \
+                    <label class="control-label" for="term">${_("Find a service")} :</label>
+                    <div class="input-prepend">
+                        <a class="btn btn-primary" href="#" id="btn-geolocation" rel="tooltip" \
+title="${_('Use your GPS')}">
+                            <i class="icon-globe icon-white"></i>
+                        </a>
+                        <input autocomplete="off" class="input-xlarge" id="term" name="term" type="text" \
 value="${data['geolocation'].main_postal_distribution_str if data.get('geolocation') else (inputs['term'] or '')}">
-                        </div>
-    % if error:
-                        <span class="help-inline">${error}</span>
-    % endif
                     </div>
-                </div>
+    % if error:
+                    <span class="help-inline">${error}</span>
+    % endif
 </%def>
 
 
