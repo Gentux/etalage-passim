@@ -1182,6 +1182,7 @@ def index_list(req):
     ids_by_territory_and_coverage = dict()
     territories_id_by_coverage = dict()
     transport_types_by_id = dict()
+    web_site_by_id = dict()
 
     for poi in (
             model.Poi.instance_by_id.get(poi_id)
@@ -1192,7 +1193,7 @@ def index_list(req):
         if poi._id in model.Poi.multimodal_info_service_ids:
             multimodal_info_services_by_id[poi._id] = poi
         else:
-            for field in poi.fields:
+            for field in poi.generate_all_fields():
                 if field.id == 'links' and strings.slugify(field.label) == 'offres-de-transport':
                     for transport_offer in [
                             transport_offer
@@ -1226,6 +1227,13 @@ def index_list(req):
                                     (territory_id, coverage),
                                     set(),
                                     ).add(poi._id)
+                if field.id == 'link' and strings.slugify(field.label) == 'site-web':
+                    web_site = model.Poi.instance_by_id.get(field.value)
+                    if web_site is None:
+                        continue
+                    for web_site_field in web_site.fields:
+                        if web_site_field.id == 'url' and strings.slugify(web_site_field.label) == 'url':
+                            web_site_by_id[poi._id] = web_site_field.value
 
     multimodal_info_services = model.Poi.sort_and_paginate_pois_list(
         ctx,
@@ -1242,9 +1250,10 @@ def index_list(req):
         ids_by_territory_and_coverage = ids_by_territory_and_coverage,
         inputs = inputs,
         mode = mode,
+        multimodal_info_services = multimodal_info_services,
         territories_id_by_coverage = territories_id_by_coverage,
         transport_types_by_id = transport_types_by_id,
-        multimodal_info_services = multimodal_info_services,
+        web_site_by_id = web_site_by_id,
         **non_territorial_search_data)
 
 
