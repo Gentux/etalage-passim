@@ -256,7 +256,7 @@ Thank you advance for any remarks, questions or suggestions about PASSIM !
                             </a>
                         </li>
     % endif
-                        <li><a href="/data">${_('Data')}</a></li>
+                        <li><a href="/data">${_('Reuse')}</a></li>
                         <li><a href="/help">${_('Help')}</a></li>
                     </ul>
                     <ul class="nav pull-right">
