@@ -64,7 +64,7 @@ sort_order_slugs = [
 
 <%def name="results()" filter="trim">
     % if errors is None:
-        % if len(ids_by_territory_and_coverage) == 0 and len(multimodal_info_services) == 0:
+        % if len(ids_by_territory_id) == 0 and len(multimodal_info_services) == 0:
         <div>
             <em>${_('No organism found.')}</em>
         </div>
@@ -73,7 +73,7 @@ sort_order_slugs = [
         <h3>${_('Multimodal Information Services')}</h3>
         <%self:results_table_multimodal info_services="${multimodal_info_services}"/>
             % endif
-            % if len(ids_by_territory_and_coverage):
+            % if len(ids_by_territory_id):
         <%self:results_table/>
             % endif
         % endif
@@ -90,17 +90,27 @@ title="${_('Search services for whole France')}">
 
 
 <%def name="results_table()" filter="trim">
-    % for coverage, territories_ids in sorted(territories_id_by_coverage.iteritems(), key = lambda t: model.Poi.weight_by_coverage[t[0]]):
 <%
         territories = sorted(
             [
                 ramdb.territory_by_id[territory_id]
-                for territory_id in territories_ids
+                for territory_id in ids_by_territory_id.iterkeys()
                 ],
             key = lambda territory: getattr(territory, 'population', 0),
             )
 %>
-        % for territory in territories:
+    % for territory in territories:
+        % if data['coverage'] is None and territory.__class__.__name__ in ['CommuneOfFrance', 'ArrondissementOfFrance',\
+            'DepartmentOfFrance', 'RegionOfFrance', 'UrbanTransportsPerimeterOfFrance']:
+<%
+            coverage = {
+                'ArrondissementOfFrance': _('local'),
+                'CommuneOfFrance': _('local'),
+                'DepartmentOfFrance': _('departmental'),
+                'RegionOfFrance': _('regional'),
+                'UrbanTransportsPerimeterOfFrance': _('local'),
+                }.get(territory.__class__.__name__, 'local')
+%>
         <h3>${_("{0} Information Services for {1}").format(coverage, territory.main_postal_distribution_str)}</h3>
         <table class="table table-bordered table-condensed table-responsive table-result table-striped">
             <thead>
@@ -122,7 +132,7 @@ title="${_('Search services for whole France')}">
                             ) or len(sort_order_slugs),
                         model.Poi.instance_by_id.get(info_service_id)
                         )
-                    for info_service_id in ids_by_territory_and_coverage.get((territory._id, coverage))
+                    for info_service_id in ids_by_territory_id.get(territory._id)
                     ],
                 key = lambda info_services_tuple: info_services_tuple[0],
                 )
@@ -153,7 +163,7 @@ title="${_('Transport offer website.')}" href="${web_site_by_id[info_service._id
             % endfor
             </tbody>
         </table>
-        % endfor
+        % endif
     % endfor
 </%def>
 
