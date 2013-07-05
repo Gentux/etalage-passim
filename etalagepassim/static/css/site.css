@@ -64,3 +64,13 @@ table.table-result td:nth-of-type(3) {
 .twitter-typeahead {
     font-size: 14px;
 }
+
+
+.search-navbar {
+    position: relative;
+}
+.search-navbar .btn-group {
+    position: absolute;
+    top: 5px;
+    right: 0px;
+}

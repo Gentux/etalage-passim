@@ -63,6 +63,34 @@ sort_order_slugs = [
 
 
 <%def name="results()" filter="trim">
+    % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
+        <div class="search-navbar">
+            <h3>${_(u'Information Services List For « {0} »').format(
+                data['geolocation'].main_postal_distribution_str \
+                if data.get('geolocation') else (inputs['term'] or '')
+                )}</h3>
+            <div class="btn-group pull-right">
+                <a class="btn" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}">
+                    ${_('Search services for whole France')}
+                </a>
+<%
+    url_args = {}
+    for name, value in sorted(inputs.iteritems()):
+        name = model.Poi.rename_input_to_param(name)
+        if name in ('accept', 'submit'):
+            continue
+        if value is None or value == u'':
+            continue
+        url_args[name] = value
+    url_args['accept'] = 1
+%>\
+                <a class="btn" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}">
+                    ${_('Export')}
+                </a>
+                <a class="btn" href="${urls.get_url(ctx, 'gadget', **url_args)}">${_('Share')}</a>
+            </div>
+        </div>
+    % endif
     % if errors is None:
         % if len(ids_by_territory_id) == 0 and len(multimodal_info_services) == 0:
         <div>

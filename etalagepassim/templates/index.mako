@@ -81,9 +81,9 @@ def is_category_autocompleter_empty(categories):
         url_args[name] = value
     url_args['accept'] = 1
 %>\
-                            <a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}">
-                                ${_('Export')}
-                            </a>
+                <a href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}">
+                    ${_('Export')}
+                </a>
 </%def>
 
 
