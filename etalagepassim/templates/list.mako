@@ -98,7 +98,7 @@ sort_order_slugs = [
         </div>
         % else:
             % if len(multimodal_info_services):
-        <h3>${_('Multimodal Information Services')}</h3>
+        <h4>${_('Multimodal Information Services')}</h4>
         <%self:results_table_multimodal info_services="${multimodal_info_services}"/>
             % endif
             % if len(ids_by_territory_id):
@@ -139,7 +139,7 @@ title="${_('Search services for whole France')}">
                 'UrbanTransportsPerimeterOfFrance': _('local'),
                 }.get(territory.__class__.__name__, 'local')
 %>
-        <h3>${_("{0} Information Services for {1}").format(coverage, territory.main_postal_distribution_str)}</h3>
+        <h4>${_("{0} Information Services for {1}").format(coverage, territory.main_postal_distribution_str)}</h4>
         <table class="table table-bordered table-condensed table-responsive table-result table-striped">
             <thead>
                 <tr>
