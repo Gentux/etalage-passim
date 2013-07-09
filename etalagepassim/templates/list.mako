@@ -108,8 +108,8 @@ sort_order_slugs = [
     % endif
     % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
         <p>
-            <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" rel="tooltip" \
-title="${_('Search services for whole France')}">
+            <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" \
+rel="tooltip" title="${_('Search services for whole France')}">
                 <i class="icon-globe icon-white"></i> ${_('Search service for whole France')}
             </a>
         </p>
@@ -128,16 +128,19 @@ title="${_('Search services for whole France')}">
             )
 %>
     % for territory in territories:
-        % if data['coverage'] is None and territory.__class__.__name__ in ['CommuneOfFrance', 'ArrondissementOfFrance',\
-            'DepartmentOfFrance', 'RegionOfFrance', 'UrbanTransportsPerimeterOfFrance']:
 <%
-            coverage = {
-                'ArrondissementOfFrance': _('local'),
-                'CommuneOfFrance': _('local'),
-                'DepartmentOfFrance': _('departmental'),
-                'RegionOfFrance': _('regional'),
-                'UrbanTransportsPerimeterOfFrance': _('local'),
-                }.get(territory.__class__.__name__, 'local')
+        coverage = {
+            'ArrondissementOfFrance': _('local'),
+            'CommuneOfFrance': _('local'),
+            'Country': _('national'),
+            'DepartmentOfFrance': _('departmental'),
+            'RegionOfFrance': _('regional'),
+            'UrbanTransportsPerimeterOfFrance': _('local'),
+            }.get(territory.__class__.__name__)
+        if data['coverage'] is None and coverage == _('national'):
+            coverage = None
+        if coverage is None:
+            continue
 %>
         <h4>${_("{0} Information Services for {1}").format(coverage, territory.main_postal_distribution_str)}</h4>
         <table class="table table-bordered table-condensed table-responsive table-result table-striped">
@@ -150,28 +153,28 @@ title="${_('Search services for whole France')}">
             </thead>
             <tbody>
 <%
-            info_services = sorted(
-                [
-                    (
-                        min(
-                            sort_order_slugs.index(strings.slugify(transport_type))
-                            for transport_type in transport_types_by_id.get(info_service_id, [])
-                            if strings.slugify(transport_type) in sort_order_slugs
-                            ) or len(sort_order_slugs),
-                        model.Poi.instance_by_id.get(info_service_id)
-                        )
-                    for info_service_id in ids_by_territory_id.get(territory._id)
-                    ],
-                key = lambda info_services_tuple: info_services_tuple[0],
-                )
+        info_services = sorted(
+            [
+                (
+                    min(
+                        sort_order_slugs.index(strings.slugify(transport_type))
+                        for transport_type in transport_types_by_id.get(info_service_id, [])
+                        if strings.slugify(transport_type) in sort_order_slugs
+                        ) or len(sort_order_slugs),
+                    model.Poi.instance_by_id.get(info_service_id)
+                    )
+                for info_service_id in ids_by_territory_id.get(territory._id)
+                ],
+            key = lambda info_services_tuple: info_services_tuple[0],
+            )
 %>
-            % for index, info_service in info_services:
+        % for index, info_service in info_services:
                 <tr>
                     <td>
-                % if web_site_by_id.get(info_service._id) is not None:
+            % if web_site_by_id.get(info_service._id) is not None:
                         <a class="btn btn-primary internal" rel="tooltip" target="_blank" \
 title="${_('Transport offer website.')}" href="${web_site_by_id[info_service._id]}">${_('www')}</a>
-                % endif
+            % endif
                     </td>
                     <td>
                         <a class="internal" href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">${info_service.name}</a>
@@ -188,10 +191,13 @@ title="${_('Transport offer website.')}" href="${web_site_by_id[info_service._id
                             )}
                     </td>
                 </tr>
-            % endfor
+        % endfor
             </tbody>
         </table>
-        % endif
+        <%
+        if territory.__class__.__name__ in ['Country', 'MetropoleOfCountry']:
+            break
+        %>
     % endfor
 </%def>
 

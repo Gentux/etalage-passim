@@ -1156,19 +1156,10 @@ def index_list(req):
     competence_territories_id = None
     presence_territory = None
     territory = data['geolocation'] or (data['term'] if not isinstance(data['term'], basestring) else None)
-    if conf['handle_competence_territories']:
-        if territory and territory.__class__.__name__ not in model.communes_kinds:
-            presence_territory = territory
-        if territory:
-            competence_territories_id = ramdb.get_territory_related_territories_id(territory)
-        if base_territory and competence_territories_id is None:
-            competence_territories_id = ramdb.get_territory_related_territories_id(base_territory)
-    else:
-        if territory and territory.__class__.__name__ not in model.communes_kinds:
-            presence_territory = territory
-        elif base_territory:
-            presence_territory = data['base_territory']
-
+    if territory and territory.__class__.__name__ not in model.communes_kinds:
+        presence_territory = territory
+    elif territory:
+        competence_territories_id = ramdb.get_territory_related_territories_id(territory)
     if non_territorial_search_data.get('term') and not isinstance(non_territorial_search_data['term'], basestring):
         non_territorial_search_data['term'] = None
 
