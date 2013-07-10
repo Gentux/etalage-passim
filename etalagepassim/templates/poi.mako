@@ -30,7 +30,7 @@ import feedparser
 import markupsafe
 from biryani import strings
 
-from etalagepassim import conf, conv, model, ramdb, urls
+from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 %>\
 
 
@@ -45,40 +45,6 @@ from etalagepassim import conf, conv, model, ramdb, urls
 <%def name="container_content()" filter="trim">
 <%
     fields = poi.generate_all_fields()
-
-    accessibility_fields = []
-    for field in fields[:]:
-        if conv.check(conv.test_isinstance(basestring))(field.label) and field.label.endswith(u'[Accessibilité]'):
-            field_attributes = field.__dict__.copy()
-            field_attributes['label'] = field.label[:-len(u'[Accessibilité]')].rstrip()
-            new_field = model.Field(**field_attributes)
-            accessibility_fields.append(new_field)
-            fields.remove(field)
-    if accessibility_fields:
-        theme_field_by_slug = {}
-        for field in accessibility_fields[:]:
-            try:
-                theme, sub_label = field.label.split(u' - ', 1)
-            except:
-                theme  = u'Divers'
-                sub_label = field.label
-            else:
-                theme = theme.rstrip()
-            theme_slug = strings.slugify(theme)
-            theme_field = theme_field_by_slug.get(theme_slug)
-            if theme_field is None:
-                theme_field_by_slug[theme_slug] = theme_field = model.Field(id = u'accessibility-theme', label = theme, value = [])
-                accessibility_fields.insert(accessibility_fields.index(field), theme_field)
-            field_attributes = field.__dict__.copy()
-            field_attributes['label'] = sub_label.lstrip()
-            theme_field.value.append(model.Field(**field_attributes))
-            accessibility_fields.remove(field)
-        accessibility_field = model.Field(id = u'accessibility', value = accessibility_fields)
-        last_update_field = model.get_first_field(fields, 'last-update')
-        if last_update_field is None:
-            fields.append(accessibility_field)
-        else:
-            fields.insert(fields.index(last_update_field), accessibility_field)
 %>\
         <%self:poi_header fields="${fields}" poi="${poi}"/>
         <%self:fields fields="${fields}" poi="${poi}"/>
@@ -101,35 +67,6 @@ from etalagepassim import conf, conv, model, ramdb, urls
         return ''
 %>\
         ${getattr(self, 'field_{0}'.format(field.id.replace('-', '_')), field_default)(field, depth = depth)}
-</%def>
-
-
-<%def name="field_accessibility(field, depth = 0)" filter="trim">
-        <div>
-            <p>
-                <button class="btn btn-mini btn-primary btn-jaccede" data-toggle="collapse" data-target="#accessibilite">
-                    Accessibilité
-                    <i class="icon-plus-sign icon-white"> </i>
-                </button>
-                en partenariat avec
-                <a href="http://www.jaccede.com/" rel="external"><img alt="Jaccede.com" src="/images/logo-jaccede-2.gif" style="height: 20px; vertical-align: text-bottom"></a>
-            </p>
-        </div>
-        <div class="collapse in" id="accessibilite">
-            <div class="well">
-    % for sub_field in field.value:
-            <%self:field depth="${depth + 1}" field="${sub_field}"/>
-    % endfor
-            </div>
-        </div>
-</%def>
-
-
-<%def name="field_accessibility_theme(field, depth = 0)" filter="trim">
-        <p class="jaccede-field-label"><strong>${field.label}</strong></p>
-    % for sub_field in field.value:
-        <%self:field depth="${depth + 1}" field="${sub_field}"/>
-    % endfor
 </%def>
 
 
@@ -177,7 +114,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
         <%self:field depth="${depth}" field="${target_field}"/>
     % else:
         <div class="page-header">
-            <h3>${field.label}</h3>
+            <h4>${field.label}</h4>
         </div>
         <div class="offset1">
             <%self:fields depth="${depth + 1}" fields="${target_fields}" poi="${target}"/>
@@ -201,61 +138,89 @@ from etalagepassim import conf, conv, model, ramdb, urls
         return u''
 %>\
     % if field.label == u'Offres de transport':
-        <div class="page-header">
-            <h3>Couverture du service</h3>
-        </div>
 <%
-        offers_infos_by_type_and_modes = {}
+        territories_id = set()
+        transport_offers_infos = []
         for offer in targets:
             offer_territories_field = offer.get_first_field(u'territories', u'Territoire couvert')
-            offer_territories_str = u', '.join(sorted(
-                territory.main_postal_distribution_str
-                for territory in (
-                    ramdb.territory_by_id.get(territory_id)
-                    for territory_id in offer_territories_field.value
-                    )
-                if territory is not None
-                )) if offer_territories_field is not None and offer_territories_field.value is not None else None
+            if offer_territories_field is not None:
+                for territory_id in offer_territories_field.value:
+                    territories_id.add(territory_id)
+
+            offer_commercial_name_field = offer.get_first_field(u'name', u'Nom commercial')
+            offer_commercial_name = offer_commercial_name_field.value \
+                if offer_commercial_name_field is not None and offer_commercial_name_field.value is not None \
+                else _(u'Name not known')
             offer_type_field = offer.get_first_field(u'select', u'Type de transport')
             offer_type = offer_type_field.value \
                 if offer_type_field is not None and offer_type_field.value is not None \
-                else u'Type de transport non précisé'
+                else _(u'Transpot type not known')
             offer_modes_field = offer.get_first_field(u'checkboxes', u'Mode de transport')
             offer_modes = u', '.join(mode for mode in offer_modes_field.value) \
                 if offer_modes_field is not None and offer_modes_field.value is not None \
                 else None
-            offer_commercial_name_field = offer.get_first_field(u'name', u'Nom commercial')
-            offer_commercial_name = offer_commercial_name_field.value \
-                if offer_commercial_name_field is not None and offer_commercial_name_field.value is not None \
-                else None
-            offers_infos_by_type_and_modes.setdefault((offer_type, offer_modes), []).append((
+
+            transport_offers_infos.append((
                 offer_commercial_name,
-                offer_territories_str,
+                offer_type,
+                offer_modes,
                 ))
+        territories = sorted(
+            [
+                ramdb.territory_by_id[territory_id]
+                for territory_id in territories_id
+                if ramdb.territory_by_id.get(territory_id)
+                ],
+            key = lambda territory: getattr(territory, 'population', 0),
+            )
 %>\
-        <div class="offset1">
-            <ul>
-        % for (offer_type, offer_modes), offers_infos in sorted(offers_infos_by_type_and_modes.iteritems()):
-                <li><strong>${offer_type}</strong>
-            % if offer_modes is not None:
-                    (${offer_modes})
-            % endif
-                    <ul>
-            % for offer_infos in sorted(offers_infos, key = lambda infos: (strings.slugify(infos[0]), infos[1])):
-                        <li>${u' / '.join(
-                                fragment
-                                for fragment in offer_infos
-                                if fragment is not None
-                                )}</li>
-            % endfor
-                    </ul>
-                </li>
-        % endfor
-            </ul>
+        <div class="page-header">
+            <h4>${_('Covered Territories')}</h4>
         </div>
+        <ul>
+        % for territory in (territories or []):
+            <li>${territory.main_postal_distribution_str}</li>
+        % endfor
+        </ul>
+        <div class="page-header">
+            <h4>${_('Transport Offers')}</h4>
+        </div>
+        <table class="table table-bordered table-condensed table-responsive">
+            <tr>
+                <th>${_('Name')}</th>
+                <th>${_('Transport Type')}</th>
+                <th>${_('Transport Offers')}</th>
+            </tr>
+        % for offer_commercial_name, offer_type, offer_modes in transport_offers_infos:
+            <tr>
+                <td>${offer_commercial_name}</td>
+                <td>${offer_type}</td>
+                <td>${offer_modes}</td>
+            </tr>
+        % endfor
+        </table>
+##        <div class="offset1">
+##            <ul>
+##        % for (offer_type, offer_modes), offers_infos in sorted(offers_infos_by_type_and_modes.iteritems()):
+##                <li><strong>${offer_type}</strong>
+##            % if offer_modes is not None:
+##                    (${offer_modes})
+##            % endif
+##                    <ul>
+##            % for offer_infos in sorted(offers_infos, key = lambda infos: (strings.slugify(infos[0]), infos[1])):
+##                        <li>${u' / '.join(
+##                                fragment
+##                                for fragment in offer_infos
+##                                if fragment is not None
+##                                )}</li>
+##            % endfor
+##                    </ul>
+##                </li>
+##            </ul>
+##        </div>
     % else:
         <div class="page-header">
-            <h3>${field.label}</h3>
+            <h4>${field.label}</h4>
         </div>
         <div class="offset1">
         % if len(targets) == 1:
@@ -595,31 +560,39 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
 <%def name="footer_actions()" filter="trim">
             <p class="pull-right">
     % if conf['data_email'] is not None:
-                <a class="label label-info" href="mailto:${u','.join(conf['data_email'])}?subject=${u'Correction fiche Passim+ : {name}'.format(
-                        name = poi.name,
-                        ).replace(u' ', u'%20')}&body=${u'''
-Veuillez effectuer les modifications suivantes sur la fiche :
-    {name}
-{url}
+<%
+        subject = _(
+            u'Contribution to PASSIM : [{0}]'
+            ).format(poi.name).replace(u' ', u'%20')
+        body = _(u'''
+Your are [an end-user, a company...]
 
-Nom : ...
-Couverture géographique : ....
-Modes de transport : ....
-Site web : ...
-Application mobile : ...
-Centre d'appel : ...
-Guichet d'information : ...
-OpenData : ...
-Notes : ...
-'''.format(
-                        name = poi.name,
-                        url = urls.get_full_url(ctx, 'organismes', poi._id),
-                        ).strip().replace(u' ', u'%20').replace(u'\n', u'%0a')}">Modifier la fiche</a>
+Your e-mail address: [xxx@yyy.org]
+
+Your contribution : [{0}]
+
+Information Service
+
+- Info Service name
+- Info booth:
+- Call centre number :
+- Web site address :
+- Mobile site or application :
+- Transport services covered:
+   - Name, Territory (city, department, region), Transport type (public transport...):
+- Your remarks (or information about web services, open data, real time info...):
+
+Thank you advance for any remarks, questions or suggestions about PASSIM !
+''').format(poi.name).strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
+%>
+                <a class="label label-info" href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">
+                    ${_('Contribute')}
+                </a>
                 &mdash;
     % endif
     % if poi.petitpois_url is not None:
-                <a href="${urlparse.urljoin(poi.petitpois_url, '/poi/view/{0}'.format(poi._id))
-                        }" rel="external">Accès back-office</a>
+                <a href="${urlparse.urljoin(poi.petitpois_url, '/poi/view/{0}'.format(poi._id))}" \
+rel="external">Accès back-office</a>
     % endif
             </p>
 </%def>
@@ -637,16 +610,17 @@ Notes : ...
         if field.value is not None:
             names.append(field.value)
         fields.remove(field)
-%>\
-            <h2>
-                ${u', '.join(names)} <small>${ramdb.schema_title_by_name[poi.schema_name]}</small>
-<%
+    title_description = _('Multimodal information service') if poi.is_multimodal_info_service() \
+        else ramdb.schema_title_by_name[poi.schema_name]
     field = model.pop_first_field(fields, 'image', u'Logo')
 %>\
+            <h3>
+                ${_(u'Detailed Informations For {0}').format(u', '.join(names))}
+                <small>${title_description}</small>
     % if field is not None and field.value is not None:
-                <img alt="" class="logo" height="50" src="${field.value}">
+                <img alt="" class="logo hidden-phone" height="50" src="${field.value}">
     % endif
-            </h2>
+            </h3>
         </div>
         <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
         <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'link', u'Site web')}"/>
@@ -673,45 +647,6 @@ Notes : ...
         <%self:field depth="${depth}" field="${field}"/>
     % endwhile
         <hr>
-</%def>
-
-
-<%def name="scripts()" filter="trim">
-    <%parent:scripts/>
-    <script src="${conf['leaflet.js']}"></script>
-<!--[if lt IE 10]>
-    <script src="${conf['pie.js']}"></script>
-<![endif]-->
-    <script src="/js/map.js"></script>
-    <script>
-var etalagepassim = etalagepassim || {};
-etalagepassim.map.markersUrl = ${conf['images.markers.url'].rstrip('/') | n, js};
-etalagepassim.map.tileLayersOptions = ${conf['tile_layers'] | n, js};
-    </script>
-</%def>
-
-
-<%def name="scripts_domready_content()" filter="trim">
-    <%parent:scripts_domready_content/>
-    $(".collapse").collapse();
-    $("button.btn-jaccede").on("click", function() {
-        var $i = $(this).find("i");
-        if ($i.hasClass("icon-plus-sign")) {
-            $i.removeClass("icon-plus-sign");
-            $i.addClass("icon-minus-sign");
-        } else {
-            $i.removeClass("icon-minus-sign");
-            $i.addClass("icon-plus-sign");
-        }
-    });
-    % if ctx.container_base_url is not None and ctx.gadget_id is not None:
-    $('#accessibilite').on('hidden', function () {
-        adjustFrameHeight(5);
-    });
-    $('#accessibilite').on('shown', function () {
-        adjustFrameHeight(5);
-    });
-    % endif
 </%def>
 
 
