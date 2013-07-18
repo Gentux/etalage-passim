@@ -70,9 +70,8 @@ sort_order_slugs = [
                 if data.get('geolocation') else (inputs['term'] or '')
                 )}</h3>
             <div class="btn-group pull-right">
-                <a class="btn" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}">
-                    ${_('Search services for whole France')}
-                </a>
+                <a class="btn" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" \
+title="${_('Search services for whole France')}">${_('France')}</a>
 <%
     url_args = {}
     for name, value in sorted(inputs.iteritems()):
@@ -84,10 +83,12 @@ sort_order_slugs = [
         url_args[name] = value
     url_args['accept'] = 1
 %>\
-                <a class="btn" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}">
-                    ${_('Export')}
+                <a class="btn tooltip" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}" \
+title="${_('Download searched information in CSV format.')}">
+                    ${_('CSV')}
                 </a>
-                <a class="btn" href="${urls.get_url(ctx, 'gadget', **url_args)}">${_('Share')}</a>
+                <a class="btn tooltip" href="${urls.get_url(ctx, 'gadget', **url_args)}" \
+title="${_('Share a HTML component in your website')}">${_('HTML')}</a>
             </div>
         </div>
     % endif
@@ -105,14 +106,6 @@ sort_order_slugs = [
         <%self:results_table/>
             % endif
         % endif
-    % endif
-    % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
-        <p>
-            <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" \
-rel="tooltip" title="${_('Search services for whole France')}">
-                <i class="icon-globe icon-white"></i> ${_('Search service for whole France')}
-            </a>
-        </p>
     % endif
 </%def>
 
