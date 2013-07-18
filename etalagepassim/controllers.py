@@ -658,9 +658,9 @@ def feed(req):
         return wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
     else:
         base_territory = data.get('base_territory')
-        territory = data['territory']
         competence_territories_id = None
         presence_territory = None
+        territory = data['geolocation'] or (data['term'] if not isinstance(data['term'], basestring) else None)
         if conf['handle_competence_territories']:
             if territory and territory.__class__.__name__ not in model.communes_kinds:
                 presence_territory = territory
@@ -696,6 +696,11 @@ def feed(req):
             sort_key = 'last_update_datetime',
             **non_territorial_search_data
             )
+        data['feed_id'] = urls.get_full_url(ctx, **inputs)
+        data['feed_url'] = data['feed_id']
+        data['feed_updated'] = pager.items[0].last_update_datetime if pager.items else datetime.datetime.utcnow()
+        data['author_name'] = u"Easter-eggs"
+        data['author_email'] = conf['data_email']
 
     req.response.content_type = 'application/atom+xml; charset=utf-8'
     return templates.render(ctx, '/feed-atom.mako',
