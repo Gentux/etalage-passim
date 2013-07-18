@@ -176,8 +176,8 @@ $(function () {
 
 <%def name="site_header()" filter="trim">
     <header class="jumbotron subhead">
-        <div class="container well">
-            <img src="/img/logo-ministere.png" style="height: 80px">
+        <div class="container">
+            <img src="/img/logo-ministere.png">
             <h2>
                 ${_('PASSIM')}
                 <small>${_('Transport information services and site directory.')}</small>
