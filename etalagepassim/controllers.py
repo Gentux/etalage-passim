@@ -1207,9 +1207,30 @@ def index_list(req):
                                 )
                             if transport_offer is not None
                             ]:
-                        for territory_id in (transport_offer.competence_territories_id or []):
-                            if not isinstance(data['term'], model.Territory) or territory_id in data['term'].ancestors_id:
-                                ids_by_territory_id.setdefault(territory_id, set()).add(poi._id)
+                        for transport_offer_territory_id in (transport_offer.competence_territories_id or []):
+                            if not isinstance(data['term'], model.Territory) \
+                                or transport_offer_territory_id in data['term'].ancestors_id:
+                                transport_offer_territory = ramdb.territory_by_id.get(transport_offer_territory_id)
+                                if transport_offer_territory.__class__.__name__ == 'UrbanTransportsPerimeterOfFrance':
+                                    PTU_postal_routing = transport_offer_territory.main_postal_distribution.get(
+                                        'postal_routing'
+                                        )
+                                    for child_territory_id in ramdb.territories_id_by_ancestor_id.get(
+                                            transport_offer_territory._id):
+                                        child_territory = ramdb.territory_by_id.get(child_territory_id)
+                                        if child_territory.__class__.__name__ != 'CommuneOfFrance':
+                                            continue
+                                        child_territory_postal_routing = child_territory.main_postal_distribution.get(
+                                            'postal_routing'
+                                            )
+                                        if PTU_postal_routing is not None \
+                                            and PTU_postal_routing == child_territory_postal_routing:
+                                            ids_by_territory_id.setdefault(child_territory_id, set()).add(poi._id)
+                                            break
+                                    else:
+                                        ids_by_territory_id.setdefault(transport_offer_territory_id, set()).add(poi._id)
+                                else:
+                                    ids_by_territory_id.setdefault(transport_offer_territory_id, set()).add(poi._id)
                         for field in transport_offer.fields:
                             field_slug = strings.slugify(field.label)
                             if field_slug == 'type-de-transport' and field.value is not None:
