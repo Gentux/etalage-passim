@@ -1187,6 +1187,14 @@ def index_list(req):
             continue
         if poi._id in model.Poi.multimodal_info_service_ids:
             multimodal_info_services_by_id[poi._id] = poi
+            for field in poi.generate_all_fields():
+                if field.id == 'link' and strings.slugify(field.label) == 'site-web':
+                    web_site = model.Poi.instance_by_id.get(field.value)
+                    if web_site is None:
+                        continue
+                    for web_site_field in web_site.fields:
+                        if web_site_field.id == 'url' and strings.slugify(web_site_field.label) == 'url':
+                            web_site_by_id[poi._id] = web_site_field.value
         else:
             labels = set()
             for field in poi.generate_all_fields():
