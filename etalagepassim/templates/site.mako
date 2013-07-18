@@ -259,10 +259,6 @@ Thank you advance for any remarks, questions or suggestions about PASSIM !
                         <li><a href="/data">${_('Reuse')}</a></li>
                         <li><a href="/help">${_('Help')}</a></li>
                     </ul>
-                    <ul class="nav pull-right">
-                        <li><%self:export_link/></li>
-                        <li><%self:share_link/></li>
-                    </ul>
                 </div>
             </div>
         </div>
