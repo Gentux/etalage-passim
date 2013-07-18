@@ -48,12 +48,6 @@ span.loading img{
 /*
 Inspired by : http://css-tricks.com/responsive-data-tables/
  */
-th {
-    background: #333;
-    color: white;
-    font-weight: bold;
-}
-
 table.table-result td:nth-of-type(1) {
     width: 70px;
 }
