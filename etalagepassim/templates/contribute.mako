@@ -29,14 +29,14 @@
 <%def name="container_content()" filter="trim">
     <h2>${_('Help')}</h2>
     <hr>
-    <p>${_(u'PASSIM is frequently verified and completed but may still include errors. If you find any false or incomplete information, we thank you in advance for contacting us (contact link) or contributing to improving the content (contribute link).')}
+    <p>${_(u'PASSIM is frequently verified and completed but may still include errors. If you find any false or incomplete information, we thank you in advance for <a href="http://passim.mat.cst.easter-eggs.com/contact">contacting us</a> or <a href="http://passim.mat.cst.easter-eggs.com/contribute">contributing to improving the content</a>.')}
     </p>
 
-    <p>${_(u'''You are welcome to contribute by submitting us :
-- a missing info (link)
-- any enhancement proposal (contact)
-- any correction or complement for a particular service description page (example link?)
+    <p>${_(u'You are welcome to contribute by submitting us :
+- a missing information
+- any enhancement proposal
+- any correction or complement for a particular service description page
 Thank you a lot !
-Also, if you are interested in contributing more regularly, we may create an account for you on the back-office content management site.''')}
+Also, if you are interested in contributing more regularly, we may create an account for you on the back-office content management site.')}
     </p>
 </%def>

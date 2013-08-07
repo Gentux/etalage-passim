@@ -29,7 +29,7 @@
 <%def name="container_content()" filter="trim">
     <h2>${_('Contact')}</h2>
     <hr>
-    <p>${_(u'''Please complete this form (contact link; lien direct sans page intermédiaire?)
+    <p>${_(u'''<a=href="http://passim.mat.cst.easter-eggs.com/contact">Please click here and complete this e-mail</a>
 Thank you for any question, remark or enhancement proposal.''')}
     </p>
 

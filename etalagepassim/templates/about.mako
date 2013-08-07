@@ -29,17 +29,17 @@
 <%def name="container_content()" filter="trim">
     <h2>${_('About')}</h2>
     <hr>
-    <p>${_(u'''The PASSIM directory lists and describes the traveller information services in France, for all modes of transport.
-PASSIM is managed by the French ministry of sustainable development .est un site géré par le ministère du développement du durable (maîtrise d'ouvrage: DGITM (lien AFIMB); maîtrise d'oeuvre : CETE Méditerranée / CEREMA (liens)).
-The web site and platform is maintained by Easter-eggs (lien). All software used for PASSIM is open source (http://gitorious.org/passim/etalage-passim).
-For more information: (http://www.cete-mediterranee.fr/tt13/www/article.php3?id_article=348).''')}
+    <p>${_(u'The PASSIM directory lists and describes the traveller information services in France, for all modes of transport.<br>
+PASSIM is managed by <a href="http://www.developpement-durable.gouv.fr/Presentation-de-l-AFIMB.html">the French ministry of sustainable development</a>.<br>
+The web site and platform is maintained by <a href="http://www.easter-eggs.com">Easter-eggs</a>. All software used for PASSIM is <a href="http://gitorious.org/passim/etalage-passim">open source</a>.<br>
+For more information: <a href="http://www.cete-mediterranee.fr/tt13/www/article.php3?id_article=348)">see CETE Med web site</a>.')}
     </p>
 
-    <p>${_(u'PASSIM content is published on http://www.data.gouv.fr/ under Etalab Open Licence (lien http://www.data.gouv.fr/Licence-Ouverte-Open-Licence).')}
+    <p>${_(u'PASSIM content is published on <a href="http://www.data.gouv.fr">http://www.data.gouv.fr</a> under <a href="http://www.data.gouv.fr/Licence-Ouverte-Open-Licence">Etalab Open Licence</a>.')}
     </p>
     
-    <p>${_(u'''PASSIM is frequently verified and completed but may still include errors. If you find any false or incomplete information, we thank you in advance for contacting us (contact link) or contributing to improving the content (contribute link). 
+    <p>${_(u'PASSIM is frequently verified and completed but may still include errors. If you find any false or incomplete information, we thank you in advance for <a=href="http://passim.mat.cst.easter-eggs.com/contact">contacting us</a> or <a href="http://passim.mat.cst.easter-eggs.com/contribute">contributing to improving the content</a>. <br>
 This web site includes links towards third-party sites and services, which are provided only for your convenience.
-Logos and trademarks are property of their owners.''')}
+Logos and trademarks are property of their owners.')}
     </p>
 </%def>
