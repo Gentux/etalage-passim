@@ -225,36 +225,8 @@ My message: ...
                                 ${_('Contact')}
                             </a>
                         </li>
-<%
-    subject = _(
-        'Contribution to PASSIM : [new Info Service, correction to an existing Info Service...]'
-        ).replace(u' ', u'%20')
-    body = _(u'''
-I am [an end-user, a company...]
-
-My e-mail address: [xxx@yyy.org]
-
-Proposed contribution : [new Info Service, correction to an existing Info Service...]
-
-Information Service
-
-- Info Service name:
-- Info booth address:
-- Call centre number :
-- Web site address :
-- Mobile site or application :
-- Transport services covered:
-   - Name, Territory (city, department, region), Transport type (public transport...):
-- Comments or remarks (such as information about web services, open data, real time info...):
-
-''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
-%>\
-                        <li>
-                            <a href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">
-                                ${_('Contribute')}
-                            </a>
-                        </li>
     % endif
+                        <li><a href="/contribute">${_('Contribute')}</a></li>
                         <li><a href="/data">${_('Reuse')}</a></li>
                         <li><a href="/help">${_('Help')}</a></li>
                     </ul>

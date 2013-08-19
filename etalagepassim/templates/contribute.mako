@@ -27,7 +27,7 @@
 
 
 <%def name="container_content()" filter="trim">
-    <h2>${_('Help')}</h2>
+    <h2>${_('Contribute')}</h2>
     <hr>
     <p>
         ${_(u'PASSIM is frequently verified and completed but may still include errors. If you find any false or \

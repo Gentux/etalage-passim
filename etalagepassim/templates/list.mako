@@ -70,7 +70,7 @@ sort_order_slugs = [
                 if data.get('geolocation') else (inputs['term'] or '')
                 )}</h3>
             <div class="btn-group pull-right">
-                <a class="btn" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" \
+                <a class="btn" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" rel="tooltip" \
 title="${_('Search services for whole France')}">${_('France')}</a>
 <%
     url_args = {}
@@ -83,11 +83,11 @@ title="${_('Search services for whole France')}">${_('France')}</a>
         url_args[name] = value
     url_args['accept'] = 1
 %>\
-                <a class="btn tooltip" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}" \
+                <a class="btn" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}" rel="tooltip" \
 title="${_('Download searched information in CSV format.')}">
                     ${_('CSV')}
                 </a>
-                <a class="btn tooltip" href="${urls.get_url(ctx, 'gadget', **url_args)}" \
+                <a class="btn" href="${urls.get_url(ctx, 'gadget', **url_args)}" rel="tooltip" \
 title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
             </div>
         </div>

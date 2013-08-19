@@ -58,7 +58,7 @@ particular request (via the HTML button) or download the corresponding list in C
     </ul>
 
     <p>
-        ${_(u'Please ')}<a=href="http://passim.mat.cst.easter-eggs.com/contact">${_('contact us')}</a>\
+        ${_(u'Please ')}<a href="http://passim.mat.cst.easter-eggs.com/contact">${_('contact us')}</a>\
 ${_(' for any question or remark')}.<br>
         ${_(u'Thank you for using PASSIM and thank in advance for your comments!')}
     </p>
