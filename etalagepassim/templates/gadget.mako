@@ -73,9 +73,8 @@ textarea {
 </script>
 <noscript>
     <iframe src="${urls.get_full_url(ctx, 'carte', gadget = gadget_id, **url_args)}" style="height: 3000; width: 100%">
-        Votre navigateur ne permet pas d'afficher l'annuaire &agrave; l'int&eacute;rieur de ce site. 
-        Cliquez sur <a href="${urls.get_full_url(ctx, 'carte', gadget = gadget_id, **url_args)}">ce lien</a> pour y
-        acc&eacute;der.
+        Your browser cannot display the directory content. 
+        Click <a href="${urls.get_full_url(ctx, 'carte', gadget = gadget_id, **url_args)}">HERE</a> to access the content.
     </iframe>
 </noscript>
 <!-- Fin du composant -->
@@ -107,7 +106,7 @@ textarea {
                 </div>
             </div>
             <div class="span6">
-                <h2>${_('Integration preview.')}</h2>
+                <h2>${_('Preview.')}</h2>
                 ${gadget | n}
             </div>
         </div>

@@ -61,38 +61,38 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 </%def>
 
 
-<%def name="field(field, depth = 0)" filter="trim">
+<%def name="field(field)" filter="trim">
 <%
     if field is None or field.value is None:
         return ''
 %>\
-        ${getattr(self, 'field_{0}'.format(field.id.replace('-', '_')), field_default)(field, depth = depth)}
+        ${getattr(self, 'field_{0}'.format(field.id.replace('-', '_')), field_default)(field)}
 </%def>
 
 
-<%def name="field_adr(field, depth = 0)" filter="trim">
+<%def name="field_adr(field)" filter="trim">
         <div class="field">
     % if strings.slugify(field.label) == u'adresse':
             <b class="field-label">${u'Adresse guichet' if field.type == 'geo' else u'Adresse postale' if field.type == 'postal' else u'Adresse'} :</b>
     % else:
             <b class="field-label">${field.label}${u' (guichet)' if field.type == 'geo' else u'  (adresse postale)' if field.type == 'postal' else u''} :</b>
     % endif
-            <%self:field_value depth="${depth}" field="${field}"/>
+            <%self:field_value field="${field}"/>
         </div>
 </%def>
 
 
-<%def name="field_default(field, depth = 0)" filter="trim">
+<%def name="field_default(field)" filter="trim">
         <div class="field">
             <b class="field-label">${field.label} :</b>
-            <%self:field_value depth="${depth}" field="${field}"/>
+            <%self:field_value field="${field}"/>
         </div>
 </%def>
 
 
-<%def name="field_link(field, depth = 0)" filter="trim">
+<%def name="field_link(field)" filter="trim">
 <%
-    if field.relation == 'parent' and depth > 0:
+    if field.relation == 'parent':
         # Avoid infinite recursion.
         return u''
     target = model.Poi.instance_by_id.get(field.value)

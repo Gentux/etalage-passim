@@ -65,7 +65,7 @@ sort_order_slugs = [
 <%def name="results()" filter="trim">
     % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
         <div class="search-navbar">
-            <h3>${_(u'Information Services List For « {0} »').format(
+            <h3>${_(u'Traveler Info Services List For « {0} »').format(
                 data['geolocation'].main_postal_distribution_str \
                 if data.get('geolocation') else (inputs['term'] or '')
                 )}</h3>
@@ -88,7 +88,7 @@ title="${_('Download searched information in CSV format.')}">
                     ${_('CSV')}
                 </a>
                 <a class="btn tooltip" href="${urls.get_url(ctx, 'gadget', **url_args)}" \
-title="${_('Share a HTML component in your website')}">${_('HTML')}</a>
+title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
             </div>
         </div>
     % endif
@@ -135,7 +135,7 @@ title="${_('Share a HTML component in your website')}">${_('HTML')}</a>
         if coverage is None:
             continue
 %>
-        <h4>${_("{0} Information Services for {1}").format(coverage, territory.main_postal_distribution_str)}</h4>
+        <h4>${_("{0} Traveler Info Services for {1}").format(coverage, territory.main_postal_distribution_str)}</h4>
         <table class="table table-bordered table-condensed table-responsive table-result table-striped">
             <thead>
                 <tr>

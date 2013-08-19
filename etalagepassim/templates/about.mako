@@ -37,7 +37,7 @@ For more information: <a href="http://www.cete-mediterranee.fr/tt13/www/article.
 
     <p>${_(u'PASSIM content is published on <a href="http://www.data.gouv.fr">http://www.data.gouv.fr</a> under <a href="http://www.data.gouv.fr/Licence-Ouverte-Open-Licence">Etalab Open Licence</a>.')}
     </p>
-    
+
     <p>${_(u'PASSIM is frequently verified and completed but may still include errors. If you find any false or incomplete information, we thank you in advance for <a=href="http://passim.mat.cst.easter-eggs.com/contact">contacting us</a> or <a href="http://passim.mat.cst.easter-eggs.com/contribute">contributing to improving the content</a>. <br>
 This web site includes links towards third-party sites and services, which are provided only for your convenience.
 Logos and trademarks are property of their owners.')}

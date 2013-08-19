@@ -75,7 +75,7 @@ from etalagepassim import model, urls
                 </li>
             </ul>
             <p>
-                Télécharger la « Licence Ouverte / Open Licence » :
+                Télécharger la « Licence Ouverte » / Download the « Open Licence » :
             </p>
             <ul>
                 <li>
@@ -85,7 +85,7 @@ from etalagepassim import model, urls
                     <a href="http://ddata.over-blog.com/xxxyyy/4/37/99/26/licence/Licence-Ouverte-Open-Licence.rtf">RTF</a>
                 </li>
                 <li>
-                    Anglais :
+                    English :
                     <a href="http://ddata.over-blog.com/xxxyyy/4/37/99/26/licence/Licence-Ouverte-Open-Licence-ENG.pdf">PDF</a>
                     -
                     <a href="http://ddata.over-blog.com/xxxyyy/4/37/99/26/licence/Licence-Ouverte-Open-Licence-ENG.rtf">RTF</a>

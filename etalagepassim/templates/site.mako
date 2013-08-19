@@ -180,7 +180,7 @@ $(function () {
             <img src="/img/logo-ministere.png">
             <h2>
                 ${_('PASSIM')}
-                <small>${_('Transport information services and site directory.')}</small>
+                <small>${_('Directory of Traveler Information Services in France.')}</small>
             </h2>
         </div>
     </header>
@@ -211,13 +211,13 @@ $(function () {
         'Contact PASSIM : [your message subject]'
         ).replace(u' ', u'%20')
     body = _(u'''
-Your are [an end-user, a company...]
+I am [an end-user, a company...]
 
-Your e-mail address: [xxx@yyy.org]
+My e-mail address: [xxx@yyy.org]
 
-Your message:
+My message: ...
 
-Thank you advance for any remarks, questions or suggestions about PASSIM !
+
 ''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
 %>\
                         <li>
@@ -230,24 +230,23 @@ Thank you advance for any remarks, questions or suggestions about PASSIM !
         'Contribution to PASSIM : [new Info Service, correction to an existing Info Service...]'
         ).replace(u' ', u'%20')
     body = _(u'''
-Your are [an end-user, a company...]
+I am [an end-user, a company...]
 
-Your e-mail address: [xxx@yyy.org]
+My e-mail address: [xxx@yyy.org]
 
-Your contribution : [new Info Service, correction to an existing Info Service...]
+Proposed contribution : [new Info Service, correction to an existing Info Service...]
 
 Information Service
 
-- Info Service name
-- Info booth:
+- Info Service name:
+- Info booth address:
 - Call centre number :
 - Web site address :
 - Mobile site or application :
 - Transport services covered:
    - Name, Territory (city, department, region), Transport type (public transport...):
-- Your remarks (or information about web services, open data, real time info...):
+- Comments or remarks (such as information about web services, open data, real time info...):
 
-Thank you advance for any remarks, questions or suggestions about PASSIM !
 ''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
 %>\
                         <li>

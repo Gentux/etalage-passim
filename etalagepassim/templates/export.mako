@@ -46,8 +46,8 @@ from etalagepassim import model, urls
                 </div>
                 <div class="control-group">
                     <div class="controls">
-                        Par ailleurs, un export quotidien du site sous forme de pages HTML statiques est
-                        <a href="http://passim.comarquage.fr/passim-static-html.tar.gz">disponible en téléchargement</a>.
+                        Besides, a daily export as static HTML pages is
+                        <a href="http://passim.comarquage.fr/passim-static-html.tar.gz">downloadable</a>.
                     </div>
                 </div>
 </%def>
@@ -56,13 +56,13 @@ from etalagepassim import model, urls
 <%def name="types_and_formats_radios()" filter="trim">
                         <label class="radio">
                             <input type="radio" value="annuaire-excel" name="type_and_format">
-                            Annuaire (format Excel) &mdash; Les informations détaillées,
-                            organisme par organisme
+                            Annuaire (XL format) &mdash; Detailed data,
+                            by info service
                         </label>
                         <label class="radio">
                             <input type="radio" value="annuaire-csv" name="type_and_format">
-                            Annuaire (format CSV) &mdash; Les informations détaillées,
-                            organisme par organisme
+                            Directory (CSV format) &mdash; Detailed data,
+                            by info service
                         </label>
 </%def>
 

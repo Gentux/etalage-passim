@@ -37,14 +37,14 @@ from etalagepassim import model, ramdb, urls
     % if errors is not None:
         % if territory is None:
         <div class="alert alert-info">
-            Pour accéder à l'annuaire, vous devez <strong>préciser un territoire</strong> dans le formulaire ci-dessus.
+            To request the directory, you have to <strong>specify the covered terrtitory or info service name</strong> in the above form.
         </div>
         % endif
     % else:
-        <h4>Annuaire ${getattr(territory, 'name_with_hinge', u'du territoire "{0}"'.format(territory.name))}</h4>
+        <h4>Directory ${getattr(territory, 'name_with_hinge', u'of territory "{0}"'.format(territory.name))}</h4>
         % if not directory:
         <div>
-            <em>Aucun organisme trouvé.</em>
+            <em>No service found.</em>
         </div>
         % else:
         <div>
