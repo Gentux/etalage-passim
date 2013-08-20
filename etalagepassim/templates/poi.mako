@@ -111,19 +111,19 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
         target_field_attributes['label'] = field.label
         target_field = model.Field(**target_field_attributes)
 %>\
-        <%self:field depth="${depth}" field="${target_field}"/>
+        <%self:field field="${target_field}"/>
     % else:
         <div class="page-header">
             <h4>${field.label}</h4>
         </div>
         <div class="offset1">
-            <%self:fields depth="${depth + 1}" fields="${target_fields}" poi="${target}"/>
+            <%self:fields fields="${target_fields}" poi="${target}"/>
         </div>
     % endif
 </%def>
 
 
-<%def name="field_links(field, depth = 0)" filter="trim">
+<%def name="field_links(field)" filter="trim">
 <%
     targets = [
         target
@@ -227,12 +227,12 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 <%
             target = targets[0]
 %>\
-            <%self:fields depth="${depth + 1}" fields="${target.generate_all_fields()}" poi="${target}"/>
+            <%self:fields fields="${target.generate_all_fields()}" poi="${target}"/>
         % else:
             <ul>
             % for target in targets:
                 <li>
-                   <%self:fields depth="${depth + 1}" fields="${target.generate_all_fields()}" poi="${target}"/>
+                   <%self:fields fields="${target.generate_all_fields()}" poi="${target}"/>
                 </li>
             % endfor
             </ul>
@@ -240,23 +240,23 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
         </div>
     % endif
 </%def>
-<%def name="field_name(field, depth = 0)" filter="trim">
+<%def name="field_name(field)" filter="trim">
     % if depth > 0:
-        <%self:field_default depth="${depth}" field="${field}"/>
+        <%self:field_default field="${field}"/>
     % endif
 </%def>
 
 
-<%def name="field_value(field, depth = 0)" filter="trim">
+<%def name="field_value(field)" filter="trim">
 <%
     if field.value is None:
         return ''
 %>\
-    ${getattr(self, 'field_value_{0}'.format(field.id.replace('-', '_')), field_value_default)(field, depth = depth)}
+    ${getattr(self, 'field_value_{0}'.format(field.id.replace('-', '_')), field_value_default)(field)}
 </%def>
 
 
-<%def name="field_value_adr(field, depth = 0)" filter="trim">
+<%def name="field_value_adr(field)" filter="trim">
             <address class="field-value">
     % for subfield in field.value:
 <%
@@ -279,7 +279,7 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 </%def>
 
 
-<%def name="field_value_autocompleter(field, depth = 0)" filter="trim">
+<%def name="field_value_autocompleter(field)" filter="trim">
 <%
     slug_and_name_couples = []
     name = field.value
@@ -292,7 +292,7 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 </%def>
 
 
-<%def name="field_value_autocompleters(field, depth = 0)" filter="trim">
+<%def name="field_value_autocompleters(field)" filter="trim">
 <%
     slug_and_name_couples = []
     for name in field.value:
@@ -311,17 +311,17 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 </%def>
 
 
-<%def name="field_value_boolean(field, depth = 0)" filter="trim">
+<%def name="field_value_boolean(field)" filter="trim">
             <span class="field-value">${u'Oui' if field.value and field.value != '0' else u'Non'}</span>
 </%def>
 
 
-<%def name="field_value_checkboxes(field, depth = 0)" filter="trim">
-            <%self:field_value_autocompleters depth="${depth}" field="${field}"/>
+<%def name="field_value_checkboxes(field)" filter="trim">
+            <%self:field_value_autocompleters field="${field}"/>
 </%def>
 
 
-<%def name="field_value_date_range(field, depth = 0)" filter="trim">
+<%def name="field_value_date_range(field)" filter="trim">
 <%
     begin_field = field.get_first_field('date-range-begin')
     begin = begin_field.value if begin_field is not None else None
@@ -340,17 +340,17 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 </%def>
 
 
-<%def name="field_value_default(field, depth = 0)" filter="trim">
+<%def name="field_value_default(field)" filter="trim">
             <span class="field-value">${field.value}</span>
 </%def>
 
 
-<%def name="field_value_email(field, depth = 0)" filter="trim">
+<%def name="field_value_email(field)" filter="trim">
             <span class="field-value"><a href="mailto:${field.value}">${field.value}</a></span>
 </%def>
 
 
-<%def name="field_value_feed(field, depth = 0)" filter="trim">
+<%def name="field_value_feed(field)" filter="trim">
 <%
     try:
         feed = feedparser.parse(field.value)
@@ -382,7 +382,7 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 </%def>
 
 
-<%def name="field_value_geo(field, depth = 0)" filter="trim">
+<%def name="field_value_geo(field)" filter="trim">
             <div class="field-value">
     % if field.value[2] <= 6:
                 <div class="alert alert-error">
@@ -409,12 +409,12 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
 </%def>
 
 
-<%def name="field_value_image(field, depth = 0)" filter="trim">
+<%def name="field_value_image(field)" filter="trim">
             <div class="field-value"><img alt="" src="${field.value}"></div>
 </%def>
 
 
-<%def name="field_value_link(field, depth = 0)" filter="trim">
+<%def name="field_value_link(field)" filter="trim">
 <%
     target = model.Poi.instance_by_id.get(field.value)
 %>\
@@ -427,12 +427,12 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
 </%def>
 
 
-<%def name="field_value_links(field, depth = 0)" filter="trim">
+<%def name="field_value_links(field)" filter="trim">
     % if len(field.value) == 1:
 <%
         single_field = model.Field(id = 'link', value = field.value[0])
 %>\
-<%self:field_value depth="${depth}" field="${single_field}"/>
+<%self:field_value field="${single_field}"/>
     % else:
             <ul class="field-value">
         % for target_id in field.value:
@@ -449,7 +449,7 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
 </%def>
 
 
-<%def name="field_value_organism_type(field, depth = 0)" filter="trim">
+<%def name="field_value_organism_type(field)" filter="trim">
 <%
     category_slug = ramdb.category_slug_by_pivot_code.get(field.value)
     category = ramdb.category_by_slug.get(category_slug) if category_slug is not None else None
@@ -459,26 +459,26 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
 </%def>
 
 
-<%def name="field_value_select(field, depth = 0)" filter="trim">
-            <%self:field_value_autocompleter depth="${depth}" field="${field}"/>
+<%def name="field_value_select(field)" filter="trim">
+            <%self:field_value_autocompleter field="${field}"/>
 </%def>
 
 
-<%def name="field_value_source(field, depth = 0)" filter="trim">
+<%def name="field_value_source(field)" filter="trim">
             <div class="field-value offset1">
     % for subfield in field.value:
-        <%self:field depth="${depth + 1}" field="${subfield}"/>
+        <%self:field field="${subfield}"/>
     % endfor
             </div>
 </%def>
 
 
-<%def name="field_value_source_url(field, depth = 0)" filter="trim">
-            <%self:field_value_url depth="${depth}" field="${field}"/>
+<%def name="field_value_source_url(field)" filter="trim">
+            <%self:field_value_url field="${field}"/>
 </%def>
 
 
-<%def name="field_value_tags(field, depth = 0)" filter="trim">
+<%def name="field_value_tags(field)" filter="trim">
 <%
     tags_name = [
         tag.name
@@ -493,7 +493,7 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
 </%def>
 
 
-<%def name="field_value_territories(field, depth = 0)" filter="trim">
+<%def name="field_value_territories(field)" filter="trim">
 <%
     territories_title_markup = [
         territory.main_postal_distribution_str
@@ -521,7 +521,7 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
 </%def>
 
 
-<%def name="field_value_text_block(field, depth = 0)" filter="trim">
+<%def name="field_value_text_block(field)" filter="trim">
     % if u'\n' in field.value:
             <div class="field-value offset1">${markupsafe.Markup('<br>').join(field.value.split('\n'))}</div>
     % else:
@@ -530,17 +530,17 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
 </%def>
 
 
-<%def name="field_value_text_rich(field, depth = 0)" filter="trim">
+<%def name="field_value_text_rich(field)" filter="trim">
             <div class="field-value offset1">${field.value | n}</div>
 </%def>
 
 
-<%def name="field_value_url(field, depth = 0)" filter="trim">
+<%def name="field_value_url(field)" filter="trim">
             <a class="field-value" href="${field.value}" rel="external">${field.value}</a>
 </%def>
 
 
-<%def name="fields(poi, fields, depth = 0)" filter="trim">
+<%def name="fields(poi, fields)" filter="trim">
     % for field in (fields or []):
 <%
         if conf['ignored_fields'] is not None and field.id in conf['ignored_fields']:
@@ -552,7 +552,7 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
                 # Ignore a field with this ID and this label
                 continue
 %>\
-        <%self:field depth="${depth}" field="${field}"/>
+        <%self:field field="${field}"/>
     % endfor
 </%def>
 
@@ -598,7 +598,7 @@ rel="external">Accès back-office</a>
 </%def>
 
 
-<%def name="poi_header(poi, fields, depth = 0)" filter="trim">
+<%def name="poi_header(poi, fields)" filter="trim">
         <div class="page-header">
 <%
     names = [poi.name]
@@ -622,12 +622,12 @@ rel="external">Accès back-office</a>
     % endif
             </h3>
         </div>
-        <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
-        <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'link', u'Site web')}"/>
-        <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'link', u'Application mobile')}"/>
-        <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'link', u'''Centre d'appel''')}"/>
-        <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'link', u'''Guichet d'information''')}"/>
-        <%self:field depth="${depth}" field="${model.pop_first_field(fields, 'link', u'Open data')}"/>
+        <%self:field field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
+        <%self:field field="${model.pop_first_field(fields, 'link', u'Site web')}"/>
+        <%self:field field="${model.pop_first_field(fields, 'link', u'Application mobile')}"/>
+        <%self:field field="${model.pop_first_field(fields, 'link', u'''Centre d'appel''')}"/>
+        <%self:field field="${model.pop_first_field(fields, 'link', u'''Guichet d'information''')}"/>
+        <%self:field field="${model.pop_first_field(fields, 'link', u'Open data')}"/>
     % while True:
 <%
         model.pop_first_field(fields, 'link', u'Opérateur')
@@ -636,7 +636,7 @@ rel="external">Accès back-office</a>
         if field is None:
             break
 %>\
-        <%self:field depth="${depth}" field="${field}"/>
+        <%self:field field="${field}"/>
     % endwhile
     % while True:
 <%
@@ -644,7 +644,7 @@ rel="external">Accès back-office</a>
         if field is None:
             break
 %>\
-        <%self:field depth="${depth}" field="${field}"/>
+        <%self:field field="${field}"/>
     % endwhile
         <hr>
 </%def>
