@@ -82,7 +82,7 @@ textarea {
 
 
 <%def name="results()" filter="trim">
-        <div class="container-fluid">
+        <div class="container">
             <div class="span6">
                 <h2>${_('Export results list on your web site.')}</h2>
                 <p>

@@ -33,7 +33,7 @@ from etalagepassim import conf, urls
     <%self:topbar/>
     <%self:site_header/>
     % endif
-    <div class="container-fluid"><div class="row-fluid">
+    <div class="container"><div class="row">
         <%self:container_content/>
         <%self:footer/>
     </div></div>
@@ -175,13 +175,11 @@ $(function () {
 
 
 <%def name="site_header()" filter="trim">
-    <header class="jumbotron subhead">
+    <header class="jumbotron subhead" id="overview">
         <div class="container">
             <img src="/img/logo-ministere.png">
-            <h2>
-                ${_('PASSIM')}
-                <small>${_('Directory of Traveler Information Services in France.')}</small>
-            </h2>
+            <h2>${_('PASSIM')}</h2>
+            <p class="lead"><small>${_('Directory of Traveler Information Services in France')}</small></p>
         </div>
     </header>
 </%def>
@@ -195,7 +193,7 @@ $(function () {
 <%def name="topbar()" filter="trim">
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
-            <div class="container-fluid">
+            <div class="container">
                 <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
