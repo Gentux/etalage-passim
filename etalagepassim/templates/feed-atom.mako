@@ -30,13 +30,10 @@ from etalagepassim import conf, urls
 %>
 
 
-<%namespace file="/site.mako" name="site"/>
-
-
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xml:lang="fr" xmlns="http://www.w3.org/2005/Atom">
     <id>${data['feed_id']}</id>
-    <title><%site:title_content/></title>
+    <title>${_('PASSIM Directory Last Updates')}</title>
     <updated>${datetime.strftime(data['feed_updated'], '%Y-%m-%dT%H:%M:%S')}.00Z</updated>
     <link href="${data['feed_url']}" rel="self" />
     <author>
