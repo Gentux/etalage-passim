@@ -60,8 +60,8 @@ Information Service
 %>\
     <p>
         ${_(u'PASSIM is frequently verified and completed but may still include errors. If you find any false or \
-incomplete information, we thank you in advance for')} <a href="http://passim.mat.cst.easter-eggs.com/contact">\
-${_('contacting us')}</a> ${_('or')} <a href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">\
+incomplete information, we thank you in advance for')} <a href="/contact">${_('contacting us')}</a> ${_('or')} \
+<a href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">\
 ${_('contributing to improving the content')}</a>.
     </p>
 
