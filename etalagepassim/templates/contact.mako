@@ -23,6 +23,11 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+<%!
+from etalagepassim import conf
+%>
+
+
 <%inherit file="/site.mako"/>
 
 
@@ -31,31 +36,22 @@
     <hr>
 <%
     subject = _(
-        'Contribution to PASSIM : [new Info Service, correction to an existing Info Service...]'
+        'Contact PASSIM : [your message subject]'
         ).replace(u' ', u'%20')
     body = _(u'''
 I am [an end-user, a company...]
 
 My e-mail address: [xxx@yyy.org]
 
-Proposed contribution : [new Info Service, correction to an existing Info Service...]
+My message: ...
 
-Information Service
-
-- Info Service name:
-- Info booth address:
-- Call centre number :
-- Web site address :
-- Mobile site or application :
-- Transport services covered:
-   - Name, Territory (city, department, region), Transport type (public transport...):
-- Comments or remarks (such as information about web services, open data, real time info...):
 
 ''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
 %>\
     <p>
         <a href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">
             ${_('Please click here and complete this e-mail')}
-        </a> ${_('Thank you for any question, remark or enhancement proposal.')}
+        </a>.<br>
+        ${_('Thank you for any question, remark or enhancement proposal.')}
     </p>
 </%def>
