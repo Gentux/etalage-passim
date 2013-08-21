@@ -31,7 +31,6 @@ import datetime
 import itertools
 import json
 import logging
-import markupsafe
 import math
 import urllib2
 import urlparse
@@ -1157,7 +1156,6 @@ def index_list(req):
     if errors is not None:
         raise wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
 
-    base_territory = data.get('base_territory')
     competence_territories_id = None
     presence_territory = None
     territory = data['geolocation'] or (data['term'] if not isinstance(data['term'], basestring) else None)
@@ -1196,7 +1194,6 @@ def index_list(req):
                         if web_site_field.id == 'url' and strings.slugify(web_site_field.label) == 'url':
                             web_site_by_id[poi._id] = web_site_field.value
         else:
-            labels = set()
             for field in poi.generate_all_fields():
                 if field.id == 'links' and strings.slugify(field.label) == 'offres-de-transport':
                     for transport_offer in [
@@ -1209,7 +1206,7 @@ def index_list(req):
                             ]:
                         for transport_offer_territory_id in (transport_offer.competence_territories_id or []):
                             if not isinstance(data['term'], model.Territory) \
-                                or transport_offer_territory_id in data['term'].ancestors_id:
+                                    or transport_offer_territory_id in data['term'].ancestors_id:
                                 transport_offer_territory = ramdb.territory_by_id.get(transport_offer_territory_id)
                                 if transport_offer_territory.__class__.__name__ == 'UrbanTransportsPerimeterOfFrance':
                                     PTU_postal_routing = transport_offer_territory.main_postal_distribution.get(
@@ -1224,7 +1221,7 @@ def index_list(req):
                                             'postal_routing'
                                             )
                                         if PTU_postal_routing is not None \
-                                            and PTU_postal_routing == child_territory_postal_routing:
+                                                and PTU_postal_routing == child_territory_postal_routing:
                                             ids_by_territory_id.setdefault(child_territory_id, set()).add(poi._id)
                                             break
                                     else:
@@ -1605,9 +1602,10 @@ def poi(req):
 
         pager = pagers.Pager(
             item_count = len(poi_by_id),
-            page_number = data['page_number'] \
-                if data['poi_index'] is None else (data['poi_index'] / conf['pager.page_max_size']) + 1,
             page_max_size = conf['pager.page_max_size'],
+            page_number = data['page_number'] if data['poi_index'] is None else (
+                data['poi_index'] / conf['pager.page_max_size']
+                ) + 1,
             )
         pager.items = model.Poi.sort_and_paginate_pois_list(
             ctx,
