@@ -55,14 +55,14 @@ def language_detector(req, app):
     match = lang_re.match(req.path_info)
     if match is None:
         ctx.lang = [
-            #req.accept_language.best_match([('en-US', 1), ('en', 1), ('fr-FR', 1), ('fr', 1)],
-            #    default_match = 'en').split('-', 1)[0],
-            'fr',
+            req.accept_language.best_match([('en-US', 1), ('en', 1), ('fr-FR', 1), ('fr', 1)],
+                default_match = 'en').split('-', 1)[0],
             ]
     else:
         ctx.lang = [match.group('lang')]
         req.script_name += req.path_info[:match.end()]
         req.path_info = req.path_info[match.end():]
+    print ctx.lang
     return req.get_response(app)
 
 
