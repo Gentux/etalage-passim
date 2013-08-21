@@ -34,7 +34,7 @@
         ${_(u'The PASSIM directory lists and describes the traveller information services in France, for all modes of \
 transport.')}<br>
         ${_(u'The www.passim.info site works for fixed or mobile terminals on most web navigators, however if you have \
-display problems, thank you for ')}<a href="http://passim.mat.cst.easter-eggs.com/contact">${_('contacting us')}</a>.
+display problems, thank you for')} <a href="http://passim.mat.cst.easter-eggs.com/contact">${_('contacting us')}</a>.
     </p>
 
     <p>
@@ -66,10 +66,10 @@ menu list).')}
     <p>
         ${_(u'If you think a service is incomplete, false or should be delete, please click on the <contribute> \
 button on page bottom.')}<br>
-        ${_(u'You are invited to ')}<a href="http://passim.mat.cst.easter-eggs.com/contact">${_(u'ask any question or \
-make any remark')}</a>${_(' or to ')}<a href="http://passim.mat.cst.easter-eggs.com/contribute">${_('propose a new \
+        ${_(u'You are invited to')} <a href="http://passim.mat.cst.easter-eggs.com/contact">${_(u'ask any question or \
+make any remark')}</a> ${_('or to')} <a href="http://passim.mat.cst.easter-eggs.com/contribute">${_('propose a new \
 service to be included')}</a>.<br>
-        ${_(u'Also, you are welcome to ')}<a href="http://passim.mat.cst.easter-eggs.com/reuse">${_(u'reuse PASSIM \
+        ${_(u'Also, you are welcome to')} <a href="http://passim.mat.cst.easter-eggs.com/reuse">${_(u'reuse PASSIM \
 content in your applications or services')}</a>.
     </p>
 

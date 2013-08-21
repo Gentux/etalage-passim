@@ -31,8 +31,8 @@
     <hr>
     <p>
         ${_(u'PASSIM is frequently verified and completed but may still include errors. If you find any false or \
-incomplete information, we thank you in advance for ')}<a href="http://passim.mat.cst.easter-eggs.com/contact">\
-${_('contacting us')}</a>${_(' or ')}<a href="http://passim.mat.cst.easter-eggs.com/contribute">\
+incomplete information, we thank you in advance for')} <a href="http://passim.mat.cst.easter-eggs.com/contact">\
+${_('contacting us')}</a> ${_('or')} <a href="http://passim.mat.cst.easter-eggs.com/contribute">\
 ${_('contributing to improving the content')}</a>.
     </p>
 

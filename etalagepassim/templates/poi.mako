@@ -47,7 +47,8 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
     fields = poi.generate_all_fields()
 %>\
         <%self:poi_header fields="${fields}" poi="${poi}"/>
-        <%self:fields fields="${fields}" poi="${poi}"/>
+        <%self:poi_first_fields fields="${fields}" poi="${poi}"/>
+        ##<%self:fields fields="${fields}" poi="${poi}"/>
 </%def>
 
 
@@ -113,12 +114,8 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 %>\
         <%self:field field="${target_field}"/>
     % else:
-        <div class="page-header">
-            <h4>${field.label}</h4>
-        </div>
-        <div class="offset1">
-            <%self:fields fields="${target_fields}" poi="${target}"/>
-        </div>
+        <h4>${field.label}</h4>
+        <%self:fields fields="${target_fields}" poi="${target}"/>
     % endif
 </%def>
 
@@ -174,17 +171,13 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
             key = lambda territory: getattr(territory, 'population', 0),
             )
 %>\
-        <div class="page-header">
-            <h4>${_('Covered Territories')}</h4>
-        </div>
+        <h4>${_('Covered Territories')}</h4>
         <ul>
         % for territory in (territories or []):
             <li>${territory.main_postal_distribution_str}</li>
         % endfor
         </ul>
-        <div class="page-header">
-            <h4>${_('Transport Offers')}</h4>
-        </div>
+        <h4>${_('Transport Offers')}</h4>
         <table class="table table-bordered table-condensed table-responsive">
             <tr>
                 <th>${_('Name')}</th>
@@ -219,25 +212,21 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 ##            </ul>
 ##        </div>
     % else:
-        <div class="page-header">
-            <h4>${field.label}</h4>
-        </div>
-        <div class="offset1">
+        <h4>${field.label}</h4>
         % if len(targets) == 1:
 <%
             target = targets[0]
 %>\
             <%self:fields fields="${target.generate_all_fields()}" poi="${target}"/>
         % else:
-            <ul>
+        <ul>
             % for target in targets:
-                <li>
-                   <%self:fields fields="${target.generate_all_fields()}" poi="${target}"/>
-                </li>
+            <li>
+               <%self:fields fields="${target.generate_all_fields()}" poi="${target}"/>
+            </li>
             % endfor
-            </ul>
+        </ul>
         % endif
-        </div>
     % endif
 </%def>
 <%def name="field_name(field)" filter="trim">
@@ -357,7 +346,7 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
     except:
         feed = None
 %>\
-            <div class="field-value offset1">
+            <div class="field-value">
     % if feed is None or 'status' not in feed \
             or not feed.version and feed.status != 304 and feed.status != 401 \
             or feed.status >= 400:
@@ -465,7 +454,7 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
 
 
 <%def name="field_value_source(field)" filter="trim">
-            <div class="field-value offset1">
+            <div class="field-value">
     % for subfield in field.value:
         <%self:field field="${subfield}"/>
     % endfor
@@ -523,7 +512,7 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
 
 <%def name="field_value_text_block(field)" filter="trim">
     % if u'\n' in field.value:
-            <div class="field-value offset1">${markupsafe.Markup('<br>').join(field.value.split('\n'))}</div>
+            <div class="field-value">${markupsafe.Markup('<br>').join(field.value.split('\n'))}</div>
     % else:
             <span class="field-value">${field.value}</span>
     % endif
@@ -531,7 +520,7 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
 
 
 <%def name="field_value_text_rich(field)" filter="trim">
-            <div class="field-value offset1">${field.value | n}</div>
+            <div class="field-value">${field.value | n}</div>
 </%def>
 
 
@@ -552,7 +541,7 @@ etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]
                 # Ignore a field with this ID and this label
                 continue
 %>\
-        <%self:field field="${field}"/>
+         <%self:field field="${field}"/>
     % endfor
 </%def>
 
@@ -598,6 +587,36 @@ rel="external">Accès back-office</a>
 </%def>
 
 
+<%def name="poi_first_fields(poi, fields)" filter="trim">
+        <%self:field field="${model.pop_first_field(fields, 'last-update', u'Dernière mise à jour')}"/>
+        <%self:field field="${model.pop_first_field(fields, 'link', u'Application mobile')}"/>
+        <%self:field field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
+        <%self:field field="${model.pop_first_field(fields, 'link', u'''Guichet d'information''')}"/>
+        <%self:field field="${model.pop_first_field(fields, 'link', u'''Centre d'appel''')}"/>
+<%
+model.pop_first_field(fields, 'name', u'Nom du service')
+%>
+        <h4>Autre services disponible</h4>
+        <button class="btn btn-primary" data-toggle="collapse" data-target="#fields-toggle">
+            <i class="icon-plus icon-white"></i>
+        </button>
+        <div id="fields-toggle" class="collapse">
+            <%self:field field="${model.pop_first_field(fields, 'link', u'Site web')}"/>
+            <%self:field field="${model.pop_first_field(fields, 'link', u'Open data')}"/>
+        </div>
+    % while True:
+<%
+        model.pop_first_field(fields, 'link', u'Opérateur')
+
+        field = model.pop_first_field(fields, 'link')
+        if field is None:
+            break
+%>\
+        <%self:field field="${field}"/>
+    % endwhile
+</%def>
+
+
 <%def name="poi_header(poi, fields)" filter="trim">
         <div class="page-header">
 <%
@@ -622,31 +641,6 @@ rel="external">Accès back-office</a>
     % endif
             </h3>
         </div>
-        <%self:field field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
-        <%self:field field="${model.pop_first_field(fields, 'link', u'Site web')}"/>
-        <%self:field field="${model.pop_first_field(fields, 'link', u'Application mobile')}"/>
-        <%self:field field="${model.pop_first_field(fields, 'link', u'''Centre d'appel''')}"/>
-        <%self:field field="${model.pop_first_field(fields, 'link', u'''Guichet d'information''')}"/>
-        <%self:field field="${model.pop_first_field(fields, 'link', u'Open data')}"/>
-    % while True:
-<%
-        model.pop_first_field(fields, 'link', u'Opérateur')
-
-        field = model.pop_first_field(fields, 'link')
-        if field is None:
-            break
-%>\
-        <%self:field field="${field}"/>
-    % endwhile
-    % while True:
-<%
-        field = model.pop_first_field(fields, 'links')
-        if field is None:
-            break
-%>\
-        <%self:field field="${field}"/>
-    % endwhile
-        <hr>
 </%def>
 
 

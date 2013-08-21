@@ -32,24 +32,24 @@
     <p>
         ${_(u'''The PASSIM directory lists and describes the traveller information services in France, for all modes of\
 transport.''')}<br>
-        ${_('PASSIM is managed by ')}<a href="http://www.developpement-durable.gouv.fr/Presentation-de-l-AFIMB.html">
+        ${_('PASSIM is managed by')} <a href="http://www.developpement-durable.gouv.fr/Presentation-de-l-AFIMB.html">
         ${_('''the French ministry of sustainable development''')}</a>.<br>
-        ${_('The web site and platform is maintained by ')}<a href="http://www.easter-eggs.com">Easter-eggs</a>.
-        ${_('All software used for PASSIM is ')}<a href="http://gitorious.org/passim/etalage-passim">\
+        ${_('The web site and platform is maintained by')} <a href="http://www.easter-eggs.com">Easter-eggs</a>.
+        ${_('All software used for PASSIM is')} <a href="http://gitorious.org/passim/etalage-passim">\
 ${_('open source')}</a>.<br>
-        ${_('For more information: ')}<a href="http://www.cete-mediterranee.fr/tt13/www/article.php3?id_article=348)">\
+        ${_('For more information:')} <a href="http://www.cete-mediterranee.fr/tt13/www/article.php3?id_article=348)">\
 ${_('see CETE Med web site')}</a>.
     </p>
 
     <p>
-        ${_(u'PASSIM content is published on ')}<a href="http://www.data.gouv.fr">http://www.data.gouv.fr</a>
+        ${_(u'PASSIM content is published on')} <a href="http://www.data.gouv.fr">http://www.data.gouv.fr</a>
         ${_('under')} <a href="http://www.data.gouv.fr/Licence-Ouverte-Open-Licence">${_('Etalab Open Licence')}</a>.
     </p>
 
     <p>
         ${_(u'PASSIM is frequently verified and completed but may still include errors. If you find any false or \
-incomplete information, we thank you in advance for ')}<a href="http://passim.mat.cst.easter-eggs.com/contact">\
-${_('contacting us')}</a>${_(' or ')}<a href="http://passim.mat.cst.easter-eggs.com/contribute">\
+incomplete information, we thank you in advance for')} <a href="http://passim.mat.cst.easter-eggs.com/contact">\
+${_('contacting us')}</a> ${_('or')} <a href="http://passim.mat.cst.easter-eggs.com/contribute">\
 ${_('contributing to improving the content')}</a>.<br>
         ${_(u'This web site includes links towards third-party sites and services, which are provided only for your \
 convenience.')}<br>
