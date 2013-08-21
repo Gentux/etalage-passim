@@ -62,7 +62,6 @@ def language_detector(req, app):
         ctx.lang = [match.group('lang')]
         req.script_name += req.path_info[:match.end()]
         req.path_info = req.path_info[match.end():]
-    print ctx.lang
     return req.get_response(app)
 
 

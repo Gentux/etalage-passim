@@ -52,17 +52,17 @@ etalagepassim.search = (function ($) {
                     },
                     url: '/api/v1/names/autocomplete?term=%QUERY'
                 }
-            },
-            {
-                header: '<h5 class="autocompleter-header">' + options.wording.categories + '</h5>',
-                remote: {
-                    filter: function(json) {
-                        return json.data.items;
-                    },
-                    url: '/api/v1/categories/autocomplete?term=%QUERY'
-                },
-                valueKey: 'tag'
             }
+//            {
+//                header: '<h5 class="autocompleter-header">' + options.wording.categories + '</h5>',
+//                remote: {
+//                    filter: function(json) {
+//                        return json.data.items;
+//                    },
+//                    url: '/api/v1/categories/autocomplete?term=%QUERY'
+//                },
+//                valueKey: 'tag'
+//            }
         ]);
     }
 
