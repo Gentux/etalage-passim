@@ -595,18 +595,14 @@ rel="external">Accès back-office</a>
         <%self:field field="${model.pop_first_field(fields, 'link', u'''Centre d'appel''')}"/>
 <%
 model.pop_first_field(fields, 'name', u'Nom du service')
-other_services = self.field(field = model.pop_first_field(fields, 'link', u'Site web'))
-other_services += self.field(field = model.pop_first_field(fields, 'link', u'Open data'))
 %>
-    % if other_services:
-        <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#fields-toggle">
-            <i class="icon-plus icon-white"></i> ${_("Other Available Services")}
-        </button>
-        <div id="fields-toggle" class="collapse">
-            <%self:field field="${model.pop_first_field(fields, 'link', u'Site web')}"/>
-            <%self:field field="${model.pop_first_field(fields, 'link', u'Open data')}"/>
-        </div>
-    % endif
+    <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#fields-toggle">
+        <i class="icon-plus icon-white"></i> ${_("Other Available Services")}
+    </button>
+    <div id="fields-toggle" class="collapse">
+        <%self:field field="${model.pop_first_field(fields, 'link', u'Site web')}"/>
+        <%self:field field="${model.pop_first_field(fields, 'link', u'Open data')}"/>
+    </div>
     % while True:
 <%
         model.pop_first_field(fields, 'link', u'Opérateur')

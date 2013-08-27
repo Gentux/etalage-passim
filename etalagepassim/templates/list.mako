@@ -179,7 +179,9 @@ title="${_('Transport offer website.')}" href="${web_site_by_id[info_service._id
                                 ).format(transport_type, strings.slugify(transport_type))
                             for transport_type in sorted(
                                 transport_types_by_id.get(info_service._id, []),
-                                key = lambda transport_type: sort_order_slugs.index(strings.slugify(transport_type)),
+                                key = lambda transport_type: sort_order_slugs.index(strings.slugify(transport_type))
+                                    if sort_order_slugs.count(strings.slugify(transport_type)) > 0
+                                    else len(sort_order_slugs),
                                 )
                             )}
                     </td>
@@ -261,7 +263,9 @@ title="${_('Transport offer website.')}" href="${web_site_by_id[info_service._id
                                 ).format(transport_type, strings.slugify(transport_type))
                             for transport_type in sorted(
                                 transport_types,
-                                key = lambda transport_type: sort_order_slugs.index(strings.slugify(transport_type)),
+                                key = lambda transport_type: sort_order_slugs.index(strings.slugify(transport_type))
+                                    if sort_order_slugs.count(strings.slugify(transport_type)) > 0
+                                    else len(sort_order_slugs),
                                 )
                             )}
                     </td>
