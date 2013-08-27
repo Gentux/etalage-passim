@@ -19,6 +19,10 @@
     width: 16px;
 }
 
+.field-label {
+    font-size: 1.1em;
+}
+
 .jaccede-field-label {
     text-decoration: underline;
     padding-top: 20px;

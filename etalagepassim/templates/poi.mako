@@ -114,8 +114,16 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 %>\
         <%self:field field="${target_field}"/>
     % else:
-        <h4>${field.label}</h4>
-        <%self:fields fields="${target_fields}" poi="${target}"/>
+        <div class="field">
+            <b class="field-label">${field.label}</b>
+            <ul class="unstyled">
+        % for field in (target_fields or []):
+            % if field.value is not None:
+                <li><b>${field.label} :</b> <%self:field_value field="${field}"/></li>
+            % endif
+        % endfor
+            </ul>
+        </div>
     % endif
 </%def>
 
@@ -171,62 +179,49 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
             key = lambda territory: getattr(territory, 'population', 0),
             )
 %>\
-        <h4>${_('Covered Territories')}</h4>
-        <ul class="inline">
+        <div class="field">
+            <b class="field-label">${_('Covered Territories')}</b>
+            <ul class="inline">
         % for territory in (territories or []):
-            <li>${territory.main_postal_distribution_str}</li>
+                <li>${territory.main_postal_distribution_str}</li>
         % endfor
-        </ul>
-        <h4>${_('Transport Mode')}</h4>
-        <table class="table table-bordered table-condensed table-responsive">
-            <tr>
-                <th>${_('Name')}</th>
-                <th>${_('Transport Type')}</th>
-                <th>${_('Transport Offers')}</th>
-            </tr>
+            </ul>
+        </div>
+        <div class="field">
+            <b class="field-label">${_('Transport Mode')}</b>
+            <table class="table table-bordered table-condensed table-responsive">
+                <tr>
+                    <th>${_('Name')}</th>
+                    <th>${_('Transport Type')}</th>
+                    <th>${_('Transport Offers')}</th>
+                </tr>
         % for offer_commercial_name, offer_type, offer_modes in transport_offers_infos:
-            <tr>
-                <td>${offer_commercial_name}</td>
-                <td>${offer_type}</td>
-                <td>${offer_modes}</td>
-            </tr>
+                <tr>
+                    <td>${offer_commercial_name}</td>
+                    <td>${offer_type}</td>
+                    <td>${offer_modes}</td>
+                </tr>
         % endfor
-        </table>
-##        <div class="offset1">
-##            <ul>
-##        % for (offer_type, offer_modes), offers_infos in sorted(offers_infos_by_type_and_modes.iteritems()):
-##                <li><strong>${offer_type}</strong>
-##            % if offer_modes is not None:
-##                    (${offer_modes})
-##            % endif
-##                    <ul>
-##            % for offer_infos in sorted(offers_infos, key = lambda infos: (strings.slugify(infos[0]), infos[1])):
-##                        <li>${u' / '.join(
-##                                fragment
-##                                for fragment in offer_infos
-##                                if fragment is not None
-##                                )}</li>
-##            % endfor
-##                    </ul>
-##                </li>
-##            </ul>
-##        </div>
+            </table>
+        </div>
     % else:
-        <h4>${field.label}</h4>
+        <div class="field">
+            <b class="field-label">${field.label}</b>
         % if len(targets) == 1:
 <%
             target = targets[0]
 %>\
             <%self:fields fields="${target.generate_all_fields()}" poi="${target}"/>
         % else:
-        <ul>
+            <ul>
             % for target in targets:
-            <li>
-               <%self:fields fields="${target.generate_all_fields()}" poi="${target}"/>
-            </li>
+                <li>
+                   <%self:fields fields="${target.generate_all_fields()}" poi="${target}"/>
+                </li>
             % endfor
-        </ul>
+            </ul>
         % endif
+        </div>
     % endif
 </%def>
 <%def name="field_name(field)" filter="trim">
@@ -589,30 +584,55 @@ rel="external">Accès back-office</a>
 
 <%def name="poi_first_fields(poi, fields)" filter="trim">
         <%self:field field="${model.pop_first_field(fields, 'last-update', u'Dernière mise à jour')}"/>
-        <%self:field field="${model.pop_first_field(fields, 'link', u'Application mobile')}"/>
+<%
+site_web_link = model.pop_first_field(fields, 'link', u'Site web')
+if site_web_link is not None and site_web_link.relation != 'parent':
+    site_web_poi = model.Poi.instance_by_id.get(site_web_link.value)
+    if site_web_poi is not None:
+        for field in site_web_poi.generate_all_fields():
+            if field.id == 'url':
+                site_web_url = field.value
+                break
+%>
+        <div class="field">
+            <b class="field-label">${_('Site web')} :</b>
+            <a class="btn btn-primary btn-small internal" rel="tooltip" target="_blank" title="${_('Transport offer website.')}" \
+href="${site_web_url}">${_('www')}</a>
+        </div>
+<%
+mobile_application_link = model.pop_first_field(fields, 'link', u'Application mobile')
+if mobile_application_link is not None and mobile_application_link.relation != 'parent':
+    mobile_application_poi = model.Poi.instance_by_id.get(mobile_application_link.value)
+else:
+    mobile_application_poi = None
+%>
+    % if mobile_application_poi is not None:
+        <div class="field">
+            <b class="field-label">${_('Mobile applications')} :</b>
+        % for field in mobile_application_poi.generate_all_fields():
+            % if field.id == 'url':
+            <a class="btn btn-primary btn-small internal" rel="tooltip" target="_blank" title="${field.label}" \
+href="${field.value}">${field.label}</a>
+            % endif
+        % endfor
+        </div>
+    % endif
         <%self:field field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
         <%self:field field="${model.pop_first_field(fields, 'link', u'''Guichet d'information''')}"/>
-        <%self:field field="${model.pop_first_field(fields, 'link', u'''Centre d'appel''')}"/>
 <%
 model.pop_first_field(fields, 'name', u'Nom du service')
+open_data_field = model.pop_first_field(fields, 'link', u'Open data')
+service_web_field = model.pop_first_field(fields, 'link', u'Service web')
 %>
+    % if open_data_field is not None or service_web_field is not None:
     <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#fields-toggle">
         <i class="icon-plus icon-white"></i> ${_("Other Available Services")}
     </button>
     <div id="fields-toggle" class="collapse">
-        <%self:field field="${model.pop_first_field(fields, 'link', u'Site web')}"/>
-        <%self:field field="${model.pop_first_field(fields, 'link', u'Open data')}"/>
+        <%self:field field="${open_data_field}"/>
+        <%self:field field="${service_web_field}"/>
     </div>
-    % while True:
-<%
-        model.pop_first_field(fields, 'link', u'Opérateur')
-
-        field = model.pop_first_field(fields, 'link')
-        if field is None:
-            break
-%>\
-        <%self:field field="${field}"/>
-    % endwhile
+    % endif
 </%def>
 
 
