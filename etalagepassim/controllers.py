@@ -698,7 +698,7 @@ def feed(req):
         data['feed_id'] = urls.get_full_url(ctx, **inputs)
         data['feed_url'] = data['feed_id']
         data['feed_updated'] = pager.items[0].last_update_datetime if pager.items else datetime.datetime.utcnow()
-        data['author_name'] = u"Easter-eggs"
+        data['author_name'] = ctx._(u'CEREMA')
         data['author_email'] = conf['data_email']
 
     req.response.content_type = 'application/atom+xml; charset=utf-8'
