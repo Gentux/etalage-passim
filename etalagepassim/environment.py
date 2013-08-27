@@ -250,13 +250,13 @@ def load_environment(global_conf, app_conf):
     # CDN configuration
     conf.update(conv.check(conv.struct(
         {
-            u'bootstrap.css': conv.default(urlparse.urljoin(conf['cdn_url'], '/bootstrap/2.2.1/css/bootstrap.min.css')),
+            u'bootstrap.css': conv.default(urlparse.urljoin(conf['cdn_url'], '/bootstrap/2.3.1/css/bootstrap.min.css')),
             u'bootstrap-gadget.css': conv.default(
-                urlparse.urljoin(conf['cdn_url'], '/bootstrap/2.2.1/css/bootstrap.min.css')
+                urlparse.urljoin(conf['cdn_url'], '/bootstrap/2.3.1/css/bootstrap.min.css')
                 ),
-            u'bootstrap.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/bootstrap/2.2.1/js/bootstrap.min.js')),
+            u'bootstrap.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/bootstrap/2.3.1/js/bootstrap.min.js')),
             u'bootstrap-responsive.css': conv.default(
-                urlparse.urljoin(conf['cdn_url'], '/bootstrap/2.2.1/css/bootstrap-responsive.min.css')
+                urlparse.urljoin(conf['cdn_url'], '/bootstrap/2.3.1/css/bootstrap-responsive.min.css')
                 ),
             u'easyxdm.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/easyxdm/latest/easyXDM.min.js')),
             u'easyxdm.swf': conv.default(urlparse.urljoin(conf['cdn_url'], '/easyxdm/latest/easyxdm.swf')),
