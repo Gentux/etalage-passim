@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Passim\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-08-21 15:31+0200\n"
-"PO-Revision-Date: 2013-08-21 13:34+0000\n"
+"POT-Creation-Date: 2013-08-27 15:34+0200\n"
+"PO-Revision-Date: 2013-08-27 13:35+0000\n"
 "Last-Translator: rsoufflet <rsoufflet@easter-eggs.com>\n"
 "Language-Team: French <passim@listes.easter-eggs.com>\n"
 "MIME-Version: 1.0\n"
@@ -69,6 +69,10 @@ msgstr "Export de la couverture géographique au format CSV"
 #: etalagepassim/controllers.py:636
 msgid "Geographical Coverage Export in Excel Format"
 msgstr "Export de la couverture géographique au format Excel"
+
+#: etalagepassim/controllers.py:701
+msgid "CEREMA"
+msgstr "CEREMA"
 
 #: etalagepassim/controllers.py:906
 msgid "Directory page disabled by configuration"
@@ -834,11 +838,15 @@ msgid ""
 "Thank you advance for any remarks, questions or suggestions about PASSIM !\n"
 msgstr "\nVous êtes [Un particulier, Opérateur d'un service d'information transport, Une entreprise...]\n\nVotre adresse mail: [xxx@yyy.org]\n\nVotre contribution : [Ajout, Modification, Suppression d'un service d'information]\n\nService d'information.\n\n- Nom du service d'information: (champ obligatoire):\n- Guichet d'information /adresse/code postal/téléphone :\n- Centre d'appel / téléphone: \n- Adresse site web / url : \n- Application mobile (nom, site mobile ou App pour iPhone, Android, Windows, etc.):\n\n- Offre(s) de transport rattachée au service d'information.\n\n   - Nom de l'offre de transport, Territoire couvert (ville, département, région), Type de transport (transport collectif, transport à la demande, vélo en libre service...):\n\n- Vos commentaires (ou autres précisions sur les services web, l'open data, le temps réel...):\n\nMerci d'avance de toutes vos remarques, propositions ou demandes d'informations sur le fonctionnement de l'annuaire PASSIM !\n"
 
-#: etalagepassim/templates/poi.mako:632
+#: etalagepassim/templates/poi.mako:603
+msgid "Other Available Services"
+msgstr "Autres services disponibles"
+
+#: etalagepassim/templates/poi.mako:635
 msgid "Multimodal information service"
 msgstr "Service d'information multimodale"
 
-#: etalagepassim/templates/poi.mako:637
+#: etalagepassim/templates/poi.mako:640
 msgid "Detailed Informations For {0}"
 msgstr "Informations détaillées pour {0}"
 
