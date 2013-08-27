@@ -172,12 +172,12 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
             )
 %>\
         <h4>${_('Covered Territories')}</h4>
-        <ul>
+        <ul class="inline">
         % for territory in (territories or []):
             <li>${territory.main_postal_distribution_str}</li>
         % endfor
         </ul>
-        <h4>${_('Transport Offers')}</h4>
+        <h4>${_('Transport Mode')}</h4>
         <table class="table table-bordered table-condensed table-responsive">
             <tr>
                 <th>${_('Name')}</th>
