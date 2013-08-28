@@ -30,11 +30,11 @@
     <h2>${_('About')}</h2>
     <hr>
     <p>
-        ${_(u'''The PASSIM directory lists and describes the traveller information services in France, for all modes of\
-transport.''')}<br>
+        ${_(u'''The PASSIM directory lists and describes the traveller information services in France, for all 
+transport modes.''')}<br>
         ${_('PASSIM is managed by')} <a href="http://www.developpement-durable.gouv.fr/Presentation-de-l-AFIMB.html">
         ${_('''the French ministry of sustainable development''')}</a>.<br>
-        ${_('The web site and platform is maintained by')} <a href="http://www.easter-eggs.com">Easter-eggs</a>.
+        ${_('The web platform is maintained by')} <a href="http://www.easter-eggs.com">Easter-eggs</a>.
         ${_('All software used for PASSIM is')} <a href="http://gitorious.org/passim/etalage-passim">\
 ${_('open source')}</a>.<br>
         ${_('For more information:')} <a href="http://www.cete-mediterranee.fr/tt13/www/article.php3?id_article=348)">\

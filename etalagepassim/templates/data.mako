@@ -37,19 +37,19 @@ ${_('Etalab Open Licence')}</a>.
 
     <p>
         ${_(u'The PASSIM directory was created in 2004 as a means to give to public authorities a global vision on the \
-traveller info service landscape and evolutions, and to contribute to some extent to a technical harmonisation ; \
-the passim.info web site presents the directory content to the public so as they can find relevant services for any \
-place in France, however PASSIM main goal is to provide its content for reuse in other services and applications.')}
+traveller info service landscape and evolutions, and to contribute to some extent to a technical harmonisation. \
+The passim.info web site presents the directory content to the public so that they can find relevant services for any \
+place in France, however PASSIM main goal is that its data content be reused by other services and applications.')}
     </p>
 
     <p>
-        ${_(u'You may reuse PASSIM in several ways :')}
+        ${_(u'You may reuse PASSIM in several ways:')}
     </p>
 
     <ul>
         <li>${_('The complete content is downloadable as a ZIP folder of the')} \
 <a href="http://petitpois.passim.comarquage.fr/">${_('the complete back-office content')}</a>\
-${_(', and is more complete than the content shown on the passim web site')}</li>
+${_(', and is more complete than what is shown on the passim web site')}</li>
         <li>${_('The content is also published in')} <a href="http://passim.comarquage.fr/data/">\
 ${_('other formats easier to visualise')}</a></li>
         <li>${_('You may also copy and paste the html/js code for displaying in your web site the response to a \
