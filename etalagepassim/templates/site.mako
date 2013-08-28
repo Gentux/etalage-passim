@@ -166,6 +166,10 @@ $(function () {
     % if ctx.container_base_url is not None and ctx.gadget_id is not None:
     initGadget();
     % endif
+    $("a[href=#]").on('click', function (e) {
+        e.preventDefault();
+        return false;
+    });
 </%def>
 
 
