@@ -586,6 +586,7 @@ rel="external">Accès back-office</a>
         <%self:field field="${model.pop_first_field(fields, 'last-update', u'Dernière mise à jour')}"/>
 <%
 site_web_link = model.pop_first_field(fields, 'link', u'Site web')
+site_web_url = None
 if site_web_link is not None and site_web_link.relation != 'parent':
     site_web_poi = model.Poi.instance_by_id.get(site_web_link.value)
     if site_web_poi is not None:
@@ -594,11 +595,13 @@ if site_web_link is not None and site_web_link.relation != 'parent':
                 site_web_url = field.value
                 break
 %>
+    % if site_web_url is not None:
         <div class="field">
             <b class="field-label">${_('Site web')} :</b>
             <a class="btn btn-primary btn-small internal" rel="tooltip" target="_blank" title="${_('Transport offer website.')}" \
 href="${site_web_url}">${_('www')}</a>
         </div>
+    % endif
 <%
 mobile_application_link = model.pop_first_field(fields, 'link', u'Application mobile')
 if mobile_application_link is not None and mobile_application_link.relation != 'parent':
