@@ -666,6 +666,18 @@ service_web_field = model.pop_first_field(fields, 'link', u'Service web')
 </%def>
 
 
+<%def name="scripts()" filter="trim">
+    <%parent:scripts/>
+    <script src="${conf['leaflet.js']}"></script>
+    <script src="/js/map.js"></script>
+    <script>
+var etalagepassim = etalagepassim || {};
+etalagepassim.map.markersUrl = ${conf['images.markers.url'].rstrip('/') | n, js};
+etalagepassim.map.tileLayersOptions = ${conf['tile_layers'] | n, js};
+    </script>
+</%def>
+
+
 <%def name="title_content()" filter="trim">
 ${poi.name} - ${parent.title_content()}
 </%def>
