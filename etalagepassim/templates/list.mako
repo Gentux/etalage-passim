@@ -150,9 +150,12 @@ title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
             [
                 (
                     min(
-                        sort_order_slugs.index(strings.slugify(transport_type))
-                        if strings.slugify(transport_type) in sort_order_slugs else len(sort_order_slugs)
-                        for transport_type in transport_types_by_id.get(info_service_id, [])
+                        (
+                            sort_order_slugs.index(strings.slugify(transport_type))
+                            if strings.slugify(transport_type) in sort_order_slugs else len(sort_order_slugs)
+                            for transport_type in transport_types_by_id.get(info_service_id, [])
+                            ),
+                        len(sort_order_slugs),
                         ),
                     model.Poi.instance_by_id.get(info_service_id)
                     )
