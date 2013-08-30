@@ -125,9 +125,6 @@ etalagepassim.params = ${inputs | n, js};
                 <%self:search_form_hidden/>
                 <fieldset>
                     <%self:search_form_field/>
-                    <button class="btn btn-success" rel="tooltip" title="${_('Passim search')}" type="submit">
-                        <i class="icon-search icon-white"></i>
-                    </button>
                 </fieldset>
             </form>
 </%def>
