@@ -185,7 +185,7 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
         </div>
         <div class="field">
             <b class="field-label">${_('Transport Offers')}</b>
-            <table class="table table-bordered table-condensed table-responsive">
+            <table class="table table-bordered table-condensed">
                 <tr>
                     <th>${_('Name')}</th>
                     <th>${_('Transport Type')}</th>

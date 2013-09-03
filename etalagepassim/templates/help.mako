@@ -45,12 +45,8 @@ fares, ... but lists the relevant services which provide this detailed informati
     <p>
         ${_(u'''You'd like to know the relevant Traveler Info Services for any place in France?''')}<br>
         ${_(u'Type in the place name (commune, département, région : the first letters typed will show a menu where \
-you can select your choice) or, if you are located by your browser, click on the <GPS> button and you will obtain the list of relevant \
-services known by PASSIM.')}<br>
-
-
-
-
+you can select your choice) or, if you are located by your browser, click on the <GPS> button and you will obtain the \
+list of relevant services known by PASSIM.')}<br>
         ${_(u'The list starts with Multimodal Info Services (i.e. services providing all info regarding Public \
 Transport and alternatives to private car in a territory such as a Région or a Département) and then shows services of \
 local, departmental, and regional interest, with indications of the transport type (urban - departmental - regional \
