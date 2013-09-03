@@ -56,16 +56,6 @@ etalagepassim.bind = (function ($) {
 
     function appendLoadingGif(event) {
         $('#search-form .control-group .controls').last().append($loadingGif);
-        $loadingGif.data('activeUrl', document.location);
-
-        setTimeout(function () {
-            if (typeof($loadingGif) !== "undefined" &&
-                    $loadingGif !== null &&
-                    document.location == $loadingGif.data('activeUrl')) {
-                $loadingGif.detach();
-                // clearTimeout();
-            }
-        }, 300);
     }
 
     return {

@@ -59,23 +59,43 @@ etalagepassim.search = (function ($) {
         });
     }
 
-    function initGeolocation($button) {
-        $button.on("click", function() {
+    function initGeolocation(options) {
+        options = options || {};
+        $(options.buttonSelector).on("click", function() {
             self = $(this);
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    $("#search-form")
-                        .append($("<input>", {
-                                type: "hidden",
-                                name: "geolocation",
-                                value: position.coords.latitude + "," + position.coords.longitude
-                        })).submit();
-                });
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        $("#search-form").append($("<input>", {
+                            type: "hidden",
+                            name: "geolocation",
+                            value: position.coords.latitude + "," + position.coords.longitude
+                        }));
+                        $('#search-form .control-group .controls .loading').detach();
+                        $("#search-form").submit();
+                    },
+                    function(error) {
+                        errors = {
+                            1: options.wording['permission denied'],
+                            2: options.wording['position unavailable'],
+                            3: options.wording['timeout']
+                        }
+                        self.closest('.control-group')
+                            .addClass('error')
+                            .append($("<span class=\"help-inline\">").text(errors[error.code]));
+                        $('#search-form .control-group .controls .loading').detach();
+                    },
+                    {
+                        enableHighAccuracy: false,
+                        timeout: 10000,
+                        maximumAge: Infinity,
+                    }
+                );
             } else {
-                self.closest('control-group').addClass('error');
-                self.closest('controls').append(
-                    $("<span class=\"help-inline\">").text("Geolocation is not supported by this browser.")
-                    );
+                $('#search-form .control-group .controls .loading').detach();
+                self.closest('.control-group')
+                    .addClass('error')
+                    .append($("<span class=\"help-inline\">").text("Geolocation is not supported by this browser."));
             }
         });
     }

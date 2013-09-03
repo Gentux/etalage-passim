@@ -114,7 +114,14 @@ etalagepassim.params = ${inputs | n, js};
             territories: ${_('Territories') | n, js}
         }
     });
-    etalagepassim.search.initGeolocation($('#btn-geolocation'));
+    etalagepassim.search.initGeolocation({
+        buttonSelector: '#btn-geolocation',
+        wording: {
+            'permission denied': ${_('Permission denied by user') | n, js},
+            'position unavailable': ${_('Geolocation unavaible') | n, js},
+            'timeout': ${_('Geolocation timed out') | n, js}
+        }
+    });
     <%parent:scripts_domready_content/>
     $("[rel=tooltip]").tooltip()
 </%def>
@@ -123,9 +130,7 @@ etalagepassim.params = ${inputs | n, js};
 <%def name="search_form()" filter="trim">
             <form action="${urls.get_url(ctx, 'liste')}" class="form-inline internal" id="search-form" method="get">
                 <%self:search_form_hidden/>
-                <fieldset>
-                    <%self:search_form_field/>
-                </fieldset>
+                <%self:search_form_field/>
             </form>
 </%def>
 
@@ -134,8 +139,9 @@ etalagepassim.params = ${inputs | n, js};
 <%
     error = errors.get('term') if errors is not None else None
 %>\
+                <div class="control-group">
                     <label class="control-label" for="term">${_("Find a service")} :</label>
-                    <div class="input-prepend">
+                    <div class="controls input-prepend">
                         <a class="btn btn-primary" href="#" id="btn-geolocation" rel="tooltip" \
 title="${_('Use your GPS')}">
                             <i class="icon-globe icon-white"></i>
@@ -146,6 +152,7 @@ value="${data['geolocation'].main_postal_distribution_str if data.get('geolocati
     % if error:
                     <span class="help-inline">${error}</span>
     % endif
+                </div>
 </%def>
 
 
