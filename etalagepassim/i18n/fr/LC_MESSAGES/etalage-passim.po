@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Passim\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-09-03 14:01+0200\n"
-"PO-Revision-Date: 2013-09-03 12:02+0000\n"
+"POT-Creation-Date: 2013-09-03 15:24+0200\n"
+"PO-Revision-Date: 2013-09-03 13:26+0000\n"
 "Last-Translator: rsoufflet <rsoufflet@easter-eggs.com>\n"
 "Language-Team: French <passim@listes.easter-eggs.com>\n"
 "MIME-Version: 1.0\n"
@@ -546,7 +546,7 @@ msgid "Preview."
 msgstr "Exemple d'intégration pour la recherche Passim."
 
 #: etalagepassim/templates/gadget.mako:127
-#: etalagepassim/templates/index.mako:192
+#: etalagepassim/templates/index.mako:197
 #: etalagepassim/templates/site.mako:177
 msgid "Share"
 msgstr "Partager"
@@ -648,11 +648,11 @@ msgstr "Enfin, vous êtes les bienvenus "
 msgid "reuse PASSIM content in your applications or services"
 msgstr "si vous souhaitez réutiliser le contenu de PASSIM "
 
-#: etalagepassim/templates/home.mako:47 etalagepassim/templates/list.mako:99
+#: etalagepassim/templates/home.mako:47 etalagepassim/templates/list.mako:98
 msgid "No organism found."
 msgstr "Aucune fiche trouvée"
 
-#: etalagepassim/templates/home.mako:56 etalagepassim/templates/list.mako:75
+#: etalagepassim/templates/home.mako:56 etalagepassim/templates/list.mako:74
 msgid "Search services for whole France"
 msgstr "Services d'info transport couvrant la France métropolitaine"
 
@@ -668,8 +668,8 @@ msgstr "Les 10 dernières mises à jour"
 msgid "RSS Feed"
 msgstr "Flux RSS"
 
-#: etalagepassim/templates/home.mako:75 etalagepassim/templates/list.mako:144
-#: etalagepassim/templates/list.mako:209 etalagepassim/templates/poi.mako:190
+#: etalagepassim/templates/home.mako:75 etalagepassim/templates/list.mako:143
+#: etalagepassim/templates/list.mako:208 etalagepassim/templates/poi.mako:190
 msgid "Name"
 msgstr "Nom"
 
@@ -702,82 +702,94 @@ msgstr "Noms"
 msgid "Territories"
 msgstr "Territoires"
 
-#: etalagepassim/templates/index.mako:136
+#: etalagepassim/templates/index.mako:120
+msgid "Permission denied by user"
+msgstr "Permissions refusées par l'utilisateur"
+
+#: etalagepassim/templates/index.mako:121
+msgid "Geolocation unavaible"
+msgstr "Geolocalisation indisponible"
+
+#: etalagepassim/templates/index.mako:122
+msgid "Geolocation timed out"
+msgstr "Le temps d'attente pour la geolocalisation à été dépassé"
+
+#: etalagepassim/templates/index.mako:143
 msgid "Find a service"
 msgstr "Recherchez un service d'info transport"
 
-#: etalagepassim/templates/index.mako:142
+#: etalagepassim/templates/index.mako:146
 msgid "Use your GPS"
 msgstr "Votre position"
 
-#: etalagepassim/templates/list.mako:69
+#: etalagepassim/templates/list.mako:68
 msgid "Traveler Info Services List For « {0} »"
 msgstr "Services d'information pour {0}"
 
-#: etalagepassim/templates/list.mako:75
+#: etalagepassim/templates/list.mako:74
 msgid "France"
 msgstr "France"
 
-#: etalagepassim/templates/list.mako:88
+#: etalagepassim/templates/list.mako:87
 msgid "Download searched information in CSV format."
 msgstr "Télécharger les informations recherchées au format CSV."
 
-#: etalagepassim/templates/list.mako:89
+#: etalagepassim/templates/list.mako:88
 msgid "CSV"
 msgstr "CSV"
 
-#: etalagepassim/templates/list.mako:92
+#: etalagepassim/templates/list.mako:91
 msgid "Use results as a HTML component in your website"
 msgstr "Utiliser ces résultats en tant que composant HTML sur votre site internet"
 
-#: etalagepassim/templates/list.mako:92
+#: etalagepassim/templates/list.mako:91
 msgid "HTML"
 msgstr "HTML"
 
-#: etalagepassim/templates/list.mako:103
+#: etalagepassim/templates/list.mako:102
 msgid "Multimodal Information Services"
 msgstr "Services d'information multimodale"
 
-#: etalagepassim/templates/list.mako:127 etalagepassim/templates/list.mako:128
-#: etalagepassim/templates/list.mako:132
+#: etalagepassim/templates/list.mako:126 etalagepassim/templates/list.mako:127
+#: etalagepassim/templates/list.mako:131
 msgid "local"
 msgstr "locale"
 
-#: etalagepassim/templates/list.mako:129 etalagepassim/templates/list.mako:134
+#: etalagepassim/templates/list.mako:128 etalagepassim/templates/list.mako:133
 msgid "national"
 msgstr "nationale"
 
-#: etalagepassim/templates/list.mako:130
+#: etalagepassim/templates/list.mako:129
 msgid "departmental"
 msgstr "départementale"
 
-#: etalagepassim/templates/list.mako:131
+#: etalagepassim/templates/list.mako:130
 msgid "regional"
 msgstr "régionale"
 
-#: etalagepassim/templates/list.mako:139
+#: etalagepassim/templates/list.mako:138
 msgid "{0} Traveler Info Services for {1}"
 msgstr "Services d'information {0} pour {1}"
 
-#: etalagepassim/templates/list.mako:143 etalagepassim/templates/list.mako:208
+#: etalagepassim/templates/list.mako:142 etalagepassim/templates/list.mako:207
 msgid "Web site"
 msgstr "Site web"
 
-#: etalagepassim/templates/list.mako:145 etalagepassim/templates/list.mako:210
+#: etalagepassim/templates/list.mako:144 etalagepassim/templates/list.mako:209
 msgid "Transport type"
 msgstr "Type de transport"
 
-#: etalagepassim/templates/list.mako:173 etalagepassim/templates/list.mako:219
+#: etalagepassim/templates/list.mako:172 etalagepassim/templates/list.mako:218
 #: etalagepassim/templates/poi.mako:581
 msgid "Transport offer website."
 msgstr "Site web d'info transport"
 
-#: etalagepassim/templates/list.mako:173 etalagepassim/templates/list.mako:219
+#: etalagepassim/templates/list.mako:172 etalagepassim/templates/list.mako:218
 #: etalagepassim/templates/poi.mako:582
 msgid "www"
 msgstr "www"
 
-#: etalagepassim/templates/list.mako:284
+#: etalagepassim/templates/list.mako:283
 msgid "List"
 msgstr "Liste"
 
