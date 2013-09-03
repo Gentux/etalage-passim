@@ -181,19 +181,15 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 %>\
         <div class="field">
             <b class="field-label">${_('Covered Territories')}</b>
-            <ul class="inline">
-        % for territory in (territories or []):
-                <li>${territory.main_postal_distribution_str}</li>
-        % endfor
-            </ul>
+            <p>${', '.join(territory.main_postal_distribution_str for territory in (territories or []))}</p>
         </div>
         <div class="field">
-            <b class="field-label">${_('Transport Mode')}</b>
+            <b class="field-label">${_('Transport Offers')}</b>
             <table class="table table-bordered table-condensed table-responsive">
                 <tr>
                     <th>${_('Name')}</th>
                     <th>${_('Transport Type')}</th>
-                    <th>${_('Transport Offers')}</th>
+                    <th>${_('Transport Mode')}</th>
                 </tr>
         % for offer_commercial_name, offer_type, offer_modes in transport_offers_infos:
                 <tr>
@@ -368,26 +364,10 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 
 <%def name="field_value_geo(field)" filter="trim">
             <div class="field-value">
-    % if field.value[2] <= 6:
-                <div class="alert alert-error">
-                    Cet organisme est positionné <strong>très approximativement</strong>.
-                </div>
-    % elif field.value[2] <= 7:
-                <div class="alert alert-warning">
-                    Cet organisme est positionné <strong>approximativement dans la rue</strong>.
-                </div>
-    % endif
-                <div class="single-marker-map" id="map-poi" style="height: 300px; width: 424px;"></div>
-                <script>
-etalagepassim.map.singleMarkerMap("map-poi", ${field.value[0]}, ${field.value[1]});
-                </script>
                 <div class="bigger-map-link">
-                    Voir sur une carte plus grande avec
+                    Voir sur une carte avec
                     <a href="${u'http://www.openstreetmap.org/?mlat={0}&mlon={1}&zoom=15&layers=M'.format(
                             field.value[0], field.value[1])}" rel="external">OpenStreetMap</a>
-                    ou
-                    <a href="${u'http://maps.google.com/maps?q={0},{1}'.format(field.value[0], field.value[1]
-                            )}" rel="external">Google Maps</a>
                 </div>
             </div>
 </%def>
@@ -651,13 +631,13 @@ service_web_field = model.pop_first_field(fields, 'link', u'Service web')
         if field.value is not None:
             names.append(field.value)
         fields.remove(field)
-    title_description = _('Multimodal information service') if poi.is_multimodal_info_service() \
-        else ramdb.schema_title_by_name[poi.schema_name]
+##    title_description = _('Multimodal information service') if poi.is_multimodal_info_service() \
+##        else ramdb.schema_title_by_name[poi.schema_name]
     field = model.pop_first_field(fields, 'image', u'Logo')
 %>\
             <h3>
-                ${_(u'Detailed Informations For {0}').format(u', '.join(names))}
-                <small>${title_description}</small>
+                ${_(u'Detailed Sheet For {0}').format(u', '.join(names))}
+##                <small>${title_description}</small>
     % if field is not None and field.value is not None:
                 <img alt="" class="logo hidden-phone" height="50" src="${field.value}">
     % endif
