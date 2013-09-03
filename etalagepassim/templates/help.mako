@@ -69,7 +69,7 @@ button on page bottom.')}<br>
         ${_(u'You are invited to')} <a href="http://passim.mat.cst.easter-eggs.com/contact">${_(u'ask any question or \
 make any remark')}</a> ${_('or to')} <a href="http://passim.mat.cst.easter-eggs.com/contribute">${_('propose a new \
 service to be included')}</a>.<br>
-        ${_(u'Also, you are welcome to')} <a href="http://passim.mat.cst.easter-eggs.com/reuse">${_(u'reuse PASSIM \
+        ${_(u'Also, you are welcome to')} <a href="http://passim.mat.cst.easter-eggs.com/data">${_(u'reuse PASSIM \
 content in your applications or services')}</a>.
     </p>
 
