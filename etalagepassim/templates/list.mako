@@ -134,6 +134,8 @@ title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
             coverage = None
         if coverage is None:
             continue
+        if data['coverage'] == 'Nationale' and territory.__class__.__name__ != 'Country':
+            continue
 %>
         <h4>${_("{0} Traveler Info Services for {1}").format(coverage, territory.main_postal_distribution_str)}</h4>
         <table class="table table-bordered table-condensed table-responsive table-result table-striped">
