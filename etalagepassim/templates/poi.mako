@@ -635,13 +635,13 @@ service_web_field = model.pop_first_field(fields, 'link', u'Service web')
 ##        else ramdb.schema_title_by_name[poi.schema_name]
     field = model.pop_first_field(fields, 'image', u'Logo')
 %>\
-            <h3>
+            <h4>
                 ${_(u'Detailed Sheet For {0}').format(u', '.join(names))}
 ##                <small>${title_description}</small>
     % if field is not None and field.value is not None:
                 <img alt="" class="logo hidden-phone" height="50" src="${field.value}">
     % endif
-            </h3>
+            </h4>
         </div>
 </%def>
 
