@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Passim\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-08-30 16:04+0200\n"
-"PO-Revision-Date: 2013-08-30 14:06+0000\n"
+"POT-Creation-Date: 2013-09-03 13:53+0200\n"
+"PO-Revision-Date: 2013-09-03 11:54+0000\n"
 "Last-Translator: rsoufflet <rsoufflet@easter-eggs.com>\n"
 "Language-Team: French <passim@listes.easter-eggs.com>\n"
 "MIME-Version: 1.0\n"
@@ -345,7 +345,7 @@ msgid "Thank you for any question, remark or enhancement proposal."
 msgstr "Merci d'avance de toute question, remarque ou proposition d'amélioration."
 
 #: etalagepassim/templates/contribute.mako:35
-#: etalagepassim/templates/poi.mako:573 etalagepassim/templates/site.mako:231
+#: etalagepassim/templates/poi.mako:553 etalagepassim/templates/site.mako:231
 msgid "Contribute"
 msgstr "Contribuer"
 
@@ -546,7 +546,7 @@ msgid "Preview."
 msgstr "Exemple d'intégration pour la recherche Passim."
 
 #: etalagepassim/templates/gadget.mako:127
-#: etalagepassim/templates/index.mako:190
+#: etalagepassim/templates/index.mako:192
 #: etalagepassim/templates/site.mako:177
 msgid "Share"
 msgstr "Partager"
@@ -669,7 +669,7 @@ msgid "RSS Feed"
 msgstr "Flux RSS"
 
 #: etalagepassim/templates/home.mako:75 etalagepassim/templates/list.mako:144
-#: etalagepassim/templates/list.mako:206 etalagepassim/templates/poi.mako:194
+#: etalagepassim/templates/list.mako:209 etalagepassim/templates/poi.mako:190
 msgid "Name"
 msgstr "Nom"
 
@@ -702,11 +702,11 @@ msgstr "Noms"
 msgid "Territories"
 msgstr "Territoires"
 
-#: etalagepassim/templates/index.mako:137
+#: etalagepassim/templates/index.mako:136
 msgid "Find a service"
 msgstr "Recherchez un service d'info transport"
 
-#: etalagepassim/templates/index.mako:140
+#: etalagepassim/templates/index.mako:142
 msgid "Use your GPS"
 msgstr "Votre position"
 
@@ -759,25 +759,25 @@ msgstr "régionale"
 msgid "{0} Traveler Info Services for {1}"
 msgstr "Services d'information {0} pour {1}"
 
-#: etalagepassim/templates/list.mako:143 etalagepassim/templates/list.mako:205
+#: etalagepassim/templates/list.mako:143 etalagepassim/templates/list.mako:208
 msgid "Web site"
 msgstr "Site web"
 
-#: etalagepassim/templates/list.mako:145 etalagepassim/templates/list.mako:207
+#: etalagepassim/templates/list.mako:145 etalagepassim/templates/list.mako:210
 msgid "Transport type"
 msgstr "Type de transport"
 
-#: etalagepassim/templates/list.mako:170 etalagepassim/templates/list.mako:216
-#: etalagepassim/templates/poi.mako:601
+#: etalagepassim/templates/list.mako:173 etalagepassim/templates/list.mako:219
+#: etalagepassim/templates/poi.mako:581
 msgid "Transport offer website."
 msgstr "Site web d'info transport"
 
-#: etalagepassim/templates/list.mako:170 etalagepassim/templates/list.mako:216
-#: etalagepassim/templates/poi.mako:602
+#: etalagepassim/templates/list.mako:173 etalagepassim/templates/list.mako:219
+#: etalagepassim/templates/poi.mako:582
 msgid "www"
 msgstr "www"
 
-#: etalagepassim/templates/list.mako:281
+#: etalagepassim/templates/list.mako:284
 msgid "List"
 msgstr "Liste"
 
@@ -801,23 +801,23 @@ msgstr "Type de transport inconnu"
 msgid "Covered Territories"
 msgstr "Territoires couverts"
 
-#: etalagepassim/templates/poi.mako:191
-msgid "Transport Mode"
-msgstr "Mode de transport"
-
-#: etalagepassim/templates/poi.mako:195
-msgid "Transport Type"
-msgstr "Type de transport"
-
-#: etalagepassim/templates/poi.mako:196
+#: etalagepassim/templates/poi.mako:187
 msgid "Transport Offers"
 msgstr "Offres de transport"
 
-#: etalagepassim/templates/poi.mako:548
+#: etalagepassim/templates/poi.mako:191
+msgid "Transport Type"
+msgstr "Type de transport"
+
+#: etalagepassim/templates/poi.mako:192
+msgid "Transport Mode"
+msgstr "Mode de transport"
+
+#: etalagepassim/templates/poi.mako:528
 msgid "Contribution to PASSIM : [{0}]"
 msgstr "Contribution à PASSIM : [{0}]"
 
-#: etalagepassim/templates/poi.mako:551
+#: etalagepassim/templates/poi.mako:531
 msgid ""
 "\n"
 "Your are [an end-user, a company...]\n"
@@ -840,25 +840,21 @@ msgid ""
 "Thank you advance for any remarks, questions or suggestions about PASSIM !\n"
 msgstr "\nVous êtes [Un particulier, Opérateur d'un service d'information transport, Une entreprise...]\n\nVotre adresse mail: [xxx@yyy.org]\n\nVotre contribution : [Ajout, Modification, Suppression d'un service d'information]\n\nService d'information.\n\n- Nom du service d'information: (champ obligatoire):\n- Guichet d'information /adresse/code postal/téléphone :\n- Centre d'appel / téléphone: \n- Adresse site web / url : \n- Application mobile (nom, site mobile ou App pour iPhone, Android, Windows, etc.):\n\n- Offre(s) de transport rattachée au service d'information.\n\n   - Nom de l'offre de transport, Territoire couvert (ville, département, région), Type de transport (transport collectif, transport à la demande, vélo en libre service...):\n\n- Vos commentaires (ou autres précisions sur les services web, l'open data, le temps réel...):\n\nMerci d'avance de toutes vos remarques, propositions ou demandes d'informations sur le fonctionnement de l'annuaire PASSIM !\n"
 
-#: etalagepassim/templates/poi.mako:600
+#: etalagepassim/templates/poi.mako:580
 msgid "Site web"
 msgstr "Site web"
 
-#: etalagepassim/templates/poi.mako:614
+#: etalagepassim/templates/poi.mako:594
 msgid "Mobile applications"
 msgstr "Applications mobile"
 
-#: etalagepassim/templates/poi.mako:632
+#: etalagepassim/templates/poi.mako:612
 msgid "Other Available Services"
 msgstr "Autres services disponibles"
 
-#: etalagepassim/templates/poi.mako:654
-msgid "Multimodal information service"
-msgstr "Service d'information multimodale"
-
-#: etalagepassim/templates/poi.mako:659
-msgid "Detailed Informations For {0}"
-msgstr "Informations détaillées pour {0}"
+#: etalagepassim/templates/poi.mako:639
+msgid "Detailed Sheet For {0}"
+msgstr "Fiche détaillée pour {0}"
 
 #: etalagepassim/templates/site.mako:98
 msgid "Data"
