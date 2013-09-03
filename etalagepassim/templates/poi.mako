@@ -365,7 +365,7 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 <%def name="field_value_geo(field)" filter="trim">
             <div class="field-value">
                 <div class="bigger-map-link">
-                    Voir sur une carte avec
+                    ${_('See on a map with')}
                     <a href="${u'http://www.openstreetmap.org/?mlat={0}&mlon={1}&zoom=15&layers=M'.format(
                             field.value[0], field.value[1])}" rel="external">OpenStreetMap</a>
                 </div>

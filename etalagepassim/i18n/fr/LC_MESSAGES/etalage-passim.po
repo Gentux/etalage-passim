@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Passim\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-09-03 13:53+0200\n"
-"PO-Revision-Date: 2013-09-03 11:54+0000\n"
+"POT-Creation-Date: 2013-09-03 14:01+0200\n"
+"PO-Revision-Date: 2013-09-03 12:02+0000\n"
 "Last-Translator: rsoufflet <rsoufflet@easter-eggs.com>\n"
 "Language-Team: French <passim@listes.easter-eggs.com>\n"
 "MIME-Version: 1.0\n"
@@ -812,6 +812,10 @@ msgstr "Type de transport"
 #: etalagepassim/templates/poi.mako:192
 msgid "Transport Mode"
 msgstr "Mode de transport"
+
+#: etalagepassim/templates/poi.mako:368
+msgid "See on a map with"
+msgstr "Voir sur une carte avec"
 
 #: etalagepassim/templates/poi.mako:528
 msgid "Contribution to PASSIM : [{0}]"
