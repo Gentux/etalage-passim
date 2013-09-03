@@ -207,27 +207,7 @@ $(function () {
                 <div class="nav-collapse collapse">
                     <ul class="nav">
                         <li><a href="/about">${_('About')}</a></li>
-    % if conf['data_email'] is not None:
-<%
-    subject = _(
-        'Contact PASSIM : [your message subject]'
-        ).replace(u' ', u'%20')
-    body = _(u'''
-I am [an end-user, a company...]
-
-My e-mail address: [xxx@yyy.org]
-
-My message: ...
-
-
-''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
-%>\
-                        <li>
-                            <a href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">
-                                ${_('Contact')}
-                            </a>
-                        </li>
-    % endif
+                        <li><a href="/contact">${_('Contact')}</a></li>
                         <li><a href="/contribute">${_('Contribute')}</a></li>
                         <li><a href="/data">${_('Reuse')}</a></li>
                         <li><a href="/help">${_('Help')}</a></li>
