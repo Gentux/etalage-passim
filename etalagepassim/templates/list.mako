@@ -28,28 +28,6 @@ import markupsafe
 from biryani import strings
 
 from etalagepassim import conf, conv, model, ramdb, urls
-
-
-sort_order_slugs = [
-    u'transport-collectif-urbain',
-    u'transport-collectif-departemental',
-    u'transport-collectif-regional',
-    u'transport-longue-distance',
-    u'transport-a-la-demande',
-    u'transport-personnes-a-mobilite-reduite',
-    u'transport-scolaire',
-    u'velo-libre-service',
-    u'autopartage',
-    u'covoiturage',
-    u'taxi',
-    u'velo-taxi',
-    u'reseau-routier',
-    u'stationnement',
-    u'port',
-    u'aeroport',
-    u'circuit-touristique',
-    u'reseau-fluvial',
-    ]
 %>
 
 
@@ -153,11 +131,12 @@ title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
                 (
                     min(
                         (
-                            sort_order_slugs.index(strings.slugify(transport_type))
-                            if strings.slugify(transport_type) in sort_order_slugs else len(sort_order_slugs)
+                            conf['transport_types_order'].index(strings.slugify(transport_type))
+                            if strings.slugify(transport_type) in conf['transport_types_order']
+                            else len(conf['transport_types_order'])
                             for transport_type in transport_types_by_id.get(info_service_id, [])
                             ),
-                        len(sort_order_slugs),
+                        len(conf['transport_types_order']),
                         ),
                     model.Poi.instance_by_id.get(info_service_id)
                     )
@@ -184,9 +163,10 @@ title="${_('Transport offer website.')}" href="${web_site_by_id[info_service._id
                                 ).format(transport_type, strings.slugify(transport_type))
                             for transport_type in sorted(
                                 transport_types_by_id.get(info_service._id, []),
-                                key = lambda transport_type: sort_order_slugs.index(strings.slugify(transport_type))
-                                    if sort_order_slugs.count(strings.slugify(transport_type)) > 0
-                                    else len(sort_order_slugs),
+                                key = lambda transport_type: conf['transport_types_order'].index(
+                                    strings.slugify(transport_type)
+                                    ) if conf['transport_types_order'].count(strings.slugify(transport_type)) > 0
+                                    else len(conf['transport_types_order']),
                                 )
                             )}
                     </td>
@@ -268,9 +248,10 @@ title="${_('Transport offer website.')}" href="${web_site_by_id[info_service._id
                                 ).format(transport_type, strings.slugify(transport_type))
                             for transport_type in sorted(
                                 transport_types,
-                                key = lambda transport_type: sort_order_slugs.index(strings.slugify(transport_type))
-                                    if sort_order_slugs.count(strings.slugify(transport_type)) > 0
-                                    else len(sort_order_slugs),
+                                key = lambda transport_type: conf['transport_types_order'].index(
+                                    strings.slugify(transport_type)
+                                    ) if conf['transport_types_order'].count(strings.slugify(transport_type)) > 0
+                                    else len(conf['transport_types_order']),
                                 )
                             )}
                     </td>

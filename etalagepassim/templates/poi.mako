@@ -170,6 +170,13 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
                 offer_type,
                 offer_modes,
                 ))
+        transport_offers_infos = sorted(
+            transport_offers_infos,
+            key = lambda transport_offer_infos: conf['transport_types_order'].index(
+                strings.slugify(transport_offer_infos[1])
+                ) if conf['transport_types_order'].count(strings.slugify(transport_offer_infos[1])) > 0
+                else len(conf['transport_types_order']),
+            )
         territories = sorted(
             [
                 ramdb.territory_by_id[territory_id]
