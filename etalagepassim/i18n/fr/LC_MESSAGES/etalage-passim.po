@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Passim\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-09-09 15:09+0200\n"
-"PO-Revision-Date: 2013-09-09 13:11+0000\n"
+"POT-Creation-Date: 2013-09-09 15:19+0200\n"
+"PO-Revision-Date: 2013-09-09 13:20+0000\n"
 "Last-Translator: rsoufflet <rsoufflet@easter-eggs.com>\n"
 "Language-Team: French <passim@listes.easter-eggs.com>\n"
 "MIME-Version: 1.0\n"
@@ -871,7 +871,7 @@ msgid "Other Available Services"
 msgstr "Autres services disponibles"
 
 #: etalagepassim/templates/poi.mako:662
-msgid "Detailed Sheet For "
+msgid "Detailed Sheet For"
 msgstr "Fiche détaillée pour"
 
 #: etalagepassim/templates/site.mako:98
