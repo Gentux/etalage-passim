@@ -78,3 +78,6 @@ table.table-result td:nth-of-type(3) {
     white-space: normal;
 }
 
+#search-form .controls {
+    padding-left: 10px;
+}
