@@ -666,5 +666,5 @@ etalagepassim.map.tileLayersOptions = ${conf['tile_layers'] | n, js};
 
 
 <%def name="title_content()" filter="trim">
-${poi.name} - ${parent.title_content()}
+${parent.title_content()} - ${poi.name}
 </%def>

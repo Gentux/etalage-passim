@@ -190,7 +190,7 @@ $(function () {
 
 
 <%def name="title_content()" filter="trim">
-Étalage - Comarquage.fr
+Passim.info
 </%def>
 
 
