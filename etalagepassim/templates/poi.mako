@@ -608,7 +608,23 @@ href="${field.value}">${field.label}</a>
         </div>
     % endif
         <%self:field field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
-        <%self:field field="${model.pop_first_field(fields, 'link', u'''Guichet d'information''')}"/>
+<%
+information_desk_link = model.pop_first_field(fields, 'link', u'Guichet d\'information')
+if information_desk_link is not None and information_desk_link.relation != 'parent':
+    information_desk_poi = model.Poi.instance_by_id.get(information_desk_link.value)
+else:
+    information_desk_poi = None
+%>
+    % if information_desk_poi is not None:
+        <div class="field">
+            <b class="field-label">${_('Information desk')} :</b>
+        % for field in information_desk_poi.generate_all_fields():
+            % if field.id in ['adr', 'geo', 'tel']:
+            <%self:field field="${field}"/>
+            % endif
+        % endfor
+        </div>
+    % endif
 <%
 model.pop_first_field(fields, 'name', u'Nom du service')
 open_data_field = model.pop_first_field(fields, 'link', u'Open data')
