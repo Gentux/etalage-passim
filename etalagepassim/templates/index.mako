@@ -146,7 +146,8 @@ etalagepassim.params = ${inputs | n, js};
 title="${_('Use your GPS')}">
                             <i class="icon-globe icon-white"></i>
                         </a>
-                        <input autocomplete="off" class="input-xlarge" id="term" name="term" type="text" \
+                        <input autocomplete="off" class="input-xlarge" id="term" name="term" rel="tooltip" \
+title="${_('Enter a commune / department / region or information service')}" type="text" \
 value="${data['geolocation'].main_postal_distribution_str if data.get('geolocation') else (inputs['term'] or '')}">
                     </div>
     % if error:

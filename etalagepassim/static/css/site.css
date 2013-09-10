@@ -80,4 +80,5 @@ table.table-result td:nth-of-type(3) {
 
 #search-form .controls {
     padding-left: 10px;
+    white-space: normal;
 }
