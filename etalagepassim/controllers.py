@@ -1245,8 +1245,6 @@ def index_list(req):
         ctx,
         None,
         multimodal_info_services_by_id,
-        related_territories_id = competence_territories_id,
-        territory = territory or data.get('base_territory'),
         **non_territorial_search_data
         )
 
@@ -1613,7 +1611,6 @@ def poi(req):
             poi_by_id,
             related_territories_id = competence_territories_id,
             territory = territory or data.get('base_territory'),
-            sort_key = data['sort_key'],
             **non_territorial_search_data
             )
         data['poi'] = pager.items[min((data['poi_index'] - 1) % conf['pager.page_max_size'], len(pager.items) - 1)]
