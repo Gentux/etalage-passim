@@ -660,7 +660,7 @@ service_web_field = model.pop_first_field(fields, 'link', u'Service web')
 %>\
             <h4>
                 ${_(u'Detailed Sheet For')} \
-<strong class="poi-name-label">${names[0]}</strong>${' ({0})'.format(', '.join(names[1:])) if names[1:] else ''}
+<strong class="poi-name-label">${names[0]}</strong>${u' ({0})'.format(u', '.join(names[1:])) if names[1:] else u''}
     % if field is not None and field.value is not None:
                 <img alt="" class="logo hidden-phone" height="50" src="${field.value}">
     % endif
