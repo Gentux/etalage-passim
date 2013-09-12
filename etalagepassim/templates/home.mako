@@ -78,7 +78,7 @@ title="${_('RSS Feed')}"><i class="icon-feed"></i></a>
                 </tr>
             </thead>
             <tbody>
-        % for info_service in pager.items:
+        % for info_service in pager.items[:pager.page_max_size]:
                 <tr>
                     <td>
                         <a class="internal" \

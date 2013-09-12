@@ -1118,12 +1118,10 @@ def index_home(req):
             page_number = 1,
             page_max_size = 10,
             )
-        pager.items = model.Poi.sort_and_paginate_pois_list(
-            ctx,
-            pager,
-            poi_by_id,
-            sort_key = 'last_update_datetime',
-            **non_territorial_search_data
+        pager.items = sorted(
+            poi_by_id.itervalues(),
+            key = lambda poi: poi.last_update_datetime,
+            reverse = True
             )
 
     return templates.render(ctx, '/home.mako',
@@ -1171,6 +1169,12 @@ def index_list(req):
         coverages = None if data['coverage'] is None else [data['coverage']],
         presence_territory = presence_territory,
         **non_territorial_search_data)
+
+    if isinstance(data['term'], basestring):
+        for poi_id in pois_id_iter:
+            poi = model.Poi.instance_by_id[poi_id]
+            if data['term'] == poi.slug:
+                raise wsgihelpers.redirect(ctx, location = urls.get_url(ctx, 'organismes', poi.slug, poi._id))
 
     multimodal_info_services_by_id = dict()
     transport_types_by_id = dict()
