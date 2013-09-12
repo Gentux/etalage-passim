@@ -110,7 +110,7 @@ etalagepassim.params = ${inputs | n, js};
         inputSelector: '#term',
         wording: {
             categories: ${_('Categories') | n, js},
-            names: ${_('Names') | n, js},
+            informationServices: ${_('Information services') | n, js},
             territories: ${_('Territories') | n, js}
         }
     });

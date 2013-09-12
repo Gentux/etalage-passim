@@ -45,7 +45,7 @@ etalagepassim.search = (function ($) {
                 valueKey: 'main_postal_distribution'
             },
             {
-                header: '<h5 class="autocompleter-header">' + options.wording.names + '</h5>',
+                header: '<h5 class="autocompleter-header">' + options.wording.informationServices + '</h5>',
                 remote: {
                     filter: function(json) {
                         return json.data.items;
