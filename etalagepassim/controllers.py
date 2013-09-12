@@ -1208,6 +1208,14 @@ def index_list(req):
                                 )
                             if transport_offer is not None
                             ]:
+                        forbidden = False
+                        for field in transport_offer.fields:
+                            field_slug = strings.slugify(field.label)
+                            if data['coverage'] is None and field_slug == 'couverture-territoriale' \
+                                and field.value == u'Nationale':
+                                forbidden = True
+                        if forbidden is True:
+                            continue
                         for transport_offer_territory_id in (transport_offer.competence_territories_id or []):
                             if not isinstance(data['term'], model.Territory) \
                                     or transport_offer_territory_id in data['term'].ancestors_id:

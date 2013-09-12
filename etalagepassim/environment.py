@@ -361,6 +361,6 @@ def load_environment(global_conf, app_conf):
         directories = templates_dirs,
 #        error_handler = handle_mako_error,
         input_encoding = 'utf-8',
-#        module_directory = os.path.join(conf['cache_dir'], 'templates'),
+        module_directory = os.path.join(conf['cache_dir'], 'templates'),
 #        strict_undefined = True,
         )
