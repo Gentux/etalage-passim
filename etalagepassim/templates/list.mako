@@ -43,10 +43,14 @@ from etalagepassim import conf, conv, model, ramdb, urls
 <%def name="results()" filter="trim">
     % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
         <div class="search-navbar">
+        % if data['coverage'] == 'Nationale':
+            <h3>${_("Traveler Info Services covering whole FRANCE")}</h3>
+        % else:
             <h3>${_(u'Traveler Info Services List For « {0} »').format(
                 data['geolocation'].main_postal_distribution_str \
                 if data.get('geolocation') else (inputs['term'] or '')
                 )}</h3>
+        % endif
             <div class="btn-group pull-right">
                 <a class="btn" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" rel="tooltip" \
 title="${_('Search services for whole France')}">${_('France')}</a>
@@ -115,7 +119,9 @@ title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
         if data['coverage'] == 'Nationale' and territory.__class__.__name__ != 'Country':
             continue
 %>
+        % if data['coverage'] != 'Nationale':
         <h4>${_("{0} Traveler Info Services for {1}").format(coverage, territory.main_postal_distribution_str)}</h4>
+        % endif
         <table class="table table-bordered table-condensed table-responsive table-result table-striped">
             <thead>
                 <tr>
