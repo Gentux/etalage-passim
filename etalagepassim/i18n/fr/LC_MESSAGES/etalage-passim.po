@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Passim\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-09-10 11:33+0200\n"
-"PO-Revision-Date: 2013-09-10 09:35+0000\n"
+"POT-Creation-Date: 2013-09-12 12:15+0200\n"
+"PO-Revision-Date: 2013-09-12 10:16+0000\n"
 "Last-Translator: rsoufflet <rsoufflet@easter-eggs.com>\n"
 "Language-Team: French <passim@listes.easter-eggs.com>\n"
 "MIME-Version: 1.0\n"
@@ -35,8 +35,8 @@ msgstr "Export désactivé par configuration"
 #: etalagepassim/controllers.py:657 etalagepassim/controllers.py:730
 #: etalagepassim/controllers.py:764 etalagepassim/controllers.py:793
 #: etalagepassim/controllers.py:796 etalagepassim/controllers.py:1100
-#: etalagepassim/controllers.py:1157 etalagepassim/controllers.py:1437
-#: etalagepassim/controllers.py:1518 etalagepassim/controllers.py:1565
+#: etalagepassim/controllers.py:1155 etalagepassim/controllers.py:1441
+#: etalagepassim/controllers.py:1522 etalagepassim/controllers.py:1569
 msgid "Error: {0}"
 msgstr "Erreur : {0}"
 
@@ -94,68 +94,68 @@ msgstr "Page gadget désactivée par configuration"
 msgid "Home page disabled by configuration"
 msgstr "Page d'accueil désactivée par configuration"
 
-#: etalagepassim/controllers.py:1269
+#: etalagepassim/controllers.py:1273
 msgid "Map page disabled by configuration"
 msgstr "Page cartographique désactivée par configuration"
 
-#: etalagepassim/controllers.py:1326
+#: etalagepassim/controllers.py:1330
 msgid "The gadget ID \"{0}\" doesn't exist."
 msgstr "Le gadget d'identifiant {0} n'existe pas"
 
-#: etalagepassim/controllers.py:1327 etalagepassim/controllers.py:1342
+#: etalagepassim/controllers.py:1331 etalagepassim/controllers.py:1346
 msgid "Rebuild component and copy the generated JavaScript into your website."
 msgstr "Regénérer le composant et copier le code JavaScript dans votre site web."
 
-#: etalagepassim/controllers.py:1328 etalagepassim/controllers.py:1344
+#: etalagepassim/controllers.py:1332 etalagepassim/controllers.py:1348
 msgid "Invalid Gadget ID"
 msgstr "Identifiant de gadget incorrect"
 
-#: etalagepassim/controllers.py:1343
+#: etalagepassim/controllers.py:1347
 msgid "The gadget ID \"{0}\" is used by another component."
 msgstr "L'identifiant de gadget \"{0}\" est utilisé par un autre composant."
 
-#: etalagepassim/controllers.py:1359
+#: etalagepassim/controllers.py:1363
 msgid "Error for \"{0}\" parameter: {1}"
 msgstr "Erreur sur le paramètre \"{0}\" : {1}"
 
-#: etalagepassim/controllers.py:1367
+#: etalagepassim/controllers.py:1371
 msgid "Base Categories Error: {0}"
 msgstr "Erreur dans les catégories de base : {0}"
 
-#: etalagepassim/controllers.py:1373
+#: etalagepassim/controllers.py:1377
 msgid "Category Tags Error: {0}"
 msgstr "Erreur dans les étiquettes de catégories : {0}"
 
-#: etalagepassim/controllers.py:1380
+#: etalagepassim/controllers.py:1384
 msgid "Base Territory Error: {0}"
 msgstr "Erreur dans les catégories de base : {0}"
 
-#: etalagepassim/controllers.py:1384 etalagepassim/controllers.py:1390
+#: etalagepassim/controllers.py:1388 etalagepassim/controllers.py:1394
 #: etalagepassim/conv.py:799 etalagepassim/conv.py:802
 msgid "Unknown territory"
 msgstr "Territoire inconnu"
 
-#: etalagepassim/controllers.py:1406
+#: etalagepassim/controllers.py:1410
 msgid "Distance Error: {0}"
 msgstr "Erreur de distance : {0}"
 
-#: etalagepassim/controllers.py:1487 etalagepassim/controllers.py:1639
+#: etalagepassim/controllers.py:1491 etalagepassim/controllers.py:1643
 msgid "Minisite disabled by configuration"
 msgstr "Mini-site désactivé par configuration"
 
-#: etalagepassim/controllers.py:1525
+#: etalagepassim/controllers.py:1529
 msgid "Access to organism failed"
 msgstr "L'accès à la fiche a échoué"
 
-#: etalagepassim/controllers.py:1567
+#: etalagepassim/controllers.py:1571
 msgid "Invalid POI ID"
 msgstr "Identifiant de POI incorrect"
 
-#: etalagepassim/controllers.py:1656
+#: etalagepassim/controllers.py:1660
 msgid "POI ID Error: {0}"
 msgstr "Erreur dans l'identifiant de POI : {0}"
 
-#: etalagepassim/controllers.py:1664
+#: etalagepassim/controllers.py:1668
 msgid "Encoding Error: {0}"
 msgstr "Erreur d'encodage : {0}"
 
@@ -646,11 +646,11 @@ msgstr "Enfin, vous êtes les bienvenus "
 msgid "reuse PASSIM content in your applications or services"
 msgstr "si vous souhaitez réutiliser le contenu de PASSIM "
 
-#: etalagepassim/templates/home.mako:47 etalagepassim/templates/list.mako:76
+#: etalagepassim/templates/home.mako:47 etalagepassim/templates/list.mako:80
 msgid "No organism found."
 msgstr "Aucune fiche trouvée"
 
-#: etalagepassim/templates/home.mako:56 etalagepassim/templates/list.mako:52
+#: etalagepassim/templates/home.mako:56 etalagepassim/templates/list.mako:56
 msgid "Search services for whole France"
 msgstr "Services d'info transport couvrant la France métropolitaine"
 
@@ -666,8 +666,8 @@ msgstr "Les 10 dernières mises à jour"
 msgid "RSS Feed"
 msgstr "Flux RSS"
 
-#: etalagepassim/templates/home.mako:75 etalagepassim/templates/list.mako:123
-#: etalagepassim/templates/list.mako:187 etalagepassim/templates/poi.mako:197
+#: etalagepassim/templates/home.mako:75 etalagepassim/templates/list.mako:129
+#: etalagepassim/templates/list.mako:193 etalagepassim/templates/poi.mako:197
 msgid "Name"
 msgstr "Nom"
 
@@ -693,8 +693,8 @@ msgid "Categories"
 msgstr "Catégories"
 
 #: etalagepassim/templates/index.mako:113
-msgid "Names"
-msgstr "Noms"
+msgid "Information services"
+msgstr "Services d'information"
 
 #: etalagepassim/templates/index.mako:114
 msgid "Territories"
@@ -724,74 +724,78 @@ msgstr "Votre position"
 msgid "Enter a commune / department / region or information service"
 msgstr "Saisir un nom de commune / département / région ou de service d'info"
 
-#: etalagepassim/templates/list.mako:46
+#: etalagepassim/templates/list.mako:47
+msgid "Traveler Info Services covering whole FRANCE"
+msgstr "Services d'information couvrant la FRANCE entière"
+
+#: etalagepassim/templates/list.mako:49
 msgid "Traveler Info Services List For « {0} »"
 msgstr "Services d'information pour {0}"
 
-#: etalagepassim/templates/list.mako:52
+#: etalagepassim/templates/list.mako:56
 msgid "France"
 msgstr "France"
 
-#: etalagepassim/templates/list.mako:65
+#: etalagepassim/templates/list.mako:69
 msgid "Download searched information in CSV format."
 msgstr "Télécharger les informations recherchées au format CSV."
 
-#: etalagepassim/templates/list.mako:66
+#: etalagepassim/templates/list.mako:70
 msgid "CSV"
 msgstr "CSV"
 
-#: etalagepassim/templates/list.mako:69
+#: etalagepassim/templates/list.mako:73
 msgid "Use results as a HTML component in your website"
 msgstr "Utiliser ces résultats en tant que composant HTML sur votre site internet"
 
-#: etalagepassim/templates/list.mako:69
+#: etalagepassim/templates/list.mako:73
 msgid "HTML"
 msgstr "HTML"
 
-#: etalagepassim/templates/list.mako:80
+#: etalagepassim/templates/list.mako:84
 msgid "Multimodal Information Services"
 msgstr "Services d'information multimodale"
 
-#: etalagepassim/templates/list.mako:104 etalagepassim/templates/list.mako:105
-#: etalagepassim/templates/list.mako:109
+#: etalagepassim/templates/list.mako:108 etalagepassim/templates/list.mako:109
+#: etalagepassim/templates/list.mako:113
 msgid "local"
 msgstr "locale"
 
-#: etalagepassim/templates/list.mako:106 etalagepassim/templates/list.mako:111
+#: etalagepassim/templates/list.mako:110 etalagepassim/templates/list.mako:115
 msgid "national"
 msgstr "nationale"
 
-#: etalagepassim/templates/list.mako:107
+#: etalagepassim/templates/list.mako:111
 msgid "departmental"
 msgstr "départementale"
 
-#: etalagepassim/templates/list.mako:108
+#: etalagepassim/templates/list.mako:112
 msgid "regional"
 msgstr "régionale"
 
-#: etalagepassim/templates/list.mako:118
+#: etalagepassim/templates/list.mako:123
 msgid "{0} Traveler Info Services for {1}"
 msgstr "Services d'information {0} pour {1}"
 
-#: etalagepassim/templates/list.mako:122 etalagepassim/templates/list.mako:186
+#: etalagepassim/templates/list.mako:128 etalagepassim/templates/list.mako:192
 msgid "Web site"
 msgstr "Site web"
 
-#: etalagepassim/templates/list.mako:124 etalagepassim/templates/list.mako:188
+#: etalagepassim/templates/list.mako:130 etalagepassim/templates/list.mako:194
 msgid "Transport type"
 msgstr "Type de transport"
 
-#: etalagepassim/templates/list.mako:150 etalagepassim/templates/list.mako:197
+#: etalagepassim/templates/list.mako:156 etalagepassim/templates/list.mako:203
 #: etalagepassim/templates/poi.mako:588
 msgid "Transport offer website."
 msgstr "Site web d'info transport"
 
-#: etalagepassim/templates/list.mako:150 etalagepassim/templates/list.mako:197
+#: etalagepassim/templates/list.mako:156 etalagepassim/templates/list.mako:203
 #: etalagepassim/templates/poi.mako:589
 msgid "www"
 msgstr "www"
 
-#: etalagepassim/templates/list.mako:263
+#: etalagepassim/templates/list.mako:269
 msgid "List"
 msgstr "Liste"
 
