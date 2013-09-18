@@ -589,24 +589,24 @@ if site_web_link is not None and site_web_link.relation != 'parent':
 href="${site_web_url}">${_('www')}</a>
         </div>
     % endif
+    % for mobile_application_link in model.iter_fields(fields, 'link', u'Application mobile'):
 <%
-mobile_application_link = model.pop_first_field(fields, 'link', u'Application mobile')
+mobile_application_url_fields = None
 if mobile_application_link is not None and mobile_application_link.relation != 'parent':
     mobile_application_poi = model.Poi.instance_by_id.get(mobile_application_link.value)
-else:
-    mobile_application_poi = None
+    mobile_application_fields = mobile_application_poi.generate_all_fields()
+    mobile_application_url_fields = list(model.iter_fields(mobile_application_fields, 'url'))
 %>
-    % if mobile_application_poi is not None:
+        % if mobile_application_url_fields is not None and len(mobile_application_url_fields) > 0:
         <div class="field">
             <b class="field-label">${_('Mobile applications')} :</b>
-        % for field in mobile_application_poi.generate_all_fields():
-            % if field.id == 'url':
+            % for field in mobile_application_url_fields:
             <a class="btn btn-primary btn-small internal" rel="tooltip" target="_blank" title="${field.label}" \
 href="${field.value}">${field.label}</a>
-            % endif
-        % endfor
+            % endfor
         </div>
-    % endif
+        % endif
+    % endfor
         <%self:field field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
 <%
 information_desk_link = model.pop_first_field(fields, 'link', u'Guichet d\'information')
