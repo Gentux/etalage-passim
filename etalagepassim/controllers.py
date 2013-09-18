@@ -686,14 +686,10 @@ def feed(req):
             if poi is not None
             )
         pager = pagers.Pager(item_count = len(poi_by_id), page_number = 1)
-        pager.items = model.Poi.sort_and_paginate_pois_list(
-            ctx,
-            pager,
-            poi_by_id,
-            related_territories_id = competence_territories_id,
-            territory = territory or data.get('base_territory'),
-            sort_key = 'last_update_datetime',
-            **non_territorial_search_data
+        pager.items = sorted(
+            poi_by_id.itervalues(),
+            key = lambda poi: poi.last_update_datetime,
+            reverse = True
             )
         data['feed_id'] = urls.get_full_url(ctx, **inputs)
         data['feed_url'] = data['feed_id']
