@@ -177,14 +177,27 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
                 ) if conf['transport_types_order'].count(strings.slugify(transport_offer_infos[1])) > 0
                 else len(conf['transport_types_order']),
             )
-        territories = sorted(
-            [
-                ramdb.territory_by_id[territory_id]
-                for territory_id in territories_id
-                if ramdb.territory_by_id.get(territory_id)
-                ],
+
+        covered_territories_field = data['poi'].get_first_field(u'territories', u'Territoire couvert')
+        territories = []
+        if covered_territories_field is not None and covered_territories_field.value:
+            territories = sorted(
+                [
+                    ramdb.territory_by_id[territory_id]
+                    for territory_id in covered_territories_field.value
+                    if ramdb.territory_by_id.get(territory_id)
+                    ],
             key = lambda territory: getattr(territory, 'population', 0),
             )
+        else:
+            territories = sorted(
+                [
+                    ramdb.territory_by_id[territory_id]
+                    for territory_id in territories_id
+                    if ramdb.territory_by_id.get(territory_id)
+                    ],
+                key = lambda territory: getattr(territory, 'population', 0),
+                )
 %>\
         <div class="field">
             <b class="field-label">${_('Covered Territories')}</b>
