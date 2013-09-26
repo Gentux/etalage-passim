@@ -596,7 +596,10 @@ class Poi(representations.UserRepresentable):
             intersected_sets.append(coverage_pois_id)
 
         if presence_territory is not None:
-            territory_present_pois_id = cls.ids_by_presence_territory_id.get(presence_territory._id)
+            territory_present_pois_id = ramdb.union_set(
+                cls.ids_by_presence_territory_id.get(presence_territory_id)
+                for presence_territory_id in ramdb.get_territory_related_territories_id(presence_territory)
+                )
             if not territory_present_pois_id:
                 return set()
             intersected_sets.append(territory_present_pois_id)
