@@ -299,8 +299,8 @@ def load_environment(global_conf, app_conf):
             u'territories_database': conv.pipe(
                 conv.default(conf['database'][0]),
                 ),
-            u'typeahead.css': conv.default(urlparse.urljoin(conf['cdn_url'], '/twitter-typeahead/0.9.2/typeahead.css')),
-            u'typeahead.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/twitter-typeahead/0.9.2/typeahead.js')),
+            u'typeahead.css': conv.default(urlparse.urljoin(conf['cdn_url'], '/twitter-typeahead/0.9.3/typeahead.css')),
+            u'typeahead.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/twitter-typeahead/0.9.3/typeahead.js')),
             },
         default = conv.noop,
         ))(conf))
