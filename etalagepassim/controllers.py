@@ -330,7 +330,7 @@ def export_directory_csv(req):
     inputs = init_base(ctx, params)
     inputs.update(model.Poi.extract_search_inputs_from_params(ctx, params))
     inputs.update(dict(
-        accept = params.get('accept'),
+        accept = params.get('accept') or req.urlvars.get('accept'),
         submit = params.get('submit'),
         ))
 
@@ -1483,6 +1483,7 @@ def make_router():
         ('GET', '^/organismes/?$', poi),
         ('GET', '^/organismes/(?P<poi_id>[a-z0-9]{24})/?$', poi),
         ('GET', '^/organismes/(?P<slug>[^/]+)/(?P<poi_id>[a-z0-9]{24})/?$', poi),
+        ('GET', '^/passim.csv/?$', export_directory_csv, {'accept': 1}),
         )
 
 
