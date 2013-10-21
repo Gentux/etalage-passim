@@ -183,7 +183,7 @@ $(function () {
         <div class="container">
             <img src="/img/logo-ministere.png">
             <h2>${_('PASSIM')}</h2>
-            <p class="lead"><small>${_('Directory of Traveler Information Services in France')}</small></p>
+            <p class="lead">${_('Directory of Traveler Information Services in France')} <small>${_('Beta')}</small></p>
         </div>
     </header>
 </%def>
