@@ -24,6 +24,8 @@
 
 
 <%!
+import markdown
+
 from etalagepassim import conf
 %>
 
@@ -35,10 +37,10 @@ from etalagepassim import conf
     <h2>${_('Contribute')}</h2>
     <hr>
 <%
-    subject = _(
-        'Contribution to PASSIM : [new Info Service, correction to an existing Info Service...]'
-        ).replace(u' ', u'%20')
-    body = _(u'''
+mailto_href = u'mailto:{0}?subject={1}&body={2}'.format(
+    u','.join(conf['data_email']),
+    _(u'Contribution to PASSIM : [new Info Service, correction to an existing Info Service...]').replace(u' ', u'%20'),
+    _(u'''
 I am [an end-user, a company...]
 
 My e-mail address: [xxx@yyy.org]
@@ -56,27 +58,21 @@ Information Service
    - Name, Territory (city, department, region), Transport type (public transport...):
 - Comments or remarks (such as information about web services, open data, real time info...):
 
-''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
+''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a'),
+    )
 %>\
-    <p>
-        ${_(u'PASSIM is frequently verified and completed but may still include errors. If you find any false or \
-incomplete information, we thank you in advance for')} <a href="/contact">${_('contacting us')}</a> ${_('or')} \
-<a href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">\
-${_('contributing to improving the content')}</a>.
-    </p>
+    ${markdown.markdown(_(u'''
+PASSIM is frequently verified and completed but may still include errors. If you find any false or incomplete
+information, we thank you in advance for [contacting us](/contact) or
+[contributing to improving the content]({mailto_href}).
 
-    <p>
-        ${_(u'You are welcome to contribute by submitting us :')}
-    </p>
+You are welcome to contribute by submitting us :
 
-    <ul>
-        <li>${_(u'A missing information')}</li>
-        <li>${_(u'Any enhancement proposal')}</li>
-        <li>${_(u'Any correction or complement for a particular service description page')}</li>
-    </ul>
+* A missing information
+* Any enhancement proposal
+* Any correction or complement for a particular service description page
 
-    <p>
-        ${_(u'Thank you a lot ! Also, if you are interested in contributing more regularly, we may create an account \
-for you on the back-office content management site.')}
-    </p>
+Thank you a lot ! Also, if you are interested in contributing more regularly, we may create an account for you on the
+back-office content management site.
+'''.format(mailto_href = mailto_href))) | n}
 </%def>

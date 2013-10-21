@@ -24,6 +24,8 @@
 
 
 <%!
+import markdown
+
 from etalagepassim import conf
 %>
 
@@ -35,10 +37,10 @@ from etalagepassim import conf
     <h2>${_('Contact')}</h2>
     <hr>
 <%
-    subject = _(
-        'Contact PASSIM : [your message subject]'
-        ).replace(u' ', u'%20')
-    body = _(u'''
+mailto_href = u'mailto:{0}?subject={1}&body={2}'.format(
+    u','.join(conf['data_email']),
+    _('Contact PASSIM : [your message subject]').replace(u' ', u'%20'),
+    _(u'''
 I am [an end-user, a company...]
 
 My e-mail address: [xxx@yyy.org]
@@ -46,12 +48,11 @@ My e-mail address: [xxx@yyy.org]
 My message: ...
 
 
-''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
+''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a'),
+    )
 %>\
-    <p>
-        <a href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">
-            ${_('Please click here and complete this e-mail')}
-        </a>.<br>
-        ${_('Thank you for any question, remark or enhancement proposal.')}
-    </p>
+    ${markdown.markdown(_(u'''
+[Please click here and complete this e-mail]({mailto_href}).<br>
+Thank you for any question, remark or enhancement proposal.
+'''.format(mailto_href = mailto_href))) | n}
 </%def>
