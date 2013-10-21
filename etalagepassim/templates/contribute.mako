@@ -74,5 +74,5 @@ You are welcome to contribute by submitting us :
 
 Thank you a lot ! Also, if you are interested in contributing more regularly, we may create an account for you on the
 back-office content management site.
-'''.format(mailto_href = mailto_href))) | n}
+''').format(mailto_href = mailto_href)) | n}
 </%def>

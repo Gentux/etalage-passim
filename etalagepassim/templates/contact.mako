@@ -54,5 +54,5 @@ My message: ...
     ${markdown.markdown(_(u'''
 [Please click here and complete this e-mail]({mailto_href}).<br>
 Thank you for any question, remark or enhancement proposal.
-'''.format(mailto_href = mailto_href))) | n}
+''').format(mailto_href = mailto_href)) | n}
 </%def>
