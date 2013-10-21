@@ -63,7 +63,7 @@ title="${_('Search services for whole France')}">
 
 <%def name="last_updated_pois()" filter="trim">
         <div class="search-navbar">
-            <h3>${_("10 Last Updated Information Services")}</h3>
+            <h4>${_("10 Last Updated Information Services")}</h4>
             <div class="btn-group pull-right">
                 <a class="btn btn-warning btn-feed" href="${urls.get_url(ctx, 'feed')}" target="_blank" \
 title="${_('RSS Feed')}"><i class="icon-feed"></i></a>
