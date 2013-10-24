@@ -36,6 +36,7 @@ def main():
     parser.add_argument('-v', '--verbose', action = 'store_true', help = 'increase output verbosity')
 
     args = parser.parse_args()
+    args_label = args.label.decode('utf-8')
 
     site_conf = appconfig('config:%s' % os.path.abspath(args.config_file))
     pylons.config = load_environment(site_conf.global_conf, site_conf.local_conf)
@@ -51,7 +52,7 @@ def main():
     log.info('Renaming field label in schema')
     schema = db.schemas.find_one()
     for field_index, field in enumerate(schema['fields']):
-        if field['id'] == args.id and field['label'] == args.label:
+        if field['id'] == args.id and field['label'] == args_label:
             break
     new_field = copy.deepcopy(schema['fields'][field_index])
     new_field['label'] = args.new_label
@@ -64,7 +65,7 @@ def main():
     log.info('Renaming POIs field')
     for poi in db.pois.find({'metadata.schema-name': schema['name']}):
         for label_index, label_dict in enumerate(poi['metadata'].get(args.id, [])):
-            if label_dict['label'] == args.label:
+            if label_dict['label'] == args_label.decode('utf-8'):
                 break
         else:
             continue
@@ -86,7 +87,7 @@ def main():
     log.info('Renaming field in POIs history')
     for hpoi in db.pois_history.find({'metadata.schema-name': schema['name']}):
         for label_index, label_dict in enumerate(hpoi['metadata'].get(args.id, [])):
-            if label_dict['label'] == args.label:
+            if label_dict['label'] == args_label.decode('utf-8'):
                 break
         else:
             continue

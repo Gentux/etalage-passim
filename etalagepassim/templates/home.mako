@@ -111,7 +111,7 @@ href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">$
         for field in transport_offer.fields:
             field_slug = strings.slugify(field.label)
             if field.id == 'select':
-                if field_slug == 'couverture-territoriale' and field.value is not None:
+                if field_slug == 'niveau' and field.value is not None:
                     coverages.add(field.value)
                 elif field_slug == 'type-de-transport' and field.value is not None:
                     transport_types.add(markupsafe.Markup(

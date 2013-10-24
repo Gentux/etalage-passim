@@ -487,7 +487,7 @@ class Poi(representations.UserRepresentable):
                             self.ids_by_transport_mode.setdefault(transport_mode, set()).add(
                                 indexed_poi_id)
                 if field.id == 'select':
-                    if field_slug == 'couverture-territoriale' and field.value is not None:
+                    if field_slug == 'niveau' and field.value is not None:
                         self.ids_by_coverage.setdefault(field.value, set()).add(indexed_poi_id)
                     elif field_slug == 'type-de-transport' and field.value is not None:
                         self.ids_by_transport_type.setdefault(field.value, set()).add(indexed_poi_id)
