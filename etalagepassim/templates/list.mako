@@ -34,12 +34,6 @@ from etalagepassim import conf, conv, model, ramdb, urls
 <%inherit file="/index.mako"/>
 
 
-<%def name="metas()" filter="trim">
-    <%parent:metas/>
-    <meta name="robots" content="noindex">
-</%def>
-
-
 <%def name="results()" filter="trim">
     % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
         <div class="search-navbar">
