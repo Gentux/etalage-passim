@@ -65,7 +65,7 @@ def main():
     log.info('Renaming POIs field')
     for poi in db.pois.find({'metadata.schema-name': schema['name']}):
         for label_index, label_dict in enumerate(poi['metadata'].get(args.id, [])):
-            if label_dict['label'] == args_label.decode('utf-8'):
+            if label_dict['label'] == args_label:
                 break
         else:
             continue
@@ -87,7 +87,7 @@ def main():
     log.info('Renaming field in POIs history')
     for hpoi in db.pois_history.find({'metadata.schema-name': schema['name']}):
         for label_index, label_dict in enumerate(hpoi['metadata'].get(args.id, [])):
-            if label_dict['label'] == args_label.decode('utf-8'):
+            if label_dict['label'] == args_label:
                 break
         else:
             continue
