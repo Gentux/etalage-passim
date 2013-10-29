@@ -82,3 +82,10 @@ table.table-result td:nth-of-type(3) {
     padding-left: 10px;
     white-space: normal;
 }
+
+.modal {
+    width: 575px;
+}
+.modal textarea {
+    width: 530px;
+    height: 240px;

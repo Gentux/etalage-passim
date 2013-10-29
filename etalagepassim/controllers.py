@@ -32,6 +32,7 @@ import itertools
 import json
 import logging
 import math
+import smtplib
 import urllib2
 import urlparse
 import zipfile
@@ -1451,11 +1452,44 @@ def kml(req):
         )
 
 
+@wsgihelpers.wsgify
+@ramdb.ramdb_based
+def mail(req):
+    ctx = contexts.Ctx(req)
+
+    params = req.GET
+    inputs = dict(
+        email = params.get('email'),
+        subject = params.get('subject'),
+        body = params.get('body'),
+        callback_url = params.get('callback-url'),
+        )
+
+    data, errors = conv.inputs_to_mail_data(inputs, state = ctx)
+    if errors is not None:
+        raise wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
+    data['to'] = conf['data_email']
+    smtp = smtplib.SMTP(conf['smtp_server'])
+    smtp.sendmail(
+        data['from'],
+        data['to'],
+        unicode(templates.render(ctx, '/contact-mail.mako', data = data).strip()).encode('utf-8')
+        )
+    smtp.quit()
+    ctx.session['message'] = ctx._('Your email has been sent')
+    ctx.session.save()
+    return wsgihelpers.redirect(
+        ctx,
+        location = urls.get_url(ctx, data['callback_url'])
+        )
+
+
 def make_router():
     """Return a WSGI application that dispatches requests to controllers """
     return urls.make_router(
         ('GET', '^/?$', index),
         ('GET', '^/(?P<page>(about|contact|help|contribute|data))/?$', static),
+        ('GET', '^/accueil?$', index_home),
         ('GET', '^/api/v1/annuaire/csv/?$', csv),
         ('GET', '^/api/v1/annuaire/excel/?$', excel),
         ('GET', '^/api/v1/annuaire/geojson/?$', geojson),
@@ -1476,8 +1510,8 @@ def make_router():
         ('GET', '^/fragment/organismes/(?P<poi_id>[a-z0-9]{24})/?$', poi_embedded),
         ('GET', '^/fragment/organismes/(?P<slug>[^/]+)/(?P<poi_id>[a-z0-9]{24})/?$', poi_embedded),
         ('GET', '^/gadget/?$', index_gadget),
-        ('GET', '^/accueil?$', index_home),
         ('GET', '^/liste/?$', index_list),
+        ('GET', '^/mail/?$', mail),
         ('GET', '^/minisite/organismes/(?P<poi_id>[a-z0-9]{24})/?$', minisite),
         ('GET', '^/minisite/organismes/(?P<slug>[^/]+)/(?P<poi_id>[a-z0-9]{24})/?$', minisite),
         ('GET', '^/organismes/?$', poi),
@@ -1686,4 +1720,18 @@ def static(req):
     ctx = contexts.Ctx(req)
     page = req.urlvars.get('page')
 
-    return templates.render(ctx, '/{0}.mako'.format(page))
+    params = req.params
+    inputs = dict(
+        message = ctx.session.get('message')
+        )
+    data, errors = conv.struct(
+        {
+            'message': conv.cleanup_line,
+            },
+        keep_none_values = True,
+        )(inputs, state = ctx)
+    if errors is not None:
+        raise wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
+    if data['message'] is not None:
+        ctx.session.delete()
+    return templates.render(ctx, '/{0}.mako'.format(page), data = data)

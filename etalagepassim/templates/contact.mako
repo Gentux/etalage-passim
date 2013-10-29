@@ -34,13 +34,9 @@ from etalagepassim import conf
 
 
 <%def name="container_content()" filter="trim">
-    <h2>${_('Contact')}</h2>
-    <hr>
 <%
-mailto_href = u'mailto:{0}?subject={1}&body={2}'.format(
-    u','.join(conf['data_email']),
-    _('Contact PASSIM : [your message subject]').replace(u' ', u'%20'),
-    _(u'''
+    subject = _(u'Contact PASSIM : [your message subject]')
+    body = _(u'''
 I am [an end-user, a company...]
 
 My e-mail address: [xxx@yyy.org]
@@ -48,11 +44,53 @@ My e-mail address: [xxx@yyy.org]
 My message: ...
 
 
-''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a'),
-    )
-%>\
-    ${markdown.markdown(_(u'''
-[Please click here and complete this e-mail]({mailto_href}).<br>
+''')
+%>
+    <h2>${_('Contact')}</h2>
+    <hr>
+% if data['message'] is not None:
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        ${data['message']}
+    </div>
+% endif
+    <div class="contact-text">
+        ${markdown.markdown(_(u'''
+[Please click here and complete this e-mail](#input-modal).<br>
 Thank you for any question, remark or enhancement proposal.
-''').format(mailto_href = mailto_href)) | n}
+''')) | n}
+        <div class="hide fade modal" id="input-modal" role="dialog">
+            <form class="form" action="/mail" method="GET">
+                <input name="callback-url" type="hidden" value="contact">
+                <fieldset>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" >×</button>
+                        <h3>${_('Contact Form')}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <label><b>${_('Email')} :</b></label>
+                        <input class="input-xxlarge"  id="email" name="email" type="text" \
+placeholder="${_(u'Type your email…')}">
+
+                        <label><b>${_('Subject')} :</b></label>
+                        <input class="input-xxlarge" id="subject" name="subject" type="text" value="${subject}">
+
+                        <label><b>${_('Body')} :</b></label>
+                        <textarea id="body" name="body">${body}</textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" value="send"/>Send</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</%def>
+
+
+<%def name="scripts_domready_content()" filter="trim">
+    $(".contact-text a").on("click", function() {
+        $("#input-modal").modal("show");
+    });
 </%def>

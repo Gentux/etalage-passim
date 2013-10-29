@@ -37,10 +37,8 @@ from etalagepassim import conf
     <h2>${_('Contribute')}</h2>
     <hr>
 <%
-mailto_href = u'mailto:{0}?subject={1}&body={2}'.format(
-    u','.join(conf['data_email']),
-    _(u'Contribution to PASSIM : [new Info Service, correction to an existing Info Service...]').replace(u' ', u'%20'),
-    _(u'''
+    subject = _(u'Contribution to PASSIM : [new Info Service, correction to an existing Info Service...]')
+    body = _(u'''
 I am [an end-user, a company...]
 
 My e-mail address: [xxx@yyy.org]
@@ -58,13 +56,19 @@ Information Service
    - Name, Territory (city, department, region), Transport type (public transport...):
 - Comments or remarks (such as information about web services, open data, real time info...):
 
-''').strip().replace(u' ', u'%20').replace(u'\n', u'%0a'),
-    )
+''')
 %>\
-    ${markdown.markdown(_(u'''
+% if data['message'] is not None:
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        ${data['message']}
+    </div>
+% endif
+    <div class="contribute-text">
+        ${markdown.markdown(_(u'''
 PASSIM is frequently verified and completed but may still include errors. If you find any false or incomplete
 information, we thank you in advance for [contacting us](/contact) or
-[contributing to improving the content]({mailto_href}).
+[contributing to improving the content](#input-modal).
 
 You are welcome to contribute by submitting us :
 
@@ -74,5 +78,39 @@ You are welcome to contribute by submitting us :
 
 Thank you a lot ! Also, if you are interested in contributing more regularly, we may create an account for you on the
 back-office content management site.
-''').format(mailto_href = mailto_href)) | n}
+''')) | n}
+        <div class="hide fade modal" id="input-modal" role="dialog">
+            <form class="form" action="/mail" method="GET">
+                <input name="callback-url" type="hidden" value="contribute">
+                <fieldset>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" >×</button>
+                        <h3>${_('Contact Form')}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <label><b>${('Email')} :</b></label>
+                        <input class="input-xxlarge"  id="email" name="email" type="text" \
+placeholder="${_(u'Type your email…')}">
+
+                        <label><b>${('Subject')} :</b></label>
+                        <input class="input-xxlarge" id="subject" name="subject" type="text" value="${subject}">
+
+                        <label><b>${('Body')} :</b></label>
+                        <textarea id="body" name="body">${body}</textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" value="send"/>Send</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</%def>
+
+
+<%def name="scripts_domready_content()" filter="trim">
+    $(".contribute-text a").on("click", function() {
+        $("#input-modal").modal("show");
+    });
 </%def>
