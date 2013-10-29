@@ -49,8 +49,8 @@ def main():
         )
 
     # Change name in the Schema
-    log.info('Renaming field label in schema')
-    schema = db.schemas.find_one()
+    log.info('Renaming field label {} in schema'.format(args.schema))
+    schema = db.schemas.find_one({'name': args.schema})
     for field_index, field in enumerate(schema['fields']):
         if field['id'] == args.id and field['label'] == args_label:
             break
