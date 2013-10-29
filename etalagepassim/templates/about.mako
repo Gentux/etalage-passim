@@ -32,7 +32,7 @@ import markdown
 
 
 <%def name="container_content()" filter="trim">
-    <h2>${_('About')}</h2>
+    <h4>${_('About')}</h4>
     <hr>
     ${markdown.markdown(_(u'''
 The PASSIM directory lists and describes the traveller information services in France, for all transport modes.<br>

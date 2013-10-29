@@ -46,7 +46,7 @@ My message: ...
 
 ''')
 %>
-    <h2>${_('Contact')}</h2>
+    <h4>${_('Contact')}</h4>
     <hr>
 % if data['message'] is not None:
     <div class="alert alert-success">

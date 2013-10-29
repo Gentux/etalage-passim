@@ -34,7 +34,7 @@ from etalagepassim import conf
 
 
 <%def name="container_content()" filter="trim">
-    <h2>${_('Contribute')}</h2>
+    <h4>${_('Contribute')}</h4>
     <hr>
 <%
     subject = _(u'Contribution to PASSIM : [new Info Service, correction to an existing Info Service...]')

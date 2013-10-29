@@ -32,7 +32,7 @@ import markdown
 
 
 <%def name="container_content()" filter="trim">
-    <h2>${_('Reuse')}</h2>
+    <h4>${_('Reuse')}</h4>
     <hr>
     ${markdown.markdown(_(u'''
 PASSIM content is published on [the national open data portal](http://www.data.gouv.fr/) under
