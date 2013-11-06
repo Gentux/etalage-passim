@@ -553,7 +553,7 @@ Your e-mail address: [xxx@yyy.org]
 
 Your contribution : [{0}]
 
-Information Service
+Information Service {1}
 
 - Info Service name
 - Info booth:
@@ -565,7 +565,7 @@ Information Service
 - Your remarks (or information about web services, open data, real time info...):
 
 Thank you advance for any remarks, questions or suggestions about PASSIM !
-''').format(poi.name)
+''').format(poi.name, poi.get_full_url(ctx))
 %>
                 <div class="contribute-text">
                     <a class="label label-info" href="#input-modal">
