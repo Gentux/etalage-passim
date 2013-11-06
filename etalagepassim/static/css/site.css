@@ -89,3 +89,8 @@ table.table-result td:nth-of-type(3) {
 .modal textarea {
     width: 530px;
     height: 240px;
+}
+
+.logo {
+    height: 100px;
+}
