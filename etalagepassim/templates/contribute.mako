@@ -110,6 +110,7 @@ placeholder="${_(u'Type your email…')}">
 
 
 <%def name="scripts_domready_content()" filter="trim">
+    <%parent:scripts_domready_content/>
     $(".contribute-text a").on("click", function() {
         $("#input-modal").modal("show");
     });

@@ -545,9 +545,7 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
             <p class="pull-right">
     % if conf['data_email'] is not None:
 <%
-        subject = _(
-            u'Contribution to PASSIM : [{0}]'
-            ).format(poi.name).replace(u' ', u'%20')
+        subject = _(u'Contribution to PASSIM : [{0}]').format(poi.name)
         body = _(u'''
 Your are [an end-user, a company...]
 
@@ -567,11 +565,40 @@ Information Service
 - Your remarks (or information about web services, open data, real time info...):
 
 Thank you advance for any remarks, questions or suggestions about PASSIM !
-''').format(poi.name).strip().replace(u' ', u'%20').replace(u'\n', u'%0a')
+''').format(poi.name)
 %>
-                <a class="label label-info" href="mailto:${u','.join(conf['data_email'])}?subject=${subject}&body=${body}">
-                    ${_('Contribute')}
-                </a>
+                <div class="contribute-text">
+                    <a class="label label-info" href="#input-modal">
+                        ${_('Contribute')}
+                    </a>
+                    <div class="hide fade modal" id="input-modal" role="dialog">
+                        <form class="form" action="/mail" method="GET">
+                            <input name="callback-url" type="hidden" value="contact">
+                            <fieldset>
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" >×</button>
+                                    <h3>${_('Contact Form')}</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <label><b>${_('Email')} :</b></label>
+                                    <input class="input-xxlarge"  id="email" name="email" type="text" \
+placeholder="${_(u'Type your email…')}">
+
+                                    <label><b>${_('Subject')} :</b></label>
+                                    <input class="input-xxlarge" id="subject" name="subject" type="text" \
+value="${subject}">
+
+                                    <label><b>${_('Body')} :</b></label>
+                                    <textarea id="body" name="body">${body}</textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary" value="send"/>Send</button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
                 &mdash;
     % endif
     % if poi.petitpois_url is not None:
@@ -691,6 +718,14 @@ var etalagepassim = etalagepassim || {};
 etalagepassim.map.markersUrl = ${conf['images.markers.url'].rstrip('/') | n, js};
 etalagepassim.map.tileLayersOptions = ${conf['tile_layers'] | n, js};
     </script>
+</%def>
+
+
+<%def name="scripts_domready_content()" filter="trim">
+    <%parent:scripts_domready_content/>
+    $(".contribute-text a").on("click", function() {
+        $("#input-modal").modal("show");
+    });
 </%def>
 
 
