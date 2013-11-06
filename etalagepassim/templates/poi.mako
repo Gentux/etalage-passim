@@ -629,17 +629,27 @@ if site_web_link is not None and site_web_link.relation != 'parent':
 href="${site_web_url}">${_('www')}</a>
         </div>
     % endif
-    % for mobile_application_link in model.iter_fields(fields, 'link', u'Application mobile'):
+<%
+    mobile_applications_link = list(model.iter_fields(fields, 'link', u'Application mobile'))
+%>
+    % for mobile_application_link in mobile_applications_link:
 <%
 mobile_application_url_fields = None
 if mobile_application_link is not None and mobile_application_link.relation != 'parent':
     mobile_application_poi = model.Poi.instance_by_id.get(mobile_application_link.value)
     mobile_application_fields = mobile_application_poi.generate_all_fields()
     mobile_application_url_fields = list(model.iter_fields(mobile_application_fields, 'url'))
+    mobile_application_name = None
+    if len(mobile_applications_link) > 1:
+        for field in mobile_application_fields:
+            if field.id == 'name':
+                mobile_application_name = field.value
+                break
 %>
         % if mobile_application_url_fields is not None and len(mobile_application_url_fields) > 0:
         <div class="field">
-            <b class="field-label">${_('Mobile applications')} :</b>
+            <b class="field-label">${_(u'Mobile applications')}\
+${u' ({})'.format(mobile_application_name) if mobile_application_name is not None else u''} :</b>
             % for field in mobile_application_url_fields:
             <a class="btn btn-primary btn-small internal" rel="tooltip" target="_blank" title="${field.label}" \
 href="${field.value}">${field.label}</a>
