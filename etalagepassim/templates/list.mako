@@ -133,7 +133,7 @@ title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
                         conf['transport_types_order'].index(strings.slugify(transport_type))
                         if strings.slugify(transport_type) in conf['transport_types_order']
                         else len(conf['transport_types_order'])
-                        for transport_type in transport_types_by_id.get(info_service_id, [])
+                        for transport_type in transport_types_by_id.get(info_service_id, [''])
                         ),
                     model.Poi.instance_by_id.get(info_service_id)
                     )
