@@ -1173,29 +1173,35 @@ def index_list(req):
             if data['term'] == poi.slug:
                 raise wsgihelpers.redirect(ctx, location = urls.get_url(ctx, 'organismes', poi.slug, poi._id))
 
+    ids_by_territory_id = dict()
     multimodal_info_services_by_id = dict()
     transport_types_by_id = dict()
     web_site_by_id = dict()
-    ids_by_territory_id = dict()
-
     for poi in (
             model.Poi.instance_by_id.get(poi_id)
             for poi_id in pois_id_iter
             ):
         if poi is None:
             continue
-        if poi._id in model.Poi.multimodal_info_service_ids:
-            multimodal_info_services_by_id[poi._id] = poi
-            for field in poi.generate_all_fields():
-                if field.id == 'link' and strings.slugify(field.label) == 'site-web':
-                    web_site = model.Poi.instance_by_id.get(field.value)
-                    if web_site is None:
-                        continue
-                    for web_site_field in web_site.fields:
-                        if web_site_field.id == 'url' and strings.slugify(web_site_field.label) == 'url':
-                            web_site_by_id[poi._id] = web_site_field.value
-        else:
-            for field in poi.generate_all_fields():
+
+        for field in poi.generate_all_fields():
+            poi_territories = set()
+            if field.id == 'territories' and strings.slugify(field.label) == 'territoires':
+                for territory in field.value:
+                    if isinstance(data['term'], model.Territory) and territory in data['term'].ancestors_id:
+                        ids_by_territory_id.setdefault(territory, set()).add(poi._id)
+
+            if field.id == 'link' and strings.slugify(field.label) == 'site-web':
+                web_site = model.Poi.instance_by_id.get(field.value)
+                if web_site is None:
+                    continue
+                for web_site_field in web_site.fields:
+                    if web_site_field.id == 'url' and strings.slugify(web_site_field.label) == 'url':
+                        web_site_by_id[poi._id] = web_site_field.value
+
+            if poi._id in model.Poi.multimodal_info_service_ids:
+                multimodal_info_services_by_id[poi._id] = poi
+            else:
                 if field.id == 'links' and strings.slugify(field.label) == 'offres-de-transport':
                     for transport_offer in [
                             transport_offer
@@ -1205,50 +1211,10 @@ def index_list(req):
                                 )
                             if transport_offer is not None
                             ]:
-                        forbidden = False
-                        for field in transport_offer.fields:
-                            field_slug = strings.slugify(field.label)
-                            if data['coverage'] is None and field_slug == 'couverture-territoriale' \
-                                and field.value == u'Nationale':
-                                forbidden = True
-                        if forbidden is True:
-                            continue
-                        for transport_offer_territory_id in (transport_offer.competence_territories_id or []):
-                            if not isinstance(data['term'], model.Territory) \
-                                    or transport_offer_territory_id in data['term'].ancestors_id:
-                                transport_offer_territory = ramdb.territory_by_id.get(transport_offer_territory_id)
-                                if transport_offer_territory.__class__.__name__ == 'UrbanTransportsPerimeterOfFrance':
-                                    PTU_postal_routing = transport_offer_territory.main_postal_distribution.get(
-                                        'postal_routing'
-                                        )
-                                    for child_territory_id in ramdb.territories_id_by_ancestor_id.get(
-                                            transport_offer_territory._id):
-                                        child_territory = ramdb.territory_by_id.get(child_territory_id)
-                                        if child_territory.__class__.__name__ != 'CommuneOfFrance':
-                                            continue
-                                        child_territory_postal_routing = child_territory.main_postal_distribution.get(
-                                            'postal_routing'
-                                            )
-                                        if PTU_postal_routing is not None \
-                                                and PTU_postal_routing == child_territory_postal_routing:
-                                            ids_by_territory_id.setdefault(child_territory_id, set()).add(poi._id)
-                                            break
-                                    else:
-                                        ids_by_territory_id.setdefault(transport_offer_territory_id, set()).add(poi._id)
-                                else:
-                                    ids_by_territory_id.setdefault(transport_offer_territory_id, set()).add(poi._id)
                         for field in transport_offer.fields:
                             field_slug = strings.slugify(field.label)
                             if field_slug == 'type-de-transport' and field.value is not None:
                                 transport_types_by_id.setdefault(poi._id, set()).add(field.value)
-
-                if field.id == 'link' and strings.slugify(field.label) == 'site-web':
-                    web_site = model.Poi.instance_by_id.get(field.value)
-                    if web_site is None:
-                        continue
-                    for web_site_field in web_site.fields:
-                        if web_site_field.id == 'url' and strings.slugify(web_site_field.label) == 'url':
-                            web_site_by_id[poi._id] = web_site_field.value
 
     multimodal_info_services = model.Poi.sort_and_paginate_pois_list(
         ctx,

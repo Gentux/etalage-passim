@@ -504,7 +504,7 @@ class Poi(representations.UserRepresentable):
                 for poi in self.iter_descendant_or_self_pois():
                     if self.competence_territories_id is not None and poi.schema_name != 'ServiceInfo' \
                             and poi.bson['metadata'].get('territories'):
-                        # When "ServiceInfo" contains a field "territories" (named "Territoire couvert") use it as
+                        # When "ServiceInfo" contains a field "territories" (named "Territoires") use it as
                         # competence territories and ignore the "territories" in children (especially of schema
                         # "OffreTransport").
                         poi_territories_metadata = poi.bson['metadata'].pop('territories')
