@@ -111,34 +111,33 @@ def main():
             log.info(u'Found "Niveau" field')
             found_fields.append('Niveau')
 
-    for field_name in found_fields:
-        if field == 'Niveau':
-            schema['fields'].append({
-                u'id': u'select',
-                u'label': u'Niveau',
-                u'options': [
-                    u'Locale',
-                    u'Départementale',
-                    u'Régionale',
-                    u'Nationale',
-                    ],
-                u'protected': u'0',
-                u'required': u'0',
-                u'tooltip': u'',
-                u'value': u'',
-                })
-            log.info('Add "Niveau" field to schema')
-        if field == 'Territoires':
-            schema['fields'].append({
-                u'id': u'territories',
-                u'initial': u'',
-                u'label': u'Territoires',
-                u'protected': u'0',
-                u'required': u'0',
-                u'tooltip': u'',
-                u'value': u'',
-                })
-            log.info('Add "Territoires" field to schema')
+    if 'Niveau' not in found_fields:
+        schema['fields'].append({
+            u'id': u'select',
+            u'label': u'Niveau',
+            u'options': [
+                u'Locale',
+                u'Départementale',
+                u'Régionale',
+                u'Nationale',
+                ],
+            u'protected': u'0',
+            u'required': u'0',
+            u'tooltip': u'',
+            u'value': u'',
+            })
+        log.info(u'Add "Niveau" field to schema')
+    if 'Territoires' not in found_fields:
+        schema['fields'].append({
+            u'id': u'territories',
+            u'initial': u'',
+            u'label': u'Territoires',
+            u'protected': u'0',
+            u'required': u'0',
+            u'tooltip': u'',
+            u'value': u'',
+            })
+        log.info(u'Add "Territoires" field to schema')
     db.schemas.save(schema, safe = True)
     log.info('Schema saved')
 
