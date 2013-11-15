@@ -93,7 +93,7 @@ def main():
 
     logging.basicConfig(
         level = logging.DEBUG if args.verbose else logging.WARNING,
-        format = u'%(message)s',
+        format = u'[%(levelname)-5.5s] %(message)s',
         #format = u'%(levelname)-5.5s [line %(lineno)d] %(message)s',
         #format = u'%(asctime)s %(levelname)-5.5s [%(name)s:%(funcName)s line %(lineno)d] %(message)s',
         stream = sys.stdout,
@@ -139,10 +139,10 @@ def main():
             })
         log.info(u'Add "Territoires" field to schema')
     db.schemas.save(schema, safe = True)
-    log.info('Schema saved')
+    log.info(u'Schema saved')
 
     errors_by_id = {}
-    log.info('Check all POIs for these two fields')
+    log.info(u'Check all POIs for these two fields')
     for poi in db.pois.find({'metadata.schema-name': u'ServiceInfo'}):
         is_multimodal_info_service = field_value(
             poi,
@@ -251,6 +251,7 @@ def main():
                 errors_by_id[poi['_id']]['type'] = '4territoires'
             else:
                 # Remove territories if one of their ancestor territories is is in the list
+                log.debug(u'Poi\'s territories before removing children : {}'.format(territoires))
                 territories = [
                     db.territories.find_one({'kind': territory_kind, 'code': territory_code})
                     for territory_kind, territory_code in territoires
@@ -263,23 +264,26 @@ def main():
                 if remove_indexes:
                     for index in sorted(remove_indexes, reverse = True):
                         territoires.pop(index)
+                log.debug(u'Poi\'s territories after removing children : {}'.format(territoires))
 
         poi = set_field_value(niveau, poi, 'select', [('label', 'Niveau')])
+        log.info(u'Save \'Niveau\' field to {} for poi {}'.format(niveau, poi['_id']))
         poi = set_field_value(territoires, poi, 'territories', [('label', 'Territoires')])
+        log.info(u'Save \'Territoires\' field to {} for poi {}'.format(territoires, poi['_id']))
         try:
             poi_tools.poi_add_metadata_indexes_things(poi)
         except Exception as exc:
-            log.error('An exception occurred while indexing POI: {}'.format(exc))
+            log.error(u'An exception occurred while indexing POI: {}'.format(exc))
             continue
 
         db.pois.save(poi)
         poi_tools.poi_changed(poi)
-    log.info('POIs field renamed')
+    log.info(u'POIs field renamed')
 
     for index, (_id, error) in enumerate(sorted(errors_by_id.iteritems(), key = lambda t: t[1].get('type'))):
-        log.error('-' * 85)
+        log.error(u'-' * 85)
         log.error(index + 1)
-        log.error('http://petitpois.passim-dev.mat.cst.easter-eggs.com/poi/view/{}'.format(_id))
+        log.error(u'http://petitpois.passim-dev.mat.cst.easter-eggs.com/poi/view/{}'.format(_id))
         log.error(error['name'])
         for message in error['messages']:
             log.error(message)
