@@ -567,7 +567,7 @@ Information Service {1}
 Thank you advance for any remarks, questions or suggestions about PASSIM !
 ''').format(poi.name, poi.get_full_url(ctx))
 %>
-                <a class="label label-info" href="#input-modal">
+                <a class="label label-info modal-trigger" href="#input-modal">
                     ${_('Contribute')}
                 </a>
                 &mdash;
@@ -730,7 +730,7 @@ etalagepassim.map.tileLayersOptions = ${conf['tile_layers'] | n, js};
 
 <%def name="scripts_domready_content()" filter="trim">
     <%parent:scripts_domready_content/>
-    $(".contribute-text a").on("click", function() {
+    $(".contribute-text a.modal-trigger").on("click", function() {
         $("#input-modal").modal("show");
     });
 </%def>
