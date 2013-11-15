@@ -200,8 +200,8 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
                 )
 %>\
         <div class="field">
-            <b class="field-label">${_('Covered Territories')}</b>
-            <p>${', '.join(territory.main_postal_distribution_str for territory in (territories or []))}</p>
+            <b class="field-label">${_('Covered Territory')} : </b>
+            ${', '.join(territory.main_postal_distribution_str for territory in (territories or []))}
         </div>
         <div class="field">
             <b class="field-label">${_('Transport Offers')}</b>
