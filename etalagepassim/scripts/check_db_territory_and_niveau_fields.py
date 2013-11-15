@@ -207,56 +207,63 @@ def main():
                     errors_by_id[poi['_id']]['territoires'] = territoires
                     break
                 niveau = territoire_niveau
-            continue
+        else:
+            official_transports_offers_niveau = set(
+                map(lambda item: field_value(item, 'select', [('label', 'Niveau')]), official_transport_offers),
+                )
+            transports_offers_niveau = None
+            if len(official_transports_offers_niveau) == 1:
+                niveau = official_transports_offers_niveau.pop()
+            else:
+                transports_offers_niveau = set(
+                    map(lambda item: field_value(item, 'select', [('label', 'Niveau')]), transport_offers),
+                    )
+                if len(transports_offers_niveau) == 1:
+                    niveau = transports_offers_niveau.pop()
+            if niveau is None:
+                errors_by_id.setdefault(poi['_id'], {})['name'] = field_value(
+                    poi,
+                    'name',
+                    [('label', u'Nom du service')],
+                    )
+                errors_by_id[poi['_id']].setdefault('messages', []).append(
+                    'Niveau can\'t be determined through transport_offers',
+                    )
+                errors_by_id[poi['_id']]['niveaux'] = transports_offers_niveau or official_transports_offers_niveau
+                errors_by_id[poi['_id']]['type'] = '3niveau'
 
-        official_transports_offers_niveau = set(
-            map(lambda item: field_value(item, 'select', [('label', 'Niveau')]), official_transport_offers),
-            )
-        transports_offers_niveau = None
-        if len(official_transports_offers_niveau) == 1:
-            niveau = official_transports_offers_niveau.pop()
-        else:
-            transports_offers_niveau = set(
-                map(lambda item: field_value(item, 'select', [('label', 'Niveau')]), transport_offers),
-                )
-            if len(transports_offers_niveau) == 1:
-                niveau = transports_offers_niveau.pop()
-        if niveau is None:
-            errors_by_id.setdefault(poi['_id'], {})['name'] = field_value(poi, 'name', [('label', u'Nom du service')])
-            errors_by_id[poi['_id']].setdefault('messages', []).append(
-                'Niveau can\'t be determined through transport_offers',
-                )
-            errors_by_id[poi['_id']]['niveaux'] = transports_offers_niveau or official_transports_offers_niveau
-            errors_by_id[poi['_id']]['type'] = '3niveau'
-
-        official_transports_offers_territoires = merge_territories(official_transport_offers)
-        if len(official_transports_offers_territoires) >= 1:
-            territoires = list(official_transports_offers_territoires)
-        else:
-            transports_offers_territoires = merge_territories(transport_offers)
-            if len(transports_offers_territoires) >= 1:
-                territoires = list(transports_offers_territoires)
-        if territoires is None:
-            errors_by_id.setdefault(poi['_id'], {})['name'] = field_value(poi, 'name', [('label', u'Nom du service')])
-            errors_by_id[poi['_id']].setdefault('messages', []).append(
-                'Territory can\'t be determined through transport_offers',
-                )
-            errors_by_id[poi['_id']]['territoires'] = transports_offers_territoires
-            errors_by_id[poi['_id']]['type'] = '4territoires'
-        else:
-            # Remove territories if one of their ancestor territories is is in the list
-            territories = [
-                db.territories.find_one({'kind': territory_kind, 'code': territory_code})
-                for territory_kind, territory_code in territoires
-                ]
-            remove_indexes = set()
-            for index, territory in enumerate(territories):
-                for index2, territory2 in enumerate(territories):
-                    if index != index2 and territory['_id'] in territory2['ancestors_id']:
-                        remove_indexes.add(index2)
-            if remove_indexes:
-                for index in sorted(remove_indexes, reverse = True):
-                    territoires.pop(index)
+            official_transports_offers_territoires = merge_territories(official_transport_offers)
+            if len(official_transports_offers_territoires) >= 1:
+                territoires = list(official_transports_offers_territoires)
+            else:
+                transports_offers_territoires = merge_territories(transport_offers)
+                if len(transports_offers_territoires) >= 1:
+                    territoires = list(transports_offers_territoires)
+            if territoires is None:
+                errors_by_id.setdefault(poi['_id'], {})['name'] = field_value(
+                    poi,
+                    'name',
+                    [('label', u'Nom du service')],
+                    )
+                errors_by_id[poi['_id']].setdefault('messages', []).append(
+                    'Territory can\'t be determined through transport_offers',
+                    )
+                errors_by_id[poi['_id']]['territoires'] = transports_offers_territoires
+                errors_by_id[poi['_id']]['type'] = '4territoires'
+            else:
+                # Remove territories if one of their ancestor territories is is in the list
+                territories = [
+                    db.territories.find_one({'kind': territory_kind, 'code': territory_code})
+                    for territory_kind, territory_code in territoires
+                    ]
+                remove_indexes = set()
+                for index, territory in enumerate(territories):
+                    for index2, territory2 in enumerate(territories):
+                        if index != index2 and territory['_id'] in territory2['ancestors_id']:
+                            remove_indexes.add(index2)
+                if remove_indexes:
+                    for index in sorted(remove_indexes, reverse = True):
+                        territoires.pop(index)
 
         poi = set_field_value(niveau, poi, 'select', [('label', 'Niveau')])
         poi = set_field_value(territoires, poi, 'territories', [('label', 'Territoires')])
