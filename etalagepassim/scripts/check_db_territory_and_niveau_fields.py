@@ -149,7 +149,7 @@ def main():
             poi,
             'boolean',
             [('label', u'Service d\'information multimodale')],
-            default = False,
+            default = '0',
             )
         niveau = field_value(poi, 'select', [('label', 'Niveau')])
         territoires = field_value(poi, 'territories', [('label', 'Territoires')])
@@ -171,16 +171,9 @@ def main():
             errors_by_id[poi['_id']]['type'] = '2missing'
             continue
 
-        if is_multimodal_info_service is True:
+        if is_multimodal_info_service == '1' or is_multimodal_info_service is True:
+            poi = set_field_value('1', poi, 'boolean', [('label', u'Service d\'information multimodale')])
             # "Territoires" already set for all multimodal info service
-            #
-            # TODO(rsoufflet)
-            #    * Si c'est un SIM.
-            #    * En fonction du territoire si il est tout seul
-            #    * Deux département => Régionale
-            #    * Département et commune => Departementale
-            #    * Région et commune => Departementale
-            #    * Plusieurs commune => Locale
             if territoires is None:
                 errors_by_id.setdefault(poi['_id'], {})['name'] = field_value(
                     poi,
