@@ -104,9 +104,9 @@ def main():
     schema = db.schemas.find_one({'title': schema_name})
     found_fields = []
     for field_index, field in enumerate(schema['fields']):
-        if field['id'] == 'territories' and field['label'] == 'Territoires':
-            log.info(u'Found "Territoires" field')
-            found_fields.append('Territoires')
+        if field['id'] == 'territories' and field['label'] == 'Territoire couvert':
+            log.info(u'Found "Territoire couvert" field')
+            found_fields.append('Territoire couvert')
         if field['id'] == 'select' and field['label'] == 'Niveau':
             log.info(u'Found "Niveau" field')
             found_fields.append('Niveau')
@@ -131,13 +131,13 @@ def main():
         schema['fields'].insert(6, {
             u'id': u'territories',
             u'initial': u'',
-            u'label': u'Territoires',
+            u'label': u'Territoire couvert',
             u'protected': u'0',
             u'required': u'0',
             u'tooltip': u'',
             u'value': u'',
             })
-        log.info(u'Add "Territoires" field to schema')
+        log.info(u'Add "Territoire couvert" field to schema')
     db.schemas.save(schema, safe = True)
     log.info(u'Schema saved')
 
@@ -151,7 +151,7 @@ def main():
             default = '0',
             )
         niveau = field_value(poi, 'select', [('label', 'Niveau')])
-        territoires = field_value(poi, 'territories', [('label', 'Territoires')])
+        territoires = field_value(poi, 'territories', [('label', 'Territoire couvert')])
         transport_offer_ids = field_value(
             poi,
             'links',
@@ -172,7 +172,7 @@ def main():
 
         if is_multimodal_info_service == '1' or is_multimodal_info_service is True:
             poi = set_field_value('1', poi, 'boolean', [('label', u'Service d\'information multimodale')], 4)
-            # "Territoires" already set for all multimodal info service
+            # "Territoire couvert" already set for all multimodal info service
             if territoires is None:
                 errors_by_id.setdefault(poi['_id'], {})['name'] = field_value(
                     poi,
@@ -184,8 +184,8 @@ def main():
                     )
                 errors_by_id[poi['_id']]['type'] = '1sim'
                 continue
-            for territoroire in territoires:
-                territoires_tuple = territoires
+            for territoire in territoires:
+                territoires_tuple = territoire
                 territoire_niveau = {
                     u'ArrondissementOfFrance': 'local',
                     u'CommuneOfFrance': 'local',
@@ -292,7 +292,7 @@ def main():
             for niveau in error['niveaux']:
                 log.error(u'{}- {}'.format(' ' * 8, niveau))
         if error.get('territoires'):
-            log.error(u'{}* Territoires :'.format(' ' * 4))
+            log.error(u'{}* Territoire couvert :'.format(' ' * 4))
             for territoire in error['territoires']:
                 log.error(u'{}- {}'.format(' ' * 8, territoire))
 
