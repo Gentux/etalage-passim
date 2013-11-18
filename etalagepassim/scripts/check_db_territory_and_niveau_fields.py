@@ -47,7 +47,7 @@ def label_index(poi, field_id, label_dict_pairs):
     return None
 
 
-def set_field_value(value, poi, field_id, label_dict_pairs):
+def set_field_value(value, poi, field_id, label_dict_pairs, position):
     if value is None:
         return poi
     poi_label_index = label_index(poi, field_id, label_dict_pairs)
@@ -62,7 +62,7 @@ def set_field_value(value, poi, field_id, label_dict_pairs):
             poi['metadata'][field_id].append(dict(label_dict_pairs))
         else:
             poi['metadata'][field_id] = [dict(label_dict_pairs)]
-        poi['metadata']['positions'].append(field_id)
+        poi['metadata']['positions'].insert(position, field_id)
         poi[field_id] = [field_value]
     else:
         poi[field_id][poi_label_index] = field_value
@@ -112,7 +112,7 @@ def main():
             found_fields.append('Niveau')
 
     if 'Niveau' not in found_fields:
-        schema['fields'].append({
+        schema['fields'].insert(5, {
             u'id': u'select',
             u'label': u'Niveau',
             u'options': [
@@ -127,8 +127,8 @@ def main():
             u'value': u'',
             })
         log.info(u'Add "Niveau" field to schema')
-    if 'Territoires' not in found_fields:
-        schema['fields'].append({
+    if 'Territoire couvert' not in found_fields:
+        schema['fields'].insert(6, {
             u'id': u'territories',
             u'initial': u'',
             u'label': u'Territoires',
@@ -171,7 +171,7 @@ def main():
             continue
 
         if is_multimodal_info_service == '1' or is_multimodal_info_service is True:
-            poi = set_field_value('1', poi, 'boolean', [('label', u'Service d\'information multimodale')])
+            poi = set_field_value('1', poi, 'boolean', [('label', u'Service d\'information multimodale')], 4)
             # "Territoires" already set for all multimodal info service
             if territoires is None:
                 errors_by_id.setdefault(poi['_id'], {})['name'] = field_value(
@@ -266,10 +266,10 @@ def main():
                         territoires.pop(index)
                 log.debug(u'Poi\'s territories after removing children : {}'.format(territoires))
 
-        poi = set_field_value(niveau, poi, 'select', [('label', 'Niveau')])
+        poi = set_field_value(niveau, poi, 'select', [('label', 'Niveau')], 5)
         log.info(u'Save \'Niveau\' field to {} for poi {}'.format(niveau, poi['_id']))
-        poi = set_field_value(territoires, poi, 'territories', [('label', 'Territoires')])
-        log.info(u'Save \'Territoires\' field to {} for poi {}'.format(territoires, poi['_id']))
+        poi = set_field_value(territoires, poi, 'territories', [('label', 'Territoire couvert')], 6)
+        log.info(u'Save \'Territoire couvert\' field to {} for poi {}'.format(territoires, poi['_id']))
         try:
             poi_tools.poi_add_metadata_indexes_things(poi)
         except Exception as exc:
