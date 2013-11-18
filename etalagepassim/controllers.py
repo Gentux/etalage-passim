@@ -87,7 +87,8 @@ def autocomplete_category(req):
         conv.rename_item('tag', 'tags_slug'),
         )(inputs, state = ctx)
     if errors is not None:
-        return wsgihelpers.respond_json(ctx,
+        return wsgihelpers.respond_json(
+            ctx,
             dict(
                 apiVersion = '1.0',
                 context = inputs['context'],
@@ -141,7 +142,8 @@ def autocomplete_category(req):
             )
         for category_infos in categories_infos[pager.first_item_index:pager.last_item_number]
         ]
-    return wsgihelpers.respond_json(ctx,
+    return wsgihelpers.respond_json(
+        ctx,
         dict(
             apiVersion = '1.0',
             context = inputs['context'],
@@ -192,7 +194,8 @@ def autocomplete_names(req):
         conv.rename_item('page', 'page_number'),
         )(inputs, state = ctx)
     if errors is not None:
-        return wsgihelpers.respond_json(ctx,
+        return wsgihelpers.respond_json(
+            ctx,
             dict(
                 apiVersion = '1.0',
                 context = inputs['context'],
@@ -238,7 +241,8 @@ def autocomplete_names(req):
         pager.last_item_number,
         ))
 
-    return wsgihelpers.respond_json(ctx,
+    return wsgihelpers.respond_json(
+        ctx,
         dict(
             apiVersion = '1.0',
             context = inputs['context'],
@@ -347,14 +351,17 @@ def export_directory_csv(req):
             )
         del url_params['accept']
         del url_params['submit']
-        return wsgihelpers.redirect(ctx, location = urls.get_url(ctx, u'api/v1/{0}/{1}'.format(type, format),
-            **url_params))
+        return wsgihelpers.redirect(
+            ctx,
+            location = urls.get_url(ctx, u'api/v1/{0}/{1}'.format(type, format), **url_params),
+            )
 
     data, errors = conv.merge(
         model.Poi.make_inputs_to_search_data(),
         conv.struct(
             dict(
-                accept = conv.test(lambda value: not inputs['submit'],
+                accept = conv.test(
+                    lambda value: not inputs['submit'],
                     error = N_(u"You must accept license to be allowed to download data."),
                     handle_none_value = True,
                     ),
@@ -363,7 +370,9 @@ def export_directory_csv(req):
             keep_none_values = True,
             ),
         )(inputs, state = ctx)
-    return templates.render(ctx, '/export-accept-license.mako',
+    return templates.render(
+        ctx,
+        '/export-accept-license.mako',
         export_title = ctx._(u"Directory Export in CSV Format"),
         errors = errors,
         format = format,
@@ -401,14 +410,17 @@ def export_directory_excel(req):
             )
         del url_params['accept']
         del url_params['submit']
-        return wsgihelpers.redirect(ctx, location = urls.get_url(ctx, u'api/v1/{0}/{1}'.format(type, format),
-            **url_params))
+        return wsgihelpers.redirect(
+            ctx,
+            location = urls.get_url(ctx, u'api/v1/{0}/{1}'.format(type, format), **url_params),
+            )
 
     data, errors = conv.merge(
         model.Poi.make_inputs_to_search_data(),
         conv.struct(
             dict(
-                accept = conv.test(lambda value: not inputs['submit'],
+                accept = conv.test(
+                    lambda value: not inputs['submit'],
                     error = N_(u"You must accept license to be allowed to download data."),
                     handle_none_value = True,
                     ),
@@ -417,7 +429,9 @@ def export_directory_excel(req):
             keep_none_values = True,
             ),
         )(inputs, state = ctx)
-    return templates.render(ctx, '/export-accept-license.mako',
+    return templates.render(
+        ctx,
+        '/export-accept-license.mako',
         export_title = ctx._(u"Directory Export in Excel Format"),
         errors = errors,
         format = format,
@@ -455,14 +469,17 @@ def export_directory_geojson(req):
             )
         del url_params['accept']
         del url_params['submit']
-        return wsgihelpers.redirect(ctx, location = urls.get_url(ctx, u'api/v1/{0}/{1}'.format(type, format),
-            **url_params))
+        return wsgihelpers.redirect(
+            ctx,
+            location = urls.get_url(ctx, u'api/v1/{0}/{1}'.format(type, format), **url_params),
+            )
 
     data, errors = conv.merge(
         model.Poi.make_inputs_to_search_data(),
         conv.struct(
             dict(
-                accept = conv.test(lambda value: not inputs['submit'],
+                accept = conv.test(
+                    lambda value: not inputs['submit'],
                     error = N_(u"You must accept license to be allowed to download data."),
                     handle_none_value = True,
                     ),
@@ -471,7 +488,9 @@ def export_directory_geojson(req):
             keep_none_values = True,
             ),
         )(inputs, state = ctx)
-    return templates.render(ctx, '/export-accept-license.mako',
+    return templates.render(
+        ctx,
+        '/export-accept-license.mako',
         export_title = ctx._(u"Directory Export in GeoJSON Format"),
         errors = errors,
         format = format,
@@ -509,14 +528,17 @@ def export_directory_kml(req):
             )
         del url_params['accept']
         del url_params['submit']
-        return wsgihelpers.redirect(ctx, location = urls.get_url(ctx, u'api/v1/{0}/{1}'.format(type, format),
-            **url_params))
+        return wsgihelpers.redirect(
+            ctx,
+            location = urls.get_url(ctx, u'api/v1/{0}/{1}'.format(type, format), **url_params),
+            )
 
     data, errors = conv.merge(
         model.Poi.make_inputs_to_search_data(),
         conv.struct(
             dict(
-                accept = conv.test(lambda value: not inputs['submit'],
+                accept = conv.test(
+                    lambda value: not inputs['submit'],
                     error = N_(u"You must accept license to be allowed to download data."),
                     handle_none_value = True,
                     ),
@@ -525,7 +547,9 @@ def export_directory_kml(req):
             keep_none_values = True,
             ),
         )(inputs, state = ctx)
-    return templates.render(ctx, '/export-accept-license.mako',
+    return templates.render(
+        ctx,
+        '/export-accept-license.mako',
         export_title = ctx._(u"Directory Export in KML Format"),
         errors = errors,
         format = format,
@@ -563,14 +587,17 @@ def export_geographical_coverage_csv(req):
             )
         del url_params['accept']
         del url_params['submit']
-        return wsgihelpers.redirect(ctx, location = urls.get_url(ctx, u'api/v1/{0}/{1}'.format(type, format),
-            **url_params))
+        return wsgihelpers.redirect(
+            ctx,
+            location = urls.get_url(ctx, u'api/v1/{0}/{1}'.format(type, format), **url_params),
+            )
 
     data, errors = conv.merge(
         model.Poi.make_inputs_to_search_data(),
         conv.struct(
             dict(
-                accept = conv.test(lambda value: not inputs['submit'],
+                accept = conv.test(
+                    lambda value: not inputs['submit'],
                     error = N_(u"You must accept license to be allowed to download data."),
                     handle_none_value = True,
                     ),
@@ -579,7 +606,9 @@ def export_geographical_coverage_csv(req):
             keep_none_values = True,
             ),
         )(inputs, state = ctx)
-    return templates.render(ctx, '/export-accept-license.mako',
+    return templates.render(
+        ctx,
+        '/export-accept-license.mako',
         export_title = ctx._(u"Geographical Coverage Export in CSV Format"),
         errors = errors,
         format = format,
@@ -617,14 +646,17 @@ def export_geographical_coverage_excel(req):
             )
         del url_params['accept']
         del url_params['submit']
-        return wsgihelpers.redirect(ctx, location = urls.get_url(ctx, u'api/v1/{0}/{1}'.format(type, format),
-            **url_params))
+        return wsgihelpers.redirect(
+            ctx,
+            location = urls.get_url(ctx, u'api/v1/{0}/{1}'.format(type, format), **url_params),
+            )
 
     data, errors = conv.merge(
         model.Poi.make_inputs_to_search_data(),
         conv.struct(
             dict(
-                accept = conv.test(lambda value: not inputs['submit'],
+                accept = conv.test(
+                    lambda value: not inputs['submit'],
                     error = N_(u"You must accept license to be allowed to download data."),
                     handle_none_value = True,
                     ),
@@ -633,7 +665,9 @@ def export_geographical_coverage_excel(req):
             keep_none_values = True,
             ),
         )(inputs, state = ctx)
-    return templates.render(ctx, '/export-accept-license.mako',
+    return templates.render(
+        ctx,
+        '/export-accept-license.mako',
         export_title = ctx._(u"Geographical Coverage Export in Excel Format"),
         errors = errors,
         format = format,
@@ -674,7 +708,8 @@ def feed(req):
             elif base_territory:
                 presence_territory = data['base_territory']
 
-        pois_id_iter = model.Poi.iter_ids(ctx,
+        pois_id_iter = model.Poi.iter_ids(
+            ctx,
             competence_territories_id = competence_territories_id,
             presence_territory = presence_territory,
             **non_territorial_search_data)
@@ -699,7 +734,9 @@ def feed(req):
         data['author_email'] = conf['data_email']
 
     req.response.content_type = 'application/atom+xml; charset=utf-8'
-    return templates.render(ctx, '/feed-atom.mako',
+    return templates.render(
+        ctx,
+        '/feed-atom.mako',
         data = data,
         errors = errors,
         inputs = inputs,
@@ -888,7 +925,9 @@ def index(req):
     if ctx.container_base_url is None or ctx.gadget_id is None:
         raise wsgihelpers.redirect(ctx, location = urls.get_url(ctx, *url_args, **url_kwargs))
     else:
-        return templates.render(ctx, '/http-simulated-redirect.mako',
+        return templates.render(
+            ctx,
+            '/http-simulated-redirect.mako',
             url_args = url_args,
             url_kwargs = url_kwargs,
             )
@@ -924,7 +963,8 @@ def index_directory(req):
             presence_territory = data['base_territory'] if data.get('base_territory') is not None else None
             competence_territories_id = related_territories_id
 
-        pois_id_iter = model.Poi.iter_ids(ctx,
+        pois_id_iter = model.Poi.iter_ids(
+            ctx,
             competence_territories_id = competence_territories_id,
             presence_territory = presence_territory,
             **model.Poi.extract_non_territorial_search_data(ctx, data))
@@ -976,7 +1016,9 @@ def index_directory(req):
                 directory[poi.theme_slug] = [poi]
             else:
                 theme_pois.append(poi)
-    return templates.render(ctx, '/directory.mako',
+    return templates.render(
+        ctx,
+        '/directory.mako',
         directory = directory,
         errors = errors,
         inputs = inputs,
@@ -1041,14 +1083,18 @@ def index_export(req):
                 if ctx.container_base_url is None or ctx.gadget_id is None:
                     raise wsgihelpers.redirect(ctx, location = urls.get_url(ctx, *url_args, **url_kwargs))
                 else:
-                    return templates.render(ctx, '/http-simulated-redirect.mako',
+                    return templates.render(
+                        ctx,
+                        '/http-simulated-redirect.mako',
                         url_args = url_args,
                         url_kwargs = url_kwargs,
                         )
             errors = dict(
                 type_and_format = ctx._(u'Missing value'),
                 )
-    return templates.render(ctx, '/export.mako',
+    return templates.render(
+        ctx,
+        '/export.mako',
         errors = errors,
         inputs = inputs,
         mode = mode,
@@ -1070,7 +1116,9 @@ def index_gadget(req):
 
     data, errors = conv.inputs_to_pois_list_data(inputs, state = ctx)
 
-    return templates.render(ctx, '/gadget.mako',
+    return templates.render(
+        ctx,
+        '/gadget.mako',
         data = data,
         errors = errors,
         inputs = inputs,
@@ -1098,7 +1146,8 @@ def index_home(req):
     else:
         competence_territories_id = None
         presence_territory = None
-        pois_id_iter = model.Poi.iter_ids(ctx,
+        pois_id_iter = model.Poi.iter_ids(
+            ctx,
             competence_territories_id = competence_territories_id,
             presence_territory = presence_territory,
             **non_territorial_search_data)
@@ -1121,7 +1170,9 @@ def index_home(req):
             reverse = True
             )
 
-    return templates.render(ctx, '/home.mako',
+    return templates.render(
+        ctx,
+        '/home.mako',
         data = data,
         errors = errors,
         inputs = inputs,
@@ -1161,7 +1212,8 @@ def index_list(req):
     if non_territorial_search_data.get('term') and not isinstance(non_territorial_search_data['term'], basestring):
         non_territorial_search_data['term'] = None
 
-    pois_id_iter = model.Poi.iter_ids(ctx,
+    pois_id_iter = model.Poi.iter_ids(
+        ctx,
         competence_territories_id = competence_territories_id,
         coverages = None if data['coverage'] is None else [data['coverage']],
         presence_territory = presence_territory,
@@ -1185,8 +1237,7 @@ def index_list(req):
             continue
 
         for field in poi.generate_all_fields():
-            poi_territories = set()
-            if field.id == 'territories' and strings.slugify(field.label) == 'territoires':
+            if field.id == 'territories' and strings.slugify(field.label) == 'territoire-couvert':
                 for territory in field.value:
                     if isinstance(data['term'], model.Territory) and territory in data['term'].ancestors_id:
                         ids_by_territory_id.setdefault(territory, set()).add(poi._id)
@@ -1215,6 +1266,7 @@ def index_list(req):
                             field_slug = strings.slugify(field.label)
                             if field_slug == 'type-de-transport' and field.value is not None:
                                 transport_types_by_id.setdefault(poi._id, set()).add(field.value)
+    print len(ids_by_territory_id)
 
     multimodal_info_services = model.Poi.sort_and_paginate_pois_list(
         ctx,
@@ -1223,7 +1275,9 @@ def index_list(req):
         **non_territorial_search_data
         )
 
-    return templates.render(ctx, '/list.mako',
+    return templates.render(
+        ctx,
+        '/list.mako',
         data = data,
         errors = errors,
         ids_by_territory_id = ids_by_territory_id,
@@ -1262,7 +1316,9 @@ def index_map(req):
     else:
         bbox = None
         territory = None
-    return templates.render(ctx, '/map.mako',
+    return templates.render(
+        ctx,
+        '/map.mako',
         bbox = bbox,
         errors = errors,
         inputs = inputs,
@@ -1294,8 +1350,10 @@ def init_base(ctx, params):
             container_base_url = None
     elif conf['subscribers.require_subscription'] and container_base_url is not None:
         subscriber = model.Subscriber.find_one({'sites.domain_name': container_hostname})
-        if subscriber is None and (container_hostname is None
-                or not container_hostname.endswith(conf['subscribers.gadget_valid_domains'])):
+        if subscriber is None and (
+                container_hostname is None or
+                not container_hostname.endswith(conf['subscribers.gadget_valid_domains'])
+                ):
             raise wsgihelpers.bad_request(
                 ctx,
                 explanation = ctx._('The gadget ID "{0}" doesn\'t exist.').format(gadget_id),
@@ -1359,8 +1417,8 @@ def init_base(ctx, params):
             return wsgihelpers.not_found(ctx, explanation = ctx._(u'Unknown territory'))
     if ctx.base_territory is None and ctx.subscriber is not None and ctx.subscriber.territory is not None:
         ctx.base_territory = model.Territory.get_variant_class(
-            ctx.subscriber.territory['kind']).get(ctx.subscriber.territory['code']
-            )
+            ctx.subscriber.territory['kind'],
+            ).get(ctx.subscriber.territory['code'])
         if ctx.base_territory is None:
             return wsgihelpers.not_found(ctx, explanation = ctx._(u'Unknown territory'))
 
@@ -1412,7 +1470,9 @@ def kml(req):
         raise wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
 
     req.response.content_type = 'application/vnd.google-earth.kml+xml; charset=utf-8'
-    return templates.render(ctx, '/kml.mako',
+    return templates.render(
+        ctx,
+        '/kml.mako',
         clusters = clusters,
         inputs = inputs,
         )
@@ -1526,8 +1586,14 @@ def minisite(req):
     if errors is not None and errors.get('poi_id'):
         return wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors['poi_id']))
 
-    data['url'] = url = urls.get_full_url(ctx, 'fragment', 'organismes', data['poi'].slug, data['poi']._id,
-        encoding = data['encoding'])
+    data['url'] = url = urls.get_full_url(
+        ctx,
+        'fragment',
+        'organismes',
+        data['poi'].slug,
+        data['poi']._id,
+        encoding = data['encoding'],
+        )
     try:
         fragment = urllib2.urlopen(url).read().decode(data['encoding'] or 'utf-8')
     except:
@@ -1593,7 +1659,8 @@ def poi(req):
             elif base_territory:
                 presence_territory = data['base_territory']
 
-        pois_id_iter = model.Poi.iter_ids(ctx,
+        pois_id_iter = model.Poi.iter_ids(
+            ctx,
             competence_territories_id = competence_territories_id,
             presence_territory = presence_territory,
             **non_territorial_search_data)
