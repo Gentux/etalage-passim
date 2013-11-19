@@ -46,9 +46,9 @@ place in France, however PASSIM main goal is that its data content be reused by 
 You may reuse PASSIM in several ways:
 
 * The complete content is downloadable as a ZIP folder of the
-[the complete back-office content](http://petitpois.passim.comarquage.fr/), and is more complete than what is shown on
+[the complete back-office content](http://petitpois.passim.info/poi/search), and is more complete than what is shown on
 the passim web site.
-* The content is also published in [other formats easier to visualise](http://passim.comarquage.fr/data/).
+* The content is also published in [other formats easier to visualise](http://www.passim.info/donnees/).
 * You may also copy and paste the html/js code for displaying in your web site the response to a particular request
 (via the HTML button) or download the corresponding list in CSV format (via the CSV button).
 * Also, the request can be made via the url via a REST API (example: /liste?term=13710+FUVEAU).

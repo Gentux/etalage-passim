@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Passim\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-11-18 15:36+0100\n"
-"PO-Revision-Date: 2013-11-18 14:42+0000\n"
+"POT-Creation-Date: 2013-11-19 17:22+0100\n"
+"PO-Revision-Date: 2013-11-19 16:25+0000\n"
 "Last-Translator: rsoufflet <rsoufflet@easter-eggs.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/passim/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -23,145 +23,145 @@ msgstr ""
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: etalagepassim/controllers.py:269 etalagepassim/controllers.py:303
-#: etalagepassim/controllers.py:328 etalagepassim/controllers.py:382
-#: etalagepassim/controllers.py:436 etalagepassim/controllers.py:490
-#: etalagepassim/controllers.py:544 etalagepassim/controllers.py:598
-#: etalagepassim/controllers.py:716 etalagepassim/controllers.py:750
-#: etalagepassim/controllers.py:994
+#: etalagepassim/controllers.py:273 etalagepassim/controllers.py:307
+#: etalagepassim/controllers.py:332 etalagepassim/controllers.py:391
+#: etalagepassim/controllers.py:450 etalagepassim/controllers.py:509
+#: etalagepassim/controllers.py:568 etalagepassim/controllers.py:627
+#: etalagepassim/controllers.py:753 etalagepassim/controllers.py:787
+#: etalagepassim/controllers.py:1036
 msgid "Export disabled by configuration"
 msgstr "Export désactivé par configuration"
 
-#: etalagepassim/controllers.py:280 etalagepassim/controllers.py:314
-#: etalagepassim/controllers.py:658 etalagepassim/controllers.py:727
-#: etalagepassim/controllers.py:761 etalagepassim/controllers.py:790
-#: etalagepassim/controllers.py:793 etalagepassim/controllers.py:1097
-#: etalagepassim/controllers.py:1152 etalagepassim/controllers.py:1412
-#: etalagepassim/controllers.py:1436 etalagepassim/controllers.py:1527
-#: etalagepassim/controllers.py:1574 etalagepassim/controllers.py:1700
+#: etalagepassim/controllers.py:284 etalagepassim/controllers.py:318
+#: etalagepassim/controllers.py:692 etalagepassim/controllers.py:764
+#: etalagepassim/controllers.py:798 etalagepassim/controllers.py:827
+#: etalagepassim/controllers.py:830 etalagepassim/controllers.py:1145
+#: etalagepassim/controllers.py:1203 etalagepassim/controllers.py:1488
+#: etalagepassim/controllers.py:1514 etalagepassim/controllers.py:1605
+#: etalagepassim/controllers.py:1658 etalagepassim/controllers.py:1785
 msgid "Error: {0}"
 msgstr "Erreur : {0}"
 
-#: etalagepassim/controllers.py:358 etalagepassim/controllers.py:412
-#: etalagepassim/controllers.py:466 etalagepassim/controllers.py:520
-#: etalagepassim/controllers.py:574 etalagepassim/controllers.py:628
+#: etalagepassim/controllers.py:365 etalagepassim/controllers.py:424
+#: etalagepassim/controllers.py:483 etalagepassim/controllers.py:542
+#: etalagepassim/controllers.py:601 etalagepassim/controllers.py:660
 msgid "You must accept license to be allowed to download data."
 msgstr "Vous devez accepter la licence afin de pouvoir télécharger les données."
 
-#: etalagepassim/controllers.py:367
+#: etalagepassim/controllers.py:376
 msgid "Directory Export in CSV Format"
 msgstr "Export de l'annuaire au format CSV"
 
-#: etalagepassim/controllers.py:421
+#: etalagepassim/controllers.py:435
 msgid "Directory Export in Excel Format"
 msgstr "Export de l'annuaire au format Excel"
 
-#: etalagepassim/controllers.py:475
+#: etalagepassim/controllers.py:494
 msgid "Directory Export in GeoJSON Format"
 msgstr "Export de l'annuaire au format GeoJSON"
 
-#: etalagepassim/controllers.py:529
+#: etalagepassim/controllers.py:553
 msgid "Directory Export in KML Format"
 msgstr "Export de l'annuaire au format KML"
 
-#: etalagepassim/controllers.py:583
+#: etalagepassim/controllers.py:612
 msgid "Geographical Coverage Export in CSV Format"
 msgstr "Export de la couverture géographique au format CSV"
 
-#: etalagepassim/controllers.py:637
+#: etalagepassim/controllers.py:671
 msgid "Geographical Coverage Export in Excel Format"
 msgstr "Export de la couverture géographique au format Excel"
 
-#: etalagepassim/controllers.py:698
+#: etalagepassim/controllers.py:733
 msgid "CEREMA"
 msgstr "CEREMA"
 
-#: etalagepassim/controllers.py:903
+#: etalagepassim/controllers.py:942
 msgid "Directory page disabled by configuration"
 msgstr "Page annuaire désactivée par configuration"
 
-#: etalagepassim/controllers.py:914 etalagepassim/conv.py:496
+#: etalagepassim/controllers.py:953 etalagepassim/conv.py:496
 msgid "In \"directory\" mode, a commune is required"
 msgstr "En mode \"annuaire\", la commune est nécessaire"
 
-#: etalagepassim/controllers.py:1049
+#: etalagepassim/controllers.py:1093
 msgid "Missing value"
 msgstr "Valeur manquante"
 
-#: etalagepassim/controllers.py:1064
+#: etalagepassim/controllers.py:1110
 msgid "Gadget page disabled by configuration"
 msgstr "Page gadget désactivée par configuration"
 
-#: etalagepassim/controllers.py:1087
+#: etalagepassim/controllers.py:1135
 msgid "Home page disabled by configuration"
 msgstr "Page d'accueil désactivée par configuration"
 
-#: etalagepassim/controllers.py:1244
+#: etalagepassim/controllers.py:1316
 msgid "Map page disabled by configuration"
 msgstr "Page cartographique désactivée par configuration"
 
-#: etalagepassim/controllers.py:1301
+#: etalagepassim/controllers.py:1377
 msgid "The gadget ID \"{0}\" doesn't exist."
 msgstr "L''identifiant de gadget {0} n'existe pas"
 
-#: etalagepassim/controllers.py:1302 etalagepassim/controllers.py:1317
+#: etalagepassim/controllers.py:1378 etalagepassim/controllers.py:1393
 msgid "Rebuild component and copy the generated JavaScript into your website."
 msgstr "Regénérer le composant et copier le code JavaScript dans votre site web."
 
-#: etalagepassim/controllers.py:1303 etalagepassim/controllers.py:1319
+#: etalagepassim/controllers.py:1379 etalagepassim/controllers.py:1395
 msgid "Invalid Gadget ID"
 msgstr "Identifiant de gadget incorrect"
 
-#: etalagepassim/controllers.py:1318
+#: etalagepassim/controllers.py:1394
 msgid "The gadget ID \"{0}\" is used by another component."
 msgstr "L'identifiant de gadget \"{0}\" est utilisé par un autre composant."
 
-#: etalagepassim/controllers.py:1334
+#: etalagepassim/controllers.py:1410
 msgid "Error for \"{0}\" parameter: {1}"
 msgstr "Erreur sur le paramètre \"{0}\" : {1}"
 
-#: etalagepassim/controllers.py:1342
+#: etalagepassim/controllers.py:1418
 msgid "Base Categories Error: {0}"
 msgstr "Erreur dans les catégories de base : {0}"
 
-#: etalagepassim/controllers.py:1348
+#: etalagepassim/controllers.py:1424
 msgid "Category Tags Error: {0}"
 msgstr "Erreur dans les étiquettes de catégories : {0}"
 
-#: etalagepassim/controllers.py:1355
+#: etalagepassim/controllers.py:1431
 msgid "Base Territory Error: {0}"
 msgstr "Erreur dans les catégories de base : {0}"
 
-#: etalagepassim/controllers.py:1359 etalagepassim/controllers.py:1365
+#: etalagepassim/controllers.py:1435 etalagepassim/controllers.py:1441
 #: etalagepassim/conv.py:810 etalagepassim/conv.py:813
 msgid "Unknown territory"
 msgstr "Territoire inconnu"
 
-#: etalagepassim/controllers.py:1381
+#: etalagepassim/controllers.py:1457
 msgid "Distance Error: {0}"
 msgstr "Erreur de distance : {0}"
 
-#: etalagepassim/controllers.py:1445
+#: etalagepassim/controllers.py:1523
 msgid "Your email has been sent"
 msgstr "Votre email a bien été envoyé"
 
-#: etalagepassim/controllers.py:1496 etalagepassim/controllers.py:1648
+#: etalagepassim/controllers.py:1574 etalagepassim/controllers.py:1733
 msgid "Minisite disabled by configuration"
 msgstr "Mini-site désactivé par configuration"
 
-#: etalagepassim/controllers.py:1534
+#: etalagepassim/controllers.py:1618
 msgid "Access to organism failed"
 msgstr "L'accès à la fiche a échoué"
 
-#: etalagepassim/controllers.py:1576
+#: etalagepassim/controllers.py:1660
 msgid "Invalid POI ID"
 msgstr "Identifiant de POI incorrect"
 
-#: etalagepassim/controllers.py:1665
+#: etalagepassim/controllers.py:1750
 msgid "POI ID Error: {0}"
 msgstr "Erreur dans l'identifiant de POI : {0}"
 
-#: etalagepassim/controllers.py:1673
+#: etalagepassim/controllers.py:1758
 msgid "Encoding Error: {0}"
 msgstr "Erreur d'encodage : {0}"
 
@@ -384,16 +384,16 @@ msgid ""
 "You may reuse PASSIM in several ways:\n"
 "\n"
 "* The complete content is downloadable as a ZIP folder of the\n"
-"[the complete back-office content](http://petitpois.passim.comarquage.fr/), and is more complete than what is shown on\n"
+"[the complete back-office content](http://petitpois.passim.info/poi/search), and is more complete than what is shown on\n"
 "the passim web site.\n"
-"* The content is also published in [other formats easier to visualise](http://passim.comarquage.fr/data/).\n"
+"* The content is also published in [other formats easier to visualise](http://www.passim.info/donnees/).\n"
 "* You may also copy and paste the html/js code for displaying in your web site the response to a particular request\n"
 "(via the HTML button) or download the corresponding list in CSV format (via the CSV button).\n"
 "* Also, the request can be made via the url via a REST API (example: /liste?term=13710+FUVEAU).\n"
 "\n"
 "Please [contact us](http://www.passim.info/contact) for any question or remark.<br>\n"
 "Thank you for using PASSIM and thank in advance for your comments!\n"
-msgstr "\nLe contenu de PASSIM est publié sur le [portail national de l'Open Data](http://www.data.gouv.fr/) sous [Licence ouverte Etalab](http://www.data.gouv.fr/Licence-Ouverte-Open-Licence).\n\nL'annuaire PASSIM a été créé au départ dès 2004 afin de donner aux pouvoirs publics une vision d'ensemble de l'info transport en France et de ses évolutions, et de contribuer à une certaine harmonisation technique ; le site passim.info présente le contenu de l'annuaire au grand public et permet de trouver les services d'information pertinents quelque part en France, mais l'objectif principal de PASSIM est la réutilisation de son contenu.\n\nLe contenu de l'annuaire est réutilisable de plus façons :\n\n* Le contenu complet est téléchargeable sous forme de dossier ZIP contenant l'ensemble des fiches de l'annuaire. [Ce contenu est en fait celui qui est géré en back-office](http://www.petitpois.passim.info/), et qui est plus complet que celui présenté sur le site web Passim.\n* Le contenu de PASSIM est publié sous [d'autres formats plus faciles à visualiser (KML, CSV, SHP, mis à jour chaque nuit)](http://passim.comarquage.fr/data/)\n* Il est possible de copier-coller le code html/js de la liste des services répondant à une recherche ou de télécharger les données correspondants au format CSV\n* Enfin, la requête sur l'annuaire est envoyée par une API REST publique (ex. /liste?term=13710+FUVEAU)\n\nVeuillez [nous contacter](http://www.passim.info/contact) pour toutes questions et remarques.<br>\nMerci d'avance d'utiliser PASSIM et de vos retours !\n"
+msgstr "\nLe contenu de PASSIM est publié sur le [portail national de l'Open Data](http://www.data.gouv.fr/) sous [Licence ouverte Etalab](http://www.data.gouv.fr/Licence-Ouverte-Open-Licence).\n\nL'annuaire PASSIM a été créé au départ dès 2004 afin de donner aux pouvoirs publics une vision d'ensemble de l'info transport en France et de ses évolutions, et de contribuer à une certaine harmonisation technique ; le site passim.info présente le contenu de l'annuaire au grand public et permet de trouver les services d'information pertinents quelque part en France, mais l'objectif principal de PASSIM est la réutilisation de son contenu.\n\nLe contenu de l'annuaire est réutilisable de plus façons :\n\n* Le contenu complet est téléchargeable sous forme de dossier ZIP contenant l'ensemble des fiches de l'annuaire. [Ce contenu est en fait celui qui est géré en back-office](http://petitpois.passim.info/poi/search), et qui est plus complet que celui présenté sur le site web Passim.\n* Le contenu de PASSIM est publié sous [d'autres formats plus faciles à visualiser (KML, CSV, SHP, mis à jour chaque nuit)](http://www.passim.info/donnees/)\n* Il est possible de copier-coller le code html/js de la liste des services répondant à une recherche ou de télécharger les données correspondants au format CSV\n* Enfin, la requête sur l'annuaire est envoyée par une API REST publique (ex. /liste?term=13710+FUVEAU)\n\nVeuillez [nous contacter](http://www.passim.info/contact) pour toutes questions et remarques.<br>\nMerci d'avance d'utiliser PASSIM et de vos retours !\n"
 
 #: etalagepassim/templates/directory.mako:90
 msgid "Directory"
