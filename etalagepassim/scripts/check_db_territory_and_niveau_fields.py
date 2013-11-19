@@ -187,12 +187,12 @@ def main():
             for territoire in territoires:
                 territoires_tuple = territoire
                 territoire_niveau = {
-                    u'ArrondissementOfFrance': 'local',
-                    u'CommuneOfFrance': 'local',
-                    u'Country': 'national',
-                    u'DepartmentOfFrance': 'departmental',
-                    u'RegionOfFrance': 'regional',
-                    u'UrbanTransportsPerimeterOfFrance': 'local',
+                    u'ArrondissementOfFrance': u'Locale',
+                    u'CommuneOfFrance': u'Locale',
+                    u'Country': u'Nationale',
+                    u'DepartmentOfFrance': u'Départementale',
+                    u'RegionOfFrance': u'Régionale',
+                    u'UrbanTransportsPerimeterOfFrance': u'Locale',
                     }.get(territoires_tuple[0])
                 if niveau is not None and niveau != territoire_niveau:
                     errors_by_id.setdefault(poi['_id'], {})['name'] = field_value(
