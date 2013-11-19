@@ -486,11 +486,15 @@ class Poi(representations.UserRepresentable):
                         for transport_mode in field.value:
                             self.ids_by_transport_mode.setdefault(transport_mode, set()).add(
                                 indexed_poi_id)
+                if field.id == 'select' and field_slug == 'type-de-transport' and field.value is not None:
+                    self.ids_by_transport_type.setdefault(field.value, set()).add(indexed_poi_id)
+
+        if self.schema_name == 'ServiceInfo':
+            for field in self.fields:
                 if field.id == 'select':
-                    if field_slug == 'niveau' and field.value is not None:
-                        self.ids_by_coverage.setdefault(field.value, set()).add(indexed_poi_id)
-                    elif field_slug == 'type-de-transport' and field.value is not None:
-                        self.ids_by_transport_type.setdefault(field.value, set()).add(indexed_poi_id)
+                    if strings.slugify(field.label) == 'niveau' and field.value is not None:
+                        coverage_slug = strings.slugify(field.value)
+                        self.ids_by_coverage.setdefault(coverage_slug, set()).add(indexed_poi_id)
 
         self.ids_by_schema_name.setdefault(self.schema_name, set()).add(indexed_poi_id)
 
@@ -590,7 +594,8 @@ class Poi(representations.UserRepresentable):
             intersected_sets.append(territory_competent_pois_id)
 
         for coverage in (coverages or []):
-            coverage_pois_id = cls.ids_by_coverage.get(coverage)
+            coverage_slug = strings.slugify(coverage)
+            coverage_pois_id = cls.ids_by_coverage.get(coverage_slug)
             if not coverage_pois_id:
                 return set()
             intersected_sets.append(coverage_pois_id)

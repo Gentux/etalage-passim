@@ -1227,6 +1227,7 @@ def index_list(req):
 
     ids_by_territory_id = dict()
     multimodal_info_services_by_id = dict()
+    national_territory_id = ramdb.territory_id_by_kind_code[('Country', 'FR')]
     transport_types_by_id = dict()
     web_site_by_id = dict()
     for poi in (
@@ -1243,6 +1244,7 @@ def index_list(req):
                         territory = ramdb.territory_by_id[territory_id]
                         if territory.__class__.__name__ != 'UrbanTransportsPerimeterOfFrance':
                             ids_by_territory_id.setdefault(territory_id, set()).add(poi._id)
+                            break
                         else:
                             PTU_postal_routing = territory.main_postal_distribution.get('postal_routing')
                             for child_territory_id in ramdb.territories_id_by_ancestor_id.get(territory_id):
@@ -1256,6 +1258,8 @@ def index_list(req):
                                         and PTU_postal_routing == child_territory_postal_routing:
                                     ids_by_territory_id.setdefault(child_territory_id, set()).add(poi._id)
                                     break
+                else:
+                    ids_by_territory_id.setdefault(national_territory_id, set()).add(poi._id)
 
             if field.id == 'link' and strings.slugify(field.label) == 'site-web':
                 web_site = model.Poi.instance_by_id.get(field.value)
