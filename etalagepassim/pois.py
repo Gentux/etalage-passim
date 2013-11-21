@@ -264,11 +264,10 @@ class Field(representations.UserRepresentable):
 class Poi(representations.UserRepresentable):
     _id = None
     # IDs of territories for which POI is fully competent. None when POI has no notion of competence territory
-    competence_territories_id = None
     fields = None
     geo = None
     ids_by_category_slug = {}
-    ids_by_competence_territory_id = {}
+    ids_by_territory_id = {}
     ids_by_coverage = {}
     ids_by_begin_datetime = []
     ids_by_end_datetime = []
@@ -289,9 +288,11 @@ class Poi(representations.UserRepresentable):
     petitpois_url = None  # class attribute defined in subclass. URL of Petitpois site
     postal_distribution_str = None
     schema_name = None
+    sim_ids_by_territory_id = {}
     slug_by_id = {}
     street_address = None
     subclass_by_database_and_schema_name = {}
+    territories_id = None
     theme_slug = None
     weight_by_coverage = {
         u'Départementale': 1,
@@ -310,7 +311,7 @@ class Poi(representations.UserRepresentable):
         cls.instance_by_id.clear()
         cls.ids_by_parent_id.clear()
         cls.ids_by_category_slug.clear()
-        cls.ids_by_competence_territory_id.clear()
+        cls.ids_by_territory_id.clear()
         cls.ids_by_coverage.clear()
         cls.ids_by_presence_territory_id.clear()
         cls.ids_by_schema_name.clear()
@@ -318,6 +319,7 @@ class Poi(representations.UserRepresentable):
         cls.ids_by_transport_type.clear()
         cls.ids_by_word.clear()
         cls.slug_by_id.clear()
+        cls.sim_ids_by_territory_id.clear()
         cls.subclass_by_database_and_schema_name.clear()
 
     @classmethod
@@ -443,7 +445,7 @@ class Poi(representations.UserRepresentable):
         for i, territory_metadata in enumerate(metadata.get('territories') or []):
             # Note: Don't fail when territory doesn't exist, because Passim can be configured to ignore some kinds
             # of territories (cf conf['territories_kinds']).
-            self.competence_territories_id = set(
+            self.territories_id = set(
                 territory_id
                 for territory_id in (
                     ramdb.territory_id_by_kind_code.get((territory_kind_code['kind'], territory_kind_code['code']))
@@ -451,11 +453,11 @@ class Poi(representations.UserRepresentable):
                     )
                 if territory_id is not None
                 )
-            for territory_id in self.competence_territories_id:
-                self.ids_by_competence_territory_id.setdefault(territory_id, set()).add(indexed_poi_id)
+            for territory_id in self.territories_id:
+                self.ids_by_territory_id.setdefault(territory_id, set()).add(indexed_poi_id)
             break
-        if not self.competence_territories_id:
-            self.ids_by_competence_territory_id.setdefault(None, set()).add(indexed_poi_id)
+        if not self.territories_id:
+            self.ids_by_territory_id.setdefault(None, set()).add(indexed_poi_id)
 
         poi_territories_id = set(
             territory_id
@@ -474,10 +476,10 @@ class Poi(representations.UserRepresentable):
         self.slug_by_id[indexed_poi_id] = strings.slugify(self.name)
 
         if self.schema_name == 'OffreTransport':
-            if not self.competence_territories_id and not self.instance_by_id[indexed_poi_id].competence_territories_id:
+            if not self.territories_id and not self.instance_by_id[indexed_poi_id].territories_id:
                 france_id = ramdb.territory_id_by_kind_code[(u'Country', u'FR')]
-                self.competence_territories_id = set([france_id])
-                self.ids_by_competence_territory_id.setdefault(france_id, set()).add(indexed_poi_id)
+                self.territories_id = set([france_id])
+                self.ids_by_territory_id.setdefault(france_id, set()).add(indexed_poi_id)
 
             for field in self.fields:
                 field_slug = strings.slugify(field.label)
@@ -496,6 +498,9 @@ class Poi(representations.UserRepresentable):
                         coverage_slug = strings.slugify(field.value)
                         self.ids_by_coverage.setdefault(coverage_slug, set()).add(indexed_poi_id)
 
+        if self.is_multimodal_info_service():
+            for territory_id in poi_territories_id:
+                self.sim_ids_by_territory_id.setdefault(territory_id, set()).add(indexed_poi_id)
         self.ids_by_schema_name.setdefault(self.schema_name, set()).add(indexed_poi_id)
 
     @classmethod
@@ -506,7 +511,7 @@ class Poi(representations.UserRepresentable):
             if self.schema_name == 'ServiceInfo':
                 cls.indexed_ids.add(self._id)
                 for poi in self.iter_descendant_or_self_pois():
-                    if self.competence_territories_id is not None and poi.schema_name != 'ServiceInfo' \
+                    if self.territories_id is not None and poi.schema_name != 'ServiceInfo' \
                             and poi.bson['metadata'].get('territories'):
                         # When "ServiceInfo" contains a field "territories" (named "Territoire couvert") use it as
                         # competence territories and ignore the "territories" in children (especially of schema
@@ -580,18 +585,16 @@ class Poi(representations.UserRepresentable):
                         yield poi
 
     @classmethod
-    def iter_ids(cls, ctx, competence_territories_id = None, coverages = None, presence_territory = None,
-            schemas_name = None, term = None, transport_modes = None, transport_types = None):
+    def iter_ids(cls, ctx, territory = None, coverages = None, term = None):
         intersected_sets = []
 
-        if competence_territories_id is not None:
-            territory_competent_pois_id = ramdb.union_set(
-                cls.ids_by_competence_territory_id.get(competence_territory_id)
-                for competence_territory_id in competence_territories_id
-                )
-            if not territory_competent_pois_id:
-                return set()
-            intersected_sets.append(territory_competent_pois_id)
+        if territory is not None:
+            ancestor_territories_poi_sets = []
+            for ancestor_id in territory.ancestors_id:
+                ancestor_territories_poi_sets.append(cls.ids_by_territory_id.get(ancestor_id, set()))
+            for child_territory_id in ramdb.territories_id_by_ancestor_id.get(territory._id):
+                ancestor_territories_poi_sets.append(cls.sim_ids_by_territory_id.get(child_territory_id, set()))
+            intersected_sets.append(ramdb.union_set(ancestor_territories_poi_sets))
 
         for coverage in (coverages or []):
             coverage_slug = strings.slugify(coverage)
@@ -599,21 +602,6 @@ class Poi(representations.UserRepresentable):
             if not coverage_pois_id:
                 return set()
             intersected_sets.append(coverage_pois_id)
-
-        if presence_territory is not None:
-            territory_present_pois_id = ramdb.union_set(
-                cls.ids_by_presence_territory_id.get(presence_territory_id)
-                for presence_territory_id in ramdb.get_territory_related_territories_id(presence_territory)
-                )
-            if not territory_present_pois_id:
-                return set()
-            intersected_sets.append(territory_present_pois_id)
-
-        for schema_name in set(schemas_name or []):
-            schema_pois_id = cls.ids_by_schema_name.get(schema_name)
-            if not schema_pois_id:
-                return set()
-            intersected_sets.append(schema_pois_id)
 
         # We should filter on term *after* having looked for competent organizations. Otherwise, when no organization
         # matching term is found, the nearest organizations will be used even when there are competent organizations
@@ -631,18 +619,6 @@ class Poi(representations.UserRepresentable):
                     if word.startswith(prefix)
                     ) or set()
             intersected_sets.extend(pois_id_by_prefix.itervalues())
-
-        for transport_mode in (transport_modes or []):
-            transport_mode_pois_id = cls.ids_by_transport_mode.get(transport_mode)
-            if not transport_mode_pois_id:
-                return set()
-            intersected_sets.append(transport_mode_pois_id)
-
-        for transport_type in (transport_types or []):
-            transport_type_pois_id = cls.ids_by_transport_type.get(transport_type)
-            if not transport_type_pois_id:
-                return set()
-            intersected_sets.append(transport_type_pois_id)
 
         found_pois_id = ramdb.intersection_set(intersected_sets)
         if found_pois_id is None:
