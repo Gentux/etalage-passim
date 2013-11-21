@@ -96,9 +96,6 @@ var etalagepassim = etalagepassim || {};
 etalagepassim.miscUrl = ${conf['images.misc.url'] | n, js};
 etalagepassim.search.autocompleterUrl = ${urlparse.urljoin(conf['territoria_url'], '/api/v1/autocomplete-territory') | n, js};
 etalagepassim.search.kinds = ${ctx.autocompleter_territories_kinds | n, js};
-    % if ctx.base_territory is not None:
-etalagepassim.search.base_territory = ${ctx.base_territory.main_postal_distribution_str | n, js};
-    % endif
 etalagepassim.params = ${inputs | n, js};
     </script>
 </%def>

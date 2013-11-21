@@ -29,12 +29,8 @@
 from cStringIO import StringIO
 import datetime
 import itertools
-import json
 import logging
-import math
 import smtplib
-import urllib2
-import urlparse
 import zipfile
 
 from biryani import strings
@@ -691,27 +687,10 @@ def feed(req):
     if errors is not None:
         return wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
     else:
-        base_territory = data.get('base_territory')
-        competence_territories_id = None
-        presence_territory = None
         territory = data['geolocation'] or (data['term'] if not isinstance(data['term'], basestring) else None)
-        if conf['handle_competence_territories']:
-            if territory and territory.__class__.__name__ not in model.communes_kinds:
-                presence_territory = territory
-            if territory:
-                competence_territories_id = ramdb.get_territory_related_territories_id(territory)
-            if base_territory and competence_territories_id is None:
-                competence_territories_id = ramdb.get_territory_related_territories_id(base_territory)
-        else:
-            if territory and territory.__class__.__name__ not in model.communes_kinds:
-                presence_territory = territory
-            elif base_territory:
-                presence_territory = data['base_territory']
-
         pois_id_iter = model.Poi.iter_ids(
             ctx,
-            competence_territories_id = competence_territories_id,
-            presence_territory = presence_territory,
+            territory = territory,
             **non_territorial_search_data)
         poi_by_id = dict(
             (poi._id, poi)
@@ -805,98 +784,6 @@ def geographical_coverage_excel(req):
 
 @wsgihelpers.wsgify
 @ramdb.ramdb_based
-def geojson(req):
-    ctx = contexts.Ctx(req)
-
-    params = req.GET
-    inputs = init_base(ctx, params)
-    inputs.update(model.Poi.extract_search_inputs_from_params(ctx, params))
-    inputs.update(dict(
-        bbox = params.get('bbox'),
-        context = params.get('context'),
-        current = params.get('current'),
-        enable_cluster = params.get('enable_cluster'),
-        jsonp = params.get('jsonp'),
-        ))
-
-    data, errors = conv.pipe(
-        conv.inputs_to_pois_layer_data,
-        conv.default_pois_layer_data_bbox,
-        )(inputs, state = ctx)
-    if errors is not None:
-        raise wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
-    clusters, errors = conv.layer_data_to_clusters(data, state = ctx)
-    if errors is not None:
-        raise wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
-
-    geojson = {
-        'type': 'FeatureCollection',
-        'properties': {
-            'context': inputs['context'],  # Parameter given in request that is returned as is.
-            'date': unicode(datetime.datetime.utcnow()),
-        },
-        'features': [
-            {
-                'type': 'Feature',
-                'bbox': [
-                    cluster.left,
-                    cluster.bottom,
-                    cluster.right,
-                    cluster.top,
-                    ] if cluster.count > 1 else None,
-                'geometry': {
-                    'type': 'Point',
-                    'coordinates': [cluster.center_longitude, cluster.center_latitude],
-                    },
-                'properties': {
-                    'competent': cluster.competent,
-                    'count': cluster.count,
-                    'iconUrl': cluster.icon_url,
-                    'id': str(cluster.center_pois[0]._id),
-                    'centerPois': [
-                        {
-                            'id': str(poi._id),
-                            'name': poi.name,
-                            'postalDistribution': poi.postal_distribution_str,
-                            'slug': poi.slug,
-                            'streetAddress': poi.street_address,
-                            }
-                        for poi in cluster.center_pois
-                        ],
-                    },
-                }
-            for cluster in clusters
-            ],
-        }
-    territory = data['territory']
-    if territory is not None:
-        geojson['features'].insert(0, {
-            'type': 'Feature',
-            'geometry': {
-                'type': 'Point',
-                'coordinates': [territory.geo[1], territory.geo[0]],
-                },
-            'properties': {
-                'home': True,
-                'id': str(territory._id),
-                },
-            })
-
-    response = json.dumps(
-        geojson,
-        encoding = 'utf-8',
-        ensure_ascii = False,
-        )
-    if inputs['jsonp']:
-        req.response.content_type = 'application/javascript; charset=utf-8'
-        return u'{0}({1})'.format(inputs['jsonp'], response)
-    else:
-        req.response.content_type = 'application/json; charset=utf-8'
-        return response
-
-
-@wsgihelpers.wsgify
-@ramdb.ramdb_based
 def index(req):
     ctx = contexts.Ctx(req)
 
@@ -931,100 +818,6 @@ def index(req):
             url_args = url_args,
             url_kwargs = url_kwargs,
             )
-
-
-@wsgihelpers.wsgify
-@ramdb.ramdb_based
-def index_directory(req):
-    ctx = contexts.Ctx(req)
-
-    if conf['hide_directory']:
-        return wsgihelpers.not_found(ctx, explanation = ctx._(u'Directory page disabled by configuration'))
-
-    params = req.GET
-    inputs = init_base(ctx, params)
-    inputs.update(model.Poi.extract_search_inputs_from_params(ctx, params))
-    mode = u'annuaire'
-
-    data, errors = conv.inputs_to_pois_directory_data(inputs, state = ctx)
-    if errors is not None:
-        directory = None
-        territory = None
-        if errors.get('territory') and errors['territory'] == ctx._(u'In "directory" mode, a commune is required'):
-            del errors['territory']
-    else:
-        territory = data['territory']
-        related_territories_id = ramdb.get_territory_related_territories_id(territory)
-        if conf['handle_competence_territories']:
-            competence_territories_id = ramdb.get_territory_related_territories_id(territory)
-            presence_territory = territory if territory.__class__.__name__ not in model.communes_kinds else None
-        else:
-            # Note: This section should never be called. In directory mode, the incompetent organisms must not be shown.
-            presence_territory = data['base_territory'] if data.get('base_territory') is not None else None
-            competence_territories_id = related_territories_id
-
-        pois_id_iter = model.Poi.iter_ids(
-            ctx,
-            competence_territories_id = competence_territories_id,
-            presence_territory = presence_territory,
-            **model.Poi.extract_non_territorial_search_data(ctx, data))
-        pois = set(
-            poi
-            for poi in (
-                model.Poi.instance_by_id.get(poi_id)
-                for poi_id in pois_id_iter
-                )
-            if poi is not None
-            )
-        territory_latitude_cos = math.cos(math.radians(territory.geo[0]))
-        territory_latitude_sin = math.sin(math.radians(territory.geo[0]))
-        distance_and_poi_couples = sorted(
-            (
-                (
-                    6372.8 * math.acos(
-                        round(
-                            math.sin(math.radians(poi.geo[0])) * territory_latitude_sin
-                            + math.cos(math.radians(poi.geo[0])) * territory_latitude_cos
-                            * math.cos(math.radians(poi.geo[1] - territory.geo[1])),
-                            13,
-                            )
-                        ),
-                    poi,
-                    )
-                for poi in pois
-                if poi.geo is not None
-                ),
-            key = lambda distance_and_poi: distance_and_poi[0],
-            )
-        directory = {}
-        for distance, poi in distance_and_poi_couples:
-            if poi.theme_slug is None:
-                continue
-            theme_pois = directory.get(poi.theme_slug)
-            if theme_pois is not None and len(theme_pois) >= 3 and territory.__class__.__name__ in model.communes_kinds:
-                continue
-            if territory.__class__.__name__ in model.communes_kinds:
-                if poi.competence_territories_id is None:
-                    # When a POI has no notion of competence territory, only show it when it is not too far away from
-                    # center territory.
-                    if distance > ctx.distance:
-                        continue
-                elif related_territories_id.isdisjoint(poi.competence_territories_id):
-                    # In directory mode, the incompetent organisms must not be shown.
-                    continue
-            if theme_pois is None:
-                directory[poi.theme_slug] = [poi]
-            else:
-                theme_pois.append(poi)
-    return templates.render(
-        ctx,
-        '/directory.mako',
-        directory = directory,
-        errors = errors,
-        inputs = inputs,
-        mode = mode,
-        territory = territory,
-        **model.Poi.extract_non_territorial_search_data(ctx, data))
 
 
 @wsgihelpers.wsgify
@@ -1144,13 +937,7 @@ def index_home(req):
     if errors is not None:
         return wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
     else:
-        competence_territories_id = None
-        presence_territory = None
-        pois_id_iter = model.Poi.iter_ids(
-            ctx,
-            competence_territories_id = competence_territories_id,
-            presence_territory = presence_territory,
-            **non_territorial_search_data)
+        pois_id_iter = model.Poi.iter_ids(ctx, **non_territorial_search_data)
         poi_by_id = dict(
             (poi._id, poi)
             for poi in (
@@ -1202,21 +989,14 @@ def index_list(req):
     if errors is not None:
         raise wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
 
-    competence_territories_id = None
-    presence_territory = None
     territory = data['geolocation'] or (data['term'] if not isinstance(data['term'], basestring) else None)
-    if territory and territory.__class__.__name__ not in model.communes_kinds:
-        presence_territory = territory
-    elif territory:
-        competence_territories_id = ramdb.get_territory_related_territories_id(territory)
     if non_territorial_search_data.get('term') and not isinstance(non_territorial_search_data['term'], basestring):
         non_territorial_search_data['term'] = None
 
     pois_id_iter = model.Poi.iter_ids(
         ctx,
-        competence_territories_id = competence_territories_id,
+        territory = territory,
         coverages = None if data['coverage'] is None else [data['coverage']],
-        presence_territory = presence_territory,
         **non_territorial_search_data)
 
     if isinstance(data['term'], basestring):
@@ -1307,52 +1087,10 @@ def index_list(req):
         **non_territorial_search_data)
 
 
-@wsgihelpers.wsgify
-@ramdb.ramdb_based
-def index_map(req):
-    ctx = contexts.Ctx(req)
-
-    if conf['hide_map']:
-        return wsgihelpers.not_found(ctx, explanation = ctx._(u'Map page disabled by configuration'))
-
-    params = req.GET
-    inputs = init_base(ctx, params)
-    inputs.update(model.Poi.extract_search_inputs_from_params(ctx, params))
-    inputs.update(dict(
-        bbox = params.get('bbox'),
-        ))
-    mode = u'carte'
-
-    data, errors = conv.pipe(
-        conv.inputs_to_pois_layer_data,
-        conv.default_pois_layer_data_bbox,
-        )(inputs, state = ctx)
-
-    if errors is None:
-        bbox = data['bbox']
-        territory = data['territory']
-    else:
-        bbox = None
-        territory = None
-    return templates.render(
-        ctx,
-        '/map.mako',
-        bbox = bbox,
-        errors = errors,
-        inputs = inputs,
-        mode = mode,
-        territory = territory,
-        **model.Poi.extract_non_territorial_search_data(ctx, data))
-
-
 def init_base(ctx, params):
     inputs = dict(
-        base_category = params.getall('base_category'),
-        base_territory = params.get('base_territory'),
-        category_tag = params.getall('category_tag'),
         container_base_url = params.get('container_base_url'),
         custom_css_url = params.get('custom_css'),
-        distance = params.get('distance'),
         gadget = params.get('gadget'),
         territory_kind = params.getall('territory_kind'),
         )
@@ -1360,45 +1098,11 @@ def init_base(ctx, params):
     ctx.container_base_url = container_base_url = inputs['container_base_url'] or None
     gadget_id, error = conv.input_to_int(inputs['gadget'])
     ctx.gadget_id = gadget_id
-    container_hostname = (urlparse.urlsplit(container_base_url).hostname or None) if container_base_url else None
     if error is not None or gadget_id is None:
         gadget_id = None
         if container_base_url is not None:
             # Ignore container site when no gadget ID is given.
             container_base_url = None
-    elif conf['subscribers.require_subscription'] and container_base_url is not None:
-        subscriber = model.Subscriber.find_one({'sites.domain_name': container_hostname})
-        if subscriber is None and (
-                container_hostname is None or
-                not container_hostname.endswith(conf['subscribers.gadget_valid_domains'])
-                ):
-            raise wsgihelpers.bad_request(
-                ctx,
-                explanation = ctx._('The gadget ID "{0}" doesn\'t exist.').format(gadget_id),
-                message = ctx._('Rebuild component and copy the generated JavaScript into your website.'),
-                title = ctx._('Invalid Gadget ID'),
-                )
-        elif subscriber is not None:
-            for site in (subscriber.sites or []):
-                for subscription in (site.subscriptions or []):
-                    if subscription.type == 'etalagepassim' and subscription.id == gadget_id:
-                        # Note: We can get some specific options for this subscriber with subscription.options here
-                        break
-                else:
-                    continue
-                break
-            else:
-                raise wsgihelpers.bad_request(
-                    ctx,
-                    comment = ctx._('Rebuild component and copy the generated JavaScript into your website.'),
-                    explanation = ctx._('The gadget ID "{0}" is used by another component.'),
-                    title = ctx._('Invalid Gadget ID'),
-                    )
-            if gadget_id is not None and container_base_url is None and subscription.url is not None:
-                # When in gadget mode but without a container_base_url, we are accessed through the noscript iframe or
-                # by a search engine. We need to retrieve the URL of page containing gadget to do a JavaScript
-                # redirection (in publication.mako).
-                container_base_url = subscription.url or None
 
     for param_visibility_name in model.Poi.get_visibility_params_names(ctx):
         inputs[param_visibility_name] = conf.get(param_visibility_name) or params.get(param_visibility_name)
@@ -1411,35 +1115,6 @@ def init_base(ctx, params):
                 param_visibility_name, error))
         setattr(ctx, param_visibility_name, param_visibility)
 
-    ctx.base_categories_slug, error = conv.uniform_sequence(
-        conv.input_to_tag_slug,
-        )(inputs['base_category'], state = ctx)
-    if error is not None:
-        raise wsgihelpers.bad_request(ctx, explanation = ctx._('Base Categories Error: {0}').format(error))
-
-    ctx.category_tags_slug, error = conv.uniform_sequence(
-        conv.input_to_tag_slug,
-        )(inputs['category_tag'], state = ctx)
-    if error is not None:
-        raise wsgihelpers.bad_request(ctx, explanation = ctx._('Category Tags Error: {0}').format(error))
-
-    ctx.base_territory, error = conv.input_to_postal_distribution_to_geolocated_territory(
-        inputs['base_territory'],
-        state = ctx,
-        )
-    if error is not None:
-        raise wsgihelpers.bad_request(ctx, explanation = ctx._('Base Territory Error: {0}').format(error))
-    if ctx.subscriber is not None:
-        subscriber_territory = ctx.subscriber.territory
-        if subscriber_territory._id not in ctx.base_territory.ancestors_id:
-            return wsgihelpers.not_found(ctx, explanation = ctx._(u'Unknown territory'))
-    if ctx.base_territory is None and ctx.subscriber is not None and ctx.subscriber.territory is not None:
-        ctx.base_territory = model.Territory.get_variant_class(
-            ctx.subscriber.territory['kind'],
-            ).get(ctx.subscriber.territory['code'])
-        if ctx.base_territory is None:
-            return wsgihelpers.not_found(ctx, explanation = ctx._(u'Unknown territory'))
-
     ctx.custom_css_url, error = conv.pipe(
         conv.cleanup_line,
         conv.empty_to_none,
@@ -1447,14 +1122,6 @@ def init_base(ctx, params):
         )(inputs['custom_css_url'], state = ctx)
     if error is not None:
         ctx.custom_css_url = None
-
-    ctx.distance, error = conv.pipe(
-        conv.input_to_float,
-        conv.test_between(0.0, 40075.16),
-        conv.default(20.0),
-        )(inputs['distance'], state = ctx)
-    if error is not None:
-        raise wsgihelpers.bad_request(ctx, explanation = ctx._('Distance Error: {0}').format(error))
 
     ctx.autocompleter_territories_kinds = [
         territory_kind
@@ -1536,13 +1203,11 @@ def make_router():
         ('GET', '^/accueil?$', index_home),
         ('GET', '^/api/v1/annuaire/csv/?$', csv),
         ('GET', '^/api/v1/annuaire/excel/?$', excel),
-        ('GET', '^/api/v1/annuaire/geojson/?$', geojson),
         ('GET', '^/api/v1/annuaire/kml/?$', kml),
         ('GET', '^/api/v1/categories/autocomplete/?$', autocomplete_category),
         ('GET', '^/api/v1/couverture/csv/?$', geographical_coverage_csv),
         ('GET', '^/api/v1/couverture/excel/?$', geographical_coverage_excel),
         ('GET', '^/api/v1/names/autocomplete/?$', autocomplete_names),
-        ('GET', '^/carte/?$', index_map),
         ('GET', '^/export/?$', index_export),
         ('GET', '^/export/annuaire/csv/?$', export_directory_csv),
         ('GET', '^/export/annuaire/excel/?$', export_directory_excel),
@@ -1551,74 +1216,14 @@ def make_router():
         ('GET', '^/export/couverture/csv/?$', export_geographical_coverage_csv),
         ('GET', '^/export/couverture/excel/?$', export_geographical_coverage_excel),
         ('GET', '^/feed/?$', feed),
-        ('GET', '^/fragment/organismes/(?P<poi_id>[a-z0-9]{24})/?$', poi_embedded),
-        ('GET', '^/fragment/organismes/(?P<slug>[^/]+)/(?P<poi_id>[a-z0-9]{24})/?$', poi_embedded),
         ('GET', '^/gadget/?$', index_gadget),
         ('GET', '^/liste/?$', index_list),
         ('GET', '^/mail/?$', mail),
-        ('GET', '^/minisite/organismes/(?P<poi_id>[a-z0-9]{24})/?$', minisite),
-        ('GET', '^/minisite/organismes/(?P<slug>[^/]+)/(?P<poi_id>[a-z0-9]{24})/?$', minisite),
         ('GET', '^/organismes/?$', poi),
         ('GET', '^/organismes/(?P<poi_id>[a-z0-9]{24})/?$', poi),
         ('GET', '^/organismes/(?P<slug>[^/]+)/(?P<poi_id>[a-z0-9]{24})/?$', poi),
         ('GET', '^/passim.csv/?$', export_directory_csv, {'accept': 1}),
         )
-
-
-@wsgihelpers.wsgify
-@ramdb.ramdb_based
-def minisite(req):
-    ctx = contexts.Ctx(req)
-
-    if conf['hide_minisite']:
-        return wsgihelpers.not_found(ctx, explanation = ctx._(u'Minisite disabled by configuration'))
-
-    params = req.params
-    inputs = init_base(ctx, params)
-    inputs.update(dict(
-        encoding = params.get('encoding') or u'',
-        poi_id = req.urlvars.get('poi_id'),
-        slug = req.urlvars.get('slug'),
-        ))
-
-    data, errors = conv.pipe(
-        conv.struct(
-            dict(
-                poi_id = conv.pipe(
-                    conv.input_to_object_id,
-                    conv.id_to_poi,
-                    conv.not_none,
-                    ),
-                encoding = conv.pipe(
-                    conv.input_to_slug,
-                    conv.translate({u'utf-8': None}),
-                    conv.test_in([u'cp1252', u'iso-8859-1', u'iso-8859-15']),
-                    ),
-                ),
-            default = 'drop',
-            keep_none_values = True,
-            ),
-        conv.rename_item('poi_id', 'poi'),
-        )(inputs, state = ctx)
-
-    if errors is not None and errors.get('poi_id'):
-        return wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors['poi_id']))
-
-    data['url'] = url = urls.get_full_url(
-        ctx,
-        'fragment',
-        'organismes',
-        data['poi'].slug,
-        data['poi']._id,
-        encoding = data['encoding'],
-        )
-    try:
-        fragment = urllib2.urlopen(url).read().decode(data['encoding'] or 'utf-8')
-    except:
-        errors = dict(fragment = ctx._('Access to organism failed'))
-    else:
-        data['fragment'] = fragment
-    return templates.render(ctx, '/minisite.mako', errors = errors, inputs = inputs, **data)
 
 
 @wsgihelpers.wsgify
@@ -1630,7 +1235,6 @@ def poi(req):
     inputs = init_base(ctx, params)
     inputs.update(model.Poi.extract_search_inputs_from_params(ctx, params))
     inputs.update(dict(
-        bbox = params.get('bbox'),
         page = params.get('page'),
         poi_id = req.urlvars.get('poi_id'),
         poi_index = params.get('poi_index'),
@@ -1660,27 +1264,10 @@ def poi(req):
         return wsgihelpers.bad_request(ctx, explanation = ctx._('Invalid POI ID'))
 
     if data['poi'] is None:
-        base_territory = data.get('base_territory')
         territory = data['territory']
-        competence_territories_id = None
-        presence_territory = None
-        if conf['handle_competence_territories']:
-            if territory and territory.__class__.__name__ not in model.communes_kinds:
-                presence_territory = territory
-            if territory:
-                competence_territories_id = ramdb.get_territory_related_territories_id(territory)
-            if base_territory and competence_territories_id is None:
-                competence_territories_id = ramdb.get_territory_related_territories_id(base_territory)
-        else:
-            if territory and territory.__class__.__name__ not in model.communes_kinds:
-                presence_territory = territory
-            elif base_territory:
-                presence_territory = data['base_territory']
-
         pois_id_iter = model.Poi.iter_ids(
             ctx,
-            competence_territories_id = competence_territories_id,
-            presence_territory = presence_territory,
+            territory = territory,
             **non_territorial_search_data)
 
         poi_by_id = dict(
@@ -1703,8 +1290,7 @@ def poi(req):
             ctx,
             pager,
             poi_by_id,
-            related_territories_id = competence_territories_id,
-            territory = territory or data.get('base_territory'),
+            territory = territory,
             **non_territorial_search_data
             )
         data['poi'] = pager.items[min((data['poi_index'] - 1) % conf['pager.page_max_size'], len(pager.items) - 1)]
@@ -1725,53 +1311,10 @@ def poi(req):
 
 
 @wsgihelpers.wsgify
-@ramdb.ramdb_based
-def poi_embedded(req):
-    ctx = contexts.Ctx(req)
-
-    if conf['hide_minisite']:
-        return wsgihelpers.not_found(ctx, explanation = ctx._(u'Minisite disabled by configuration'))
-
-    params = req.params
-    inputs = init_base(ctx, params)
-    inputs.update(model.Poi.extract_search_inputs_from_params(ctx, params))
-    inputs.update(dict(
-        encoding = params.get('encoding') or u'',
-        poi_id = req.urlvars.get('poi_id'),
-        slug = req.urlvars.get('slug'),
-        ))
-
-    poi, error = conv.pipe(
-        conv.input_to_object_id,
-        conv.id_to_poi,
-        conv.not_none,
-        )(inputs['poi_id'], state = ctx)
-    if error is not None:
-        raise wsgihelpers.bad_request(ctx, explanation = ctx._('POI ID Error: {0}').format(error))
-
-    encoding, error = conv.pipe(
-        conv.input_to_slug,
-        conv.translate({u'utf-8': None}),
-        conv.test_in([u'cp1252', u'iso-8859-1', u'iso-8859-15']),
-        )(inputs['encoding'], state = ctx)
-    if error is not None:
-        raise wsgihelpers.bad_request(ctx, explanation = ctx._('Encoding Error: {0}').format(error))
-
-    text = templates.render(ctx, '/poi-embedded.mako', poi = poi)
-    if encoding is None:
-        req.response.content_type = 'text/plain; charset=utf-8'
-        return text
-    else:
-        req.response.content_type = 'text/plain; charset={0}'.format(encoding)
-        return text.encode(encoding, errors = 'xmlcharrefreplace')
-
-
-@wsgihelpers.wsgify
 def static(req):
     ctx = contexts.Ctx(req)
     page = req.urlvars.get('page')
 
-    params = req.params
     inputs = dict(
         message = ctx.session.get('message')
         )

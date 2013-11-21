@@ -145,167 +145,6 @@ def csv_infos_to_excel_bytes(csv_infos_by_schema_name, state = None):
     return excel_file.getvalue(), None
 
 
-def default_pois_layer_data_bbox(data, state = None):
-    """Compute bounding box and add it when it is missing from data. Return modified data."""
-    from . import conf, model, ramdb
-    if data is None:
-        return data, None
-    if state is None:
-        state = default_state
-    if data['bbox'] is not None:
-        return data, None
-    data = data.copy()
-
-    territory = data['territory']
-    poi_by_id = model.Poi.instance_by_id
-    if territory is None:
-        presence_territory = None
-        competence_territories_id = None
-        related_territories_id = None
-        if conf['handle_competence_territories']:
-            competence_territories_id = ramdb.get_territory_related_territories_id(
-                data['base_territory'],
-                ) if data.get('base_territory') is not None else None
-        elif data.get('base_territory'):
-            presence_territory = data['base_territory']
-            related_territories_id = ramdb.get_territory_related_territories_id(data['base_territory'])
-        pois_id_iter = model.Poi.iter_ids(state,
-            competence_territories_id = competence_territories_id,
-            presence_territory = presence_territory,
-            **model.Poi.extract_non_territorial_search_data(state, data)
-            )
-        pois = [
-            poi
-            for poi in (
-                poi_by_id[poi_id]
-                for poi_id in pois_id_iter
-                )
-            if poi.geo is not None
-            ]
-        if not pois:
-            data['bbox'] = [-180.0, -90.0, 180.0, 90.0]
-            return data, None
-        bottom = top = pois[0].geo[0]
-        left = right = pois[0].geo[1]
-    else:
-        center_latitude = territory.geo[0]
-        center_longitude = territory.geo[1]
-        bottom = center_latitude
-        left = center_longitude
-        right = center_longitude
-        top = center_latitude
-
-        if territory.__class__.__name__ not in model.communes_kinds:
-            presence_territory = territory
-            pois_id_iter = model.Poi.iter_ids(state,
-                competence_territories_id = ramdb.get_territory_related_territories_id(
-                    data['base_territory'],
-                    ) if data.get('base_territory') is not None else None,
-                presence_territory = territory,
-                **model.Poi.extract_non_territorial_search_data(state, data))
-            pois = [
-                poi
-                for poi in (
-                    poi_by_id[poi_id]
-                    for poi_id in pois_id_iter
-                    )
-                if poi.geo is not None
-                ]
-        else:
-            # Note: Use the bounding box of the territory (ie the bounding box enclosing every POI present in the
-            # territory).
-            presence_territory = territory
-            if conf['handle_competence_territories'] and data.get('base_territory'):
-                competence_territories_id = ramdb.get_territory_related_territories_id(data['base_territory'])
-            else:
-                competence_territories_id = None
-            pois_id_iter = model.Poi.iter_ids(state,
-                competence_territories_id = competence_territories_id,
-                presence_territory = presence_territory,
-                **model.Poi.extract_non_territorial_search_data(state, data))
-            pois = [
-                poi
-                for poi in (
-                    poi_by_id[poi_id]
-                    for poi_id in pois_id_iter
-                    )
-                if poi.geo is not None
-                ]
-            if not pois and conf['handle_competence_territories']:
-                # When no POI has been found in territory, use the bounding box enclosing every competent POI.
-                competence_territories_id = ramdb.get_territory_related_territories_id(territory)
-                presence_territory = None
-                pois_id_iter = model.Poi.iter_ids(state,
-                    competence_territories_id = competence_territories_id or (
-                        ramdb.get_territory_related_territories_id(data['base_territory'])
-                        if data.get('base_territory') is not None else None
-                        ),
-                    competence_type = 'by_territory',
-                    presence_territory = presence_territory,
-                    **model.Poi.extract_non_territorial_search_data(state, data))
-                pois = [
-                    poi
-                    for poi in (
-                        poi_by_id[poi_id]
-                        for poi_id in pois_id_iter
-                        )
-                    if poi.geo is not None
-                    ]
-                if not pois:
-                    pois_id_iter = model.Poi.iter_ids(state,
-                        competence_territories_id = competence_territories_id or (
-                            ramdb.get_territory_related_territories_id(data['base_territory'])
-                            if data.get('base_territory') is not None else None
-                            ),
-                        competence_type = 'by_nature',
-                        presence_territory = presence_territory,
-                        **model.Poi.extract_non_territorial_search_data(state, data))
-                    territory_latitude_cos = math.cos(math.radians(center_latitude))
-                    territory_latitude_sin = math.sin(math.radians(center_latitude))
-                    distance_poi_couples = sorted(
-                        (
-                            # distance
-                            6372.8 * math.acos(
-                                round(
-                                    math.sin(math.radians(poi.geo[0])) * territory_latitude_sin
-                                    + math.cos(math.radians(poi.geo[0])) * territory_latitude_cos
-                                    * math.cos(math.radians(poi.geo[1] - center_longitude)),
-                                    13,
-                                )),
-                            poi,
-                            )
-                        for poi in (
-                            poi_by_id[poi_id]
-                            for poi_id in pois_id_iter
-                            )
-                        if poi.geo is not None
-                        )[:3]
-                    pois = [poi for distance, poi in distance_poi_couples]
-                if not pois:
-                    # When no present nor competent POI has been found, compute bounding box using given distance.
-                    delta = math.degrees(state.distance / 6372.8)
-                    data['bbox'] = [
-                        center_longitude - delta,  # left
-                        center_latitude - delta,  # bottom
-                        center_longitude + delta,  # left
-                        center_latitude + delta,  # top
-                        ]
-                    return data, None
-    for poi in pois:
-        poi_latitude = poi.geo[0]
-        if poi_latitude < bottom:
-            bottom = poi_latitude
-        elif poi_latitude > top:
-            top = poi_latitude
-        poi_longitude = poi.geo[1]
-        if poi_longitude < left:
-            left = poi_longitude
-        elif poi_longitude > right:
-            right = poi_longitude
-    data['bbox'] = [left, bottom, right, top]
-    return data, None
-
-
 def id_name_dict_list_to_ignored_fields(value, state = None):
     if not value:
         return None, None
@@ -399,51 +238,8 @@ inputs_to_mail_data = pipe(
     )
 
 
-def inputs_to_geographical_coverage_csv_infos(inputs, state = None):
-    from . import model, ramdb
-    if state is None:
-        state = default_state
-    data, errors = model.Poi.make_inputs_to_search_data()(inputs, state = state)
-    if errors is not None:
-        return data, errors
-
-    territory = data['territory']
-    competence_territories_id = ramdb.get_territory_related_territories_id(territory) if territory is not None else None
-    if competence_territories_id is None:
-        competence_territories_id = ramdb.get_territory_related_territories_id(
-            data['base_territory'],
-            ) if data.get('base_territory') is not None else None
-    if competence_territories_id is None:
-        competence_territories_id = set(ramdb.territory_by_id.iterkeys())
-    pois_id = set(model.Poi.iter_ids(state, **model.Poi.extract_non_territorial_search_data(state, data)))
-    pois_id_by_commune_id = {}
-    rows_count = 0
-    if pois_id:
-        pois_id_by_competence_territory_id = {}
-        for commune_id in competence_territories_id:
-            commune = ramdb.territory_by_id.get(commune_id)
-            if commune is None:
-                continue
-            if commune.__class__.__name__ in (u'ArrondissementOfCommuneOfFrance', u'CommuneOfFrance') \
-                    and commune.code not in (u'13055', u'69123', u'75056'):
-                commune_pois_id = set()
-                for related_territory_id in ramdb.get_territory_related_territories_id(commune):
-                    if related_territory_id not in pois_id_by_competence_territory_id:
-                        related_territory_pois_id = model.Poi.ids_by_competence_territory_id.get(related_territory_id)
-                        pois_id_by_competence_territory_id[related_territory_id] = pois_id.intersection(
-                            related_territory_pois_id) if related_territory_pois_id is not None else set()
-                    commune_pois_id.update(pois_id_by_competence_territory_id[related_territory_id])
-                if commune_pois_id:
-                    pois_id_by_commune_id[commune_id] = commune_pois_id
-                    rows_count += len(commune_pois_id)
-                    if rows_count > 65535:
-                        # Excel doesn't support sheets with more than 65535 rows.
-                        return None, state._(u'Export is too big. Restrict some search criteria and try again.')
-    return pois_id_by_commune_id_to_csv_infos(pois_id_by_commune_id, state = state)
-
-
 def inputs_to_pois_csv_infos(inputs, state = None):
-    from . import model, ramdb
+    from . import model
     if state is None:
         state = default_state
     # Export only POIs present on given territory.
@@ -452,14 +248,9 @@ def inputs_to_pois_csv_infos(inputs, state = None):
         return data, errors
 
     territory = data['geolocation'] or (data['term'] if not isinstance(data['term'], basestring) else None)
-    presence_territory = territory
-    competence_territories_id = ramdb.get_territory_related_territories_id(
-        data['base_territory'],
-        ) if data.get('base_territory') is not None else None
     pois_id = set(model.Poi.iter_ids(
         state,
-        competence_territories_id = competence_territories_id,
-        presence_territory = presence_territory,
+        territory = territory,
         **model.Poi.extract_non_territorial_search_data(state, data)
         ))
 
@@ -590,118 +381,6 @@ def inputs_to_pois_list_data(inputs, state = None):
             ),
         rename_item('page', 'page_number'),
         )(inputs, state = state)
-
-
-def layer_data_to_clusters(data, state = None):
-    from . import conf, model, ramdb
-    if data is None:
-        return None, None
-    if state is None:
-        state = default_state
-    left, bottom, right, top = data['bbox']
-    center_latitude = (bottom + top) / 2.0
-    center_latitude_cos = math.cos(math.radians(center_latitude))
-    center_latitude_sin = math.sin(math.radians(center_latitude))
-    center_longitude = (left + right) / 2.0
-    base_territory = data['base_territory']
-    territory = data['territory']
-    related_territories_id = None
-    presence_territory = None
-    competence_territories_id = None
-    if conf['handle_competence_territories']:
-        if territory and territory.__class__.__name__ not in model.communes_kinds:
-            presence_territory = territory
-        if territory:
-            competence_territories_id = ramdb.get_territory_related_territories_id(territory)
-        if base_territory and competence_territories_id is None:
-            competence_territories_id = ramdb.get_territory_related_territories_id(base_territory)
-    else:
-        if territory and territory.__class__.__name__ not in model.communes_kinds:
-            presence_territory = territory
-        elif base_territory:
-            presence_territory = base_territory
-    pois_id_iter = model.Poi.iter_ids(state,
-        presence_territory = presence_territory,
-        **model.Poi.extract_non_territorial_search_data(state, data))
-
-    poi_by_id = model.Poi.instance_by_id
-    current = data['current']
-    pois_iter = (
-        poi
-        for poi in (
-            poi_by_id[poi_id]
-            for poi_id in pois_id_iter
-            )
-        if poi.geo is not None and bottom <= poi.geo[0] <= top and left <= poi.geo[1] <= right and (
-            current is None or poi._id != current._id)
-        )
-    distance_and_poi_couples = sorted(
-        (
-            (
-                # distance from center of map
-                6372.8 * math.acos(
-                    round(
-                        math.sin(math.radians(poi.geo[0])) * center_latitude_sin
-                        + math.cos(math.radians(poi.geo[0])) * center_latitude_cos
-                        * math.cos(math.radians(poi.geo[1] - center_longitude)),
-                        13,
-                    )) if poi.geo is not None else (sys.float_info.max, poi),
-                # POI
-                poi,
-                )
-            for poi in pois_iter
-            ),
-        key = lambda distance_and_poi_couple: distance_and_poi_couple[0],
-        )
-    pois = [
-        poi
-        for distance, poi in distance_and_poi_couples
-        ]
-    if current is not None:
-        pois.insert(0, current)
-    horizontal_iota = (right - left) / 20.0
-    vertical_iota = (top - bottom) / 15.0
-    clusters = []
-    for poi in pois:
-        poi_latitude = poi.geo[0]
-        poi_longitude = poi.geo[1]
-        for cluster in clusters:
-            if data['enable_cluster'] is False:
-                continue
-            if abs(poi_latitude - cluster.center_latitude) <= vertical_iota \
-                    and abs(poi_longitude - cluster.center_longitude) <= horizontal_iota:
-                cluster.count += 1
-                if poi_latitude == cluster.center_latitude and poi_longitude == cluster.center_longitude:
-                    cluster.center_pois.append(poi)
-                if poi_latitude < cluster.bottom:
-                    cluster.bottom = poi_latitude
-                elif poi_latitude > cluster.top:
-                    cluster.top = poi_latitude
-                if poi_longitude < cluster.left:
-                    cluster.left = poi_longitude
-                elif poi_longitude > cluster.right:
-                    cluster.right = poi_longitude
-                break
-        else:
-            cluster = model.Cluster()
-            cluster.bottom = cluster.top = cluster.center_latitude = poi_latitude
-            cluster.center_pois = [poi]
-            cluster.competent = False  # changed below
-            cluster.count = 1
-            cluster.left = cluster.right = cluster.center_longitude = poi_longitude
-            cluster.icon_url = poi.icon_url
-            if conf['handle_competence_territories']:
-                if cluster.competent is False:
-                    if competence_territories_id is None or poi.competence_territories_id is None:
-                        cluster.competent = None
-                    elif not competence_territories_id.isdisjoint(poi.competence_territories_id):
-                        cluster.competent = True
-                elif cluster.competent is None and competence_territories_id is not None \
-                        and poi.competence_territories_id is not None \
-                        and not competence_territories_id.isdisjoint(poi.competence_territories_id):
-                    cluster.competent = True
-            clusters.append(cluster)
-    return clusters, None
 
 
 def pois_id_by_commune_id_to_csv_infos(pois_id_by_commune_id, state = None):
@@ -844,19 +523,6 @@ def subscriber_to_bson(subscriber, state = None):
 
 
 subscription_to_bson = object_to_clean_dict
-
-
-def test_territory_in_base_territory(data, state = None):
-    if state is None:
-        state = default_state
-    if not data.get('base_territory') or \
-            data.get('territory') and data['base_territory']._id in data['territory'].ancestors_id:
-        return data, None
-    if not data.get('territory'):
-        return data, None
-    return data, {'territory': state._(u'Searched territory not located in base territory {0}').format(
-        data['base_territory'].main_postal_distribution['postal_routing']
-        )}
 
 
 user_to_bson = object_to_clean_dict
