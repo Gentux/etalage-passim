@@ -1290,7 +1290,7 @@ def index_list(req):
         ctx,
         None,
         multimodal_info_services_by_id,
-        **non_territorial_search_data
+        multimodal_info_services = True,
         )
 
     return templates.render(

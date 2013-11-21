@@ -800,13 +800,15 @@ class Poi(representations.UserRepresentable):
         return strings.slugify(self.name)
 
     @classmethod
-    def sort_and_paginate_pois_list(cls, ctx, pager, poi_by_id, **other_search_data):
+    def sort_and_paginate_pois_list(cls, ctx, pager, poi_by_id, multimodal_info_services = False, **other_search_data):
         if pager is not None:
             return itertools.islice(
                 cls.iter_sort_pois_list(ctx, poi_by_id),
                 pager.first_item_index,
                 pager.last_item_number,
                 )
+        elif multimodal_info_services is True:
+            return list(poi_by_id.itervalues())
         else:
             return list(cls.iter_sort_pois_list(ctx, poi_by_id))
 
