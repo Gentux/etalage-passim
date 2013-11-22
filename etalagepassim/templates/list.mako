@@ -34,6 +34,42 @@ from etalagepassim import conf, conv, model, ramdb, urls
 <%inherit file="/index.mako"/>
 
 
+<%def name="other_search_links()" filter="trim">
+<%
+    child_territories = []
+    if data['term'] is not None and isinstance(data['term'], model.Territory):
+        if data['term'].__class__.__name__ == 'DepartmentOfFrance':
+            child_territories = [
+                territory
+                for territory in [
+                    ramdb.territory_by_id[territory_id]
+                    for territory_id in ramdb.territories_id_by_ancestor_id.get(data['term']._id, [])
+                    if ramdb.territory_by_id.get(territory_id) is not None
+                    ]
+                if territory.__class__.__name__ == 'UrbanTransportsPerimeterOfFrance'
+                ]
+        if data['term'].__class__.__name__ == 'RegionOfFrance':
+            child_territories = [
+                territory
+                for territory in [
+                    ramdb.territory_by_id[territory_id]
+                    for territory_id in ramdb.territories_id_by_ancestor_id.get(data['term']._id, [])
+                    if ramdb.territory_by_id.get(territory_id) is not None
+                    ]
+                if territory.__class__.__name__ == 'DepartmentOfFrance'
+                ]
+%>\
+        <p>
+    % for child_territory in child_territories:
+            <a href="${urls.get_url(ctx, 'liste', term = child_territory.main_postal_distribution_str)}">
+                ${_(u'Traveler info services for « {0} »').format(child_territory.main_postal_distribution_str)}
+            </a>
+            <br>
+    % endfor
+        </p>
+</%def>
+
+
 <%def name="results()" filter="trim">
     % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
         <div class="search-navbar">
@@ -45,9 +81,10 @@ from etalagepassim import conf, conv, model, ramdb, urls
                 if data.get('geolocation') else (inputs['term'] or '')
                 )}</h3>
         % endif
-            <div class="btn-group pull-right">
+            <div class="btn-action pull-right">
                 <a class="btn" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" rel="tooltip" \
 title="${_('Search services for whole France')}">${_('France')}</a>
+                <div class="btn-group">
 <%
     url_args = {}
     for name, value in sorted(inputs.iteritems()):
@@ -59,12 +96,11 @@ title="${_('Search services for whole France')}">${_('France')}</a>
         url_args[name] = value
     url_args['accept'] = 1
 %>\
-                <a class="btn" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}" rel="tooltip" \
-title="${_('Download searched information in CSV format.')}">
-                    ${_('CSV')}
-                </a>
-                <a class="btn" href="${urls.get_url(ctx, 'gadget', **url_args)}" rel="tooltip" \
+                    <a class="btn" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}" rel="tooltip" \
+title="${_('Download searched information in CSV format.')}">${_('CSV')}</a>
+                    <a class="btn" href="${urls.get_url(ctx, 'gadget', **url_args)}" rel="tooltip" \
 title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
+                </div>
             </div>
         </div>
     % endif
@@ -82,6 +118,7 @@ title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
         <%self:results_table/>
             % endif
         % endif
+        <%self:other_search_links/>
     % endif
 </%def>
 
@@ -262,4 +299,3 @@ title="${_('Transport offer website.')}" href="${web_site_by_id[info_service._id
 <%def name="title_content()" filter="trim">
 ${_(u'List')} - ${parent.title_content()}
 </%def>
-
