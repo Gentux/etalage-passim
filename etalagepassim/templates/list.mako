@@ -151,7 +151,7 @@ title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
             continue
 %>
         % if data['coverage'] != 'Nationale':
-        <h4>${_("{0} Traveler Info Services for {1}").format(coverage, territory.main_postal_distribution_str)}</h4>
+        <h4>${_("{0} Interest Traveler Info Services for {1}").format(coverage, territory.main_postal_distribution_str)}
         % endif
         <table class="table table-bordered table-condensed table-responsive table-result table-striped">
             <thead>

@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Passim\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-11-22 10:49+0100\n"
-"PO-Revision-Date: 2013-11-22 09:50+0000\n"
+"POT-Creation-Date: 2013-11-25 10:18+0100\n"
+"PO-Revision-Date: 2013-11-25 09:18+0000\n"
 "Last-Translator: rsoufflet <rsoufflet@easter-eggs.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/passim/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -469,8 +469,8 @@ msgstr "Les 10 dernières mises à jour"
 msgid "RSS Feed"
 msgstr "Flux RSS"
 
-#: etalagepassim/templates/home.mako:69 etalagepassim/templates/list.mako:160
-#: etalagepassim/templates/list.mako:224 etalagepassim/templates/poi.mako:210
+#: etalagepassim/templates/home.mako:69 etalagepassim/templates/list.mako:161
+#: etalagepassim/templates/list.mako:225 etalagepassim/templates/poi.mako:210
 msgid "Name"
 msgstr "Nom"
 
@@ -581,28 +581,28 @@ msgid "regional"
 msgstr "régionale"
 
 #: etalagepassim/templates/list.mako:154
-msgid "{0} Traveler Info Services for {1}"
-msgstr "Services d'information {0} pour {1}"
+msgid "{0} Interest Traveler Info Services for {1}"
+msgstr "Services d'information d'intérêt {0} pour {1}"
 
-#: etalagepassim/templates/list.mako:159 etalagepassim/templates/list.mako:223
+#: etalagepassim/templates/list.mako:160 etalagepassim/templates/list.mako:224
 msgid "Web site"
 msgstr "Site web"
 
-#: etalagepassim/templates/list.mako:161 etalagepassim/templates/list.mako:225
+#: etalagepassim/templates/list.mako:162 etalagepassim/templates/list.mako:226
 msgid "Transport type"
 msgstr "Type de transport"
 
-#: etalagepassim/templates/list.mako:187 etalagepassim/templates/list.mako:234
+#: etalagepassim/templates/list.mako:188 etalagepassim/templates/list.mako:235
 #: etalagepassim/templates/poi.mako:625
 msgid "Transport offer website."
 msgstr "Site web d'info transport"
 
-#: etalagepassim/templates/list.mako:187 etalagepassim/templates/list.mako:234
+#: etalagepassim/templates/list.mako:188 etalagepassim/templates/list.mako:235
 #: etalagepassim/templates/poi.mako:626
 msgid "www"
 msgstr "www"
 
-#: etalagepassim/templates/list.mako:300
+#: etalagepassim/templates/list.mako:301
 msgid "List"
 msgstr "Liste"
 
