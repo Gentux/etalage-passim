@@ -62,9 +62,9 @@ from etalagepassim import conf, conv, model, ramdb, urls
         <p>
     % for child_territory in child_territories:
             <a href="${urls.get_url(ctx, 'liste', term = child_territory.main_postal_distribution_str)}">
-                ${_(u'Traveler info services for « {0} »').format(child_territory.main_postal_distribution_str)}
+                <h4>${_(u'Traveler info services for « {0} »').format(child_territory.main_postal_distribution_str)}\
+</h4>
             </a>
-            <br>
     % endfor
         </p>
 </%def>
@@ -82,7 +82,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
                 )}</h3>
         % endif
             <div class="btn-action pull-right">
-                <a class="btn" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" rel="tooltip" \
+                <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" rel="tooltip" \
 title="${_('Search services for whole France')}">${_('France')}</a>
                 <div class="btn-group">
 <%
@@ -96,9 +96,9 @@ title="${_('Search services for whole France')}">${_('France')}</a>
         url_args[name] = value
     url_args['accept'] = 1
 %>\
-                    <a class="btn" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}" rel="tooltip" \
+                    <a class="btn btn-primary" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}" rel="tooltip" \
 title="${_('Download searched information in CSV format.')}">${_('CSV')}</a>
-                    <a class="btn" href="${urls.get_url(ctx, 'gadget', **url_args)}" rel="tooltip" \
+                    <a class="btn btn-primary" href="${urls.get_url(ctx, 'gadget', **url_args)}" rel="tooltip" \
 title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
                 </div>
             </div>
@@ -152,6 +152,7 @@ title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
 %>
         % if data['coverage'] != 'Nationale':
         <h4>${_("{0} Interest Traveler Info Services for {1}").format(coverage, territory.main_postal_distribution_str)}
+</h4>
         % endif
         <table class="table table-bordered table-condensed table-responsive table-result table-striped">
             <thead>
