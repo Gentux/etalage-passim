@@ -81,21 +81,21 @@ from etalagepassim import conf, conv, model, ramdb, urls
                 if data.get('geolocation') else (inputs['term'] or '')
                 )}</h3>
         % endif
+<%
+        url_args = {}
+        for name, value in sorted(inputs.iteritems()):
+            name = model.Poi.rename_input_to_param(name)
+            if name in ('accept', 'submit'):
+                continue
+            if value is None or value == u'':
+                continue
+            url_args[name] = value
+        url_args['accept'] = 1
+%>\
             <div class="btn-action pull-right">
                 <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'National')}" rel="tooltip" \
 title="${_('Search services for whole France')}">${_('France')}</a>
                 <div class="btn-group">
-<%
-    url_args = {}
-    for name, value in sorted(inputs.iteritems()):
-        name = model.Poi.rename_input_to_param(name)
-        if name in ('accept', 'submit'):
-            continue
-        if value is None or value == u'':
-            continue
-        url_args[name] = value
-    url_args['accept'] = 1
-%>\
                     <a class="btn btn-primary" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}" rel="tooltip" \
 title="${_('Download searched information in CSV format.')}">${_('CSV')}</a>
                     <a class="btn btn-primary" href="${urls.get_url(ctx, 'gadget', **url_args)}" rel="tooltip" \

@@ -58,10 +58,29 @@ title="${_('Search services for whole France')}">
 <%def name="last_updated_pois()" filter="trim">
         <div class="search-navbar">
             <h4>${_("10 Last Updated Information Services")}</h4>
-            <div class="btn-group pull-right">
+    % if ctx.container_base_url is None:
+<%
+        url_args = {}
+        for name, value in sorted(inputs.iteritems()):
+            name = model.Poi.rename_input_to_param(name)
+            if name in ('accept', 'submit'):
+                continue
+            if value is None or value == u'':
+                continue
+            url_args[name] = value
+        url_args['accept'] = 1
+%>\
+            <div class="btn-action pull-right">
+                <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'National')}" rel="tooltip" \
+title="${_('Search services for whole France')}">${_('France')}</a>
+                <a class="btn btn-primary" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}" rel="tooltip" \
+title="${_('Download searched information in CSV format.')}">${_('CSV')}</a>
+                <a class="btn btn-primary" href="${urls.get_url(ctx, 'gadget', **url_args)}" rel="tooltip" \
+title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
                 <a class="btn btn-warning btn-feed" href="${urls.get_url(ctx, 'feed')}" target="_blank" \
 title="${_('RSS Feed')}"><i class="icon-feed"></i></a>
             </div>
+    % endif
         </div>
         <table class="table table-bordered table-condensed table-striped table-responsive">
             <thead>
