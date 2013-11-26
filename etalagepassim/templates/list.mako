@@ -73,7 +73,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
 <%def name="results()" filter="trim">
     % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
         <div class="search-navbar">
-        % if data['coverage'] == 'Nationale':
+        % if data['coverage'] == 'National':
             <h3>${_("Traveler Info Services covering whole FRANCE")}</h3>
         % else:
             <h3>${_(u'Traveler Info Services List For « {0} »').format(
@@ -82,7 +82,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
                 )}</h3>
         % endif
             <div class="btn-action pull-right">
-                <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'Nationale')}" rel="tooltip" \
+                <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'National')}" rel="tooltip" \
 title="${_('Search services for whole France')}">${_('France')}</a>
                 <div class="btn-group">
 <%
@@ -147,10 +147,10 @@ title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
             coverage = None
         if coverage is None:
             continue
-        if data['coverage'] == 'Nationale' and territory.__class__.__name__ != 'Country':
+        if data['coverage'] == 'National' and territory.__class__.__name__ != 'Country':
             continue
 %>
-        % if data['coverage'] != 'Nationale':
+        % if data['coverage'] != 'National':
         <h4>${_("{0} Interest Traveler Info Services for {1}").format(coverage, territory.main_postal_distribution_str)}
 </h4>
         % endif

@@ -359,7 +359,7 @@ def inputs_to_pois_list_data(inputs, state = None):
                 dict(
                     coverage = pipe(
                         cleanup_line,
-                        test_in([u'Départementale', u'Locale', u'Nationale', u'Régionale']),
+                        test_in([u'Départemental', u'Local', u'National', u'Régional']),
                         ),
                     page = pipe(
                         input_to_int,

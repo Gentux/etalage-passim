@@ -295,10 +295,10 @@ class Poi(representations.UserRepresentable):
     territories_id = None
     theme_slug = None
     weight_by_coverage = {
-        u'Départementale': 1,
-        u'Locale': 0,
-        u'Nationale': 3,
-        u'Régionale': 2,
+        u'Départemental': 1,
+        u'Local': 0,
+        u'National': 3,
+        u'Régional': 2,
         }
 
     def __init__(self, **attributes):

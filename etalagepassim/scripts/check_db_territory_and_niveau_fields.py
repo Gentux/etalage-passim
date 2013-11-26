@@ -116,10 +116,10 @@ def main():
             u'id': u'select',
             u'label': u'Niveau',
             u'options': [
-                u'Locale',
-                u'Départementale',
-                u'Régionale',
-                u'Nationale',
+                u'Local',
+                u'Départemental',
+                u'Régional',
+                u'National',
                 ],
             u'protected': u'0',
             u'required': u'0',
@@ -187,12 +187,12 @@ def main():
             for territoire in territoires:
                 territoires_tuple = territoire
                 territoire_niveau = {
-                    u'ArrondissementOfFrance': u'Locale',
-                    u'CommuneOfFrance': u'Locale',
-                    u'Country': u'Nationale',
-                    u'DepartmentOfFrance': u'Départementale',
-                    u'RegionOfFrance': u'Régionale',
-                    u'UrbanTransportsPerimeterOfFrance': u'Locale',
+                    u'ArrondissementOfFrance': u'Local',
+                    u'CommuneOfFrance': u'Local',
+                    u'Country': u'National',
+                    u'DepartmentOfFrance': u'Départemental',
+                    u'RegionOfFrance': u'Régional',
+                    u'UrbanTransportsPerimeterOfFrance': u'Local',
                     }.get(territoires_tuple[0])
                 if niveau is not None and niveau != territoire_niveau:
                     errors_by_id.setdefault(poi['_id'], {})['name'] = field_value(
