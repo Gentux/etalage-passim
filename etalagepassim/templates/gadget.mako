@@ -49,9 +49,9 @@ textarea {
         for name, value in inputs.iteritems()
         if name not in ('container_base_url', 'gadget') and value not in (None, [], '')
         )
-    gadget_params = dict(
-        path = conf['gadget_default_tab'] or conf['default_tab'],
-        )
+    gadget_params = {
+        'path': 'liste' if data['term'] is not None else conf['default_tab'],
+        }
     gadget_params.update(url_args)
 %>\
 <!-- Debut du composant : ${conf['realm']} -->
@@ -63,18 +63,13 @@ textarea {
         container: "gadget-passim",
         id: ${gadget_id},
         params: ${gadget_params | n, js},
-##        props: {
-##            style: {
-##                border: '1px solid red'
-##            }
-##        },
         remote: '${urls.get_full_url(ctx)}'
     });
 </script>
 <noscript>
-    <iframe src="${urls.get_full_url(ctx, 'carte', gadget = gadget_id, **url_args)}" style="height: 3000; width: 100%">
+    <iframe src="${urls.get_full_url(ctx, gadget_params['path'], gadget = gadget_id, **url_args)}" style="height: 3000; width: 100%">
         Your browser cannot display the directory content. 
-        Click <a href="${urls.get_full_url(ctx, 'carte', gadget = gadget_id, **url_args)}">HERE</a> to access the content.
+        Click <a href="${urls.get_full_url(ctx, gadget_params['path'], gadget = gadget_id, **url_args)}">HERE</a> to access the content.
     </iframe>
 </noscript>
 <!-- Fin du composant -->
