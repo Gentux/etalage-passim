@@ -1008,8 +1008,10 @@ def index_list(req):
     ids_by_territory_id = dict()
     multimodal_info_services_by_id = dict()
     national_territory_id = ramdb.territory_id_by_kind_code[('Country', 'FR')]
+    ids_by_niveau = dict()
     transport_types_by_id = dict()
     web_site_by_id = dict()
+
     for poi in (
             model.Poi.instance_by_id.get(poi_id)
             for poi_id in pois_id_iter
@@ -1058,8 +1060,8 @@ def index_list(req):
                     else:
                         ids_by_territory_id.setdefault(national_territory_id, set()).add(poi._id)
 
-            if field.id == 'select' and strings.slugify(field.label) == 'niveau':
-                niveau_by_id[poi._id] = field.value
+                if field.id == 'select' and strings.slugify(field.label) == 'niveau':
+                    ids_by_niveau.setdefault(strings.slugify(field.value), set()).add(poi._id)
 
             if field.id == 'link' and strings.slugify(field.label) == 'site-web':
                 web_site = model.Poi.instance_by_id.get(field.value)
@@ -1085,6 +1087,7 @@ def index_list(req):
         inputs = inputs,
         mode = mode,
         multimodal_info_services = multimodal_info_services,
+        ids_by_niveau = ids_by_niveau,
         transport_types_by_id = transport_types_by_id,
         web_site_by_id = web_site_by_id,
         **non_territorial_search_data)

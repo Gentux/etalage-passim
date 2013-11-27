@@ -175,7 +175,7 @@ title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
                         ),
                     model.Poi.instance_by_id.get(info_service_id)
                     )
-                for info_service_id in ids_by_territory_id.get(territory._id)
+                for info_service_id in ids_by_niveau.get(strings.slugify(coverage))
                 ],
             key = lambda info_services_tuple: info_services_tuple[0],
             )
@@ -189,7 +189,8 @@ title="${_('Transport offer website.')}" href="${web_site_by_id[info_service._id
             % endif
                     </td>
                     <td>
-                        <a class="internal" href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">${info_service.name}</a>
+                        <a class="internal" \
+href="${urls.get_url(ctx, 'organismes', info_service.slug, info_service._id)}">${info_service.name}</a>
                     </td>
                     <td>
                         ${markupsafe.escape(u' ').join(
