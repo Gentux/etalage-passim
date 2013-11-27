@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Passim\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2013-11-25 10:18+0100\n"
-"PO-Revision-Date: 2013-11-25 09:18+0000\n"
+"PO-Revision-Date: 2013-11-27 16:22+0000\n"
 "Last-Translator: rsoufflet <rsoufflet@easter-eggs.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/passim/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -566,19 +566,19 @@ msgstr "Services d'information multimodale"
 #: etalagepassim/templates/list.mako:139 etalagepassim/templates/list.mako:140
 #: etalagepassim/templates/list.mako:144
 msgid "local"
-msgstr "locale"
+msgstr "local"
 
 #: etalagepassim/templates/list.mako:141 etalagepassim/templates/list.mako:146
 msgid "national"
-msgstr "nationale"
+msgstr "national"
 
 #: etalagepassim/templates/list.mako:142
 msgid "departmental"
-msgstr "départementale"
+msgstr "départemental"
 
 #: etalagepassim/templates/list.mako:143
 msgid "regional"
-msgstr "régionale"
+msgstr "régional"
 
 #: etalagepassim/templates/list.mako:154
 msgid "{0} Interest Traveler Info Services for {1}"
