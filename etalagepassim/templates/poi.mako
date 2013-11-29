@@ -136,7 +136,8 @@ else:
             <div class="poi-field-subfields">
                 <ul class="unstyled">
         % for target_field in (target_fields or []):
-            % if target_field.value is not None and target_field.label != 'Service d\'information':
+            % if target_field.value is not None and target_field.label != 'Service d\'information' and \
+                target_field.label != u'Dernière mise à jour':
                     <li><b>${target_field.label} :</b> <%self:field_value field="${target_field}"/></li>
             % endif
         % endfor
@@ -374,7 +375,7 @@ href="${urls.get_url(ctx, 'organismes', poi.name, offer_offical_information_serv
 %>\
         % if subfield.id == 'street-address':
             % for line in subfield.value.split('\n'):
-                ${line}<br>
+                ${line}
             % endfor
         % elif subfield.id == 'commune':
 <%
@@ -492,13 +493,11 @@ href="${urls.get_url(ctx, 'organismes', poi.name, offer_offical_information_serv
 
 
 <%def name="field_value_geo(field)" filter="trim">
-            <div class="field-value">
-                <div class="bigger-map-link">
-                    ${_('See on a map with')}
-                    <a href="${u'http://www.openstreetmap.org/?mlat={0}&mlon={1}&zoom=15&layers=M'.format(
-                            field.value[0], field.value[1])}" rel="external">OpenStreetMap</a>
-                </div>
-            </div>
+            <span class="field-value bigger-map-link">
+                ${_('See on a map with')}
+                <a href="${u'http://www.openstreetmap.org/?mlat={0}&mlon={1}&zoom=15&layers=M'.format(
+                        field.value[0], field.value[1])}" rel="external">OpenStreetMap</a>
+            </span>
 </%def>
 
 
@@ -746,9 +745,6 @@ service_web_field = model.pop_first_field(fields, 'link', u'Service web')
         <%self:field_mobile_application_link poi="${poi}" fields="${fields}"/>
         <%self:field_transport_offers_links field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
         <%self:field_information_desk_link poi="${poi}" fields="${fields}"/>
-##6.5 : Faire apparaitre le nouveau service "marque blanche" dans la liste des "autres services"
-##    * Ce services et un "copier/coller" de code HTML/Javascript
-##    * Le nom et le schéma de ce nouveaux service est "Comarquage"
         <%self:other_fields poi="${poi}" fields="${fields}"/>
 </%def>
 
@@ -769,9 +765,10 @@ service_web_field = model.pop_first_field(fields, 'link', u'Service web')
 %>\
             <h4>
     % if poi.is_multimodal_info_service():
-        ${_('Multimodal')}
+        ${_('Multimodal Information Service')} \
+    % else:
+        ${_('Information Service')} \
     % endif
-        ${_(u'Information Service')} \
 <strong class="poi-name-label">${names[0]}</strong>${u' ({0})'.format(u', '.join(names[1:])) if names[1:] else u''}
     % if field is not None and field.value is not None:
                 <img alt="" class="logo hidden-phone" src="${field.value}">

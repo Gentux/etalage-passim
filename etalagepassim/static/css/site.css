@@ -1,3 +1,8 @@
+address {
+    margin: 0;
+    display: inline;
+}
+
 .autocompleter-header {
     margin: 0 20px 5px 20px;
     padding: 3px 0;
