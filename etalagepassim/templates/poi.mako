@@ -37,18 +37,12 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 <%inherit file="/site.mako"/>
 
 
-<%def name="links()" filter="trim">
-<link rel="canonical" href="${urls.get_full_url(ctx, 'organismes', poi.slug, poi._id)}">
-</%def>
-
-
 <%def name="container_content()" filter="trim">
 <%
     fields = poi.generate_all_fields()
 %>\
         <%self:poi_header fields="${fields}" poi="${poi}"/>
         <%self:poi_first_fields fields="${fields}" poi="${poi}"/>
-        ##<%self:fields fields="${fields}" poi="${poi}"/>
 </%def>
 
 
@@ -91,6 +85,29 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
 </%def>
 
 
+<%def name="field_information_desk_link(poi, fields)" filter="trim">
+<%
+information_desk_link = model.pop_first_field(fields, 'link', u'Guichet d\'information')
+if information_desk_link is not None and information_desk_link.relation != 'parent':
+    information_desk_poi = model.Poi.instance_by_id.get(information_desk_link.value)
+else:
+    information_desk_poi = None
+%>
+    % if information_desk_poi is not None:
+        <div class="field">
+            <b class="field-label">${_('Information desk')} :</b>
+            <div class="poi-field-subfields">
+        % for field in information_desk_poi.generate_all_fields():
+            % if field.id in ['adr', 'geo', 'tel']:
+                <%self:field field="${field}"/>
+            % endif
+        % endfor
+            </div>
+        </div>
+    % endif
+</%def>
+
+
 <%def name="field_link(field)" filter="trim">
 <%
     if field.relation == 'parent':
@@ -116,13 +133,15 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
     % else:
         <div class="field">
             <b class="field-label">${field.label}</b>
-            <ul class="unstyled">
-        % for field in (target_fields or []):
-            % if field.value is not None:
-                <li><b>${field.label} :</b> <%self:field_value field="${field}"/></li>
+            <div class="poi-field-subfields">
+                <ul class="unstyled">
+        % for target_field in (target_fields or []):
+            % if target_field.value is not None and target_field.label != 'Service d\'information':
+                    <li><b>${target_field.label} :</b> <%self:field_value field="${target_field}"/></li>
             % endif
         % endfor
-            </ul>
+                </ul>
+            </div>
         </div>
     % endif
 </%def>
@@ -142,62 +161,159 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
     if not targets:
         return u''
 %>\
-    % if field.label == u'Offres de transport':
+        <div class="field">
+            <b class="field-label">${field.label}</b>
+    % if len(targets) == 1:
 <%
-        territories_id = set()
-        transport_offers_infos = []
-        for offer in targets:
-            offer_territories_field = offer.get_first_field(u'territories', u'Territoire couvert')
-            if offer_territories_field is not None:
-                for territory_id in offer_territories_field.value:
-                    territories_id.add(territory_id)
+            target = targets[0]
+%>\
+            <%self:fields fields="${target.generate_all_fields()}" poi="${target}"/>
+    % else:
+            <ul>
+        % for target in targets:
+                <li>
+                   <%self:fields fields="${target.generate_all_fields()}" poi="${target}"/>
+                </li>
+        % endfor
+            </ul>
+    % endif
+        </div>
+</%def>
 
-            offer_commercial_name_field = offer.get_first_field(u'name', u'Nom commercial')
-            offer_commercial_name = offer_commercial_name_field.value \
-                if offer_commercial_name_field is not None and offer_commercial_name_field.value is not None \
-                else _(u'Name not known')
-            offer_type_field = offer.get_first_field(u'select', u'Type de transport')
-            offer_type = offer_type_field.value \
-                if offer_type_field is not None and offer_type_field.value is not None \
-                else _(u'Transpot type not known')
-            offer_modes_field = offer.get_first_field(u'checkboxes', u'Mode de transport')
-            offer_modes = u', '.join(mode for mode in offer_modes_field.value) \
-                if offer_modes_field is not None and offer_modes_field.value is not None \
-                else None
 
-            transport_offers_infos.append((
-                offer_commercial_name,
-                offer_type,
-                offer_modes,
-                ))
-        transport_offers_infos = sorted(
-            transport_offers_infos,
-            key = lambda transport_offer_infos: conf['transport_types_order'].index(
-                strings.slugify(transport_offer_infos[1])
-                ) if conf['transport_types_order'].count(strings.slugify(transport_offer_infos[1])) > 0
-                else len(conf['transport_types_order']),
+<%def name="field_mobile_application_link(poi, fields)" filter="trim">
+<%
+    mobile_applications_link = list(model.iter_fields(fields, 'link', u'Application mobile'))
+%>
+    % for mobile_application_link in mobile_applications_link:
+<%
+mobile_application_url_fields = None
+if mobile_application_link is not None and mobile_application_link.relation != 'parent':
+    mobile_application_poi = model.Poi.instance_by_id.get(mobile_application_link.value)
+    mobile_application_fields = mobile_application_poi.generate_all_fields()
+    mobile_application_url_fields = list(model.iter_fields(mobile_application_fields, 'url'))
+    mobile_application_name = None
+    if len(mobile_applications_link) > 1:
+        for field in mobile_application_fields:
+            if field.id == 'name':
+                mobile_application_name = field.value
+                break
+%>
+        % if mobile_application_url_fields is not None and len(mobile_application_url_fields) > 0:
+        <div class="field">
+            <b class="field-label">${_(u'Mobile applications')}\
+${u' ({})'.format(mobile_application_name) if mobile_application_name is not None else u''} :</b>
+            % for field in mobile_application_url_fields:
+            <a class="btn btn-margin btn-primary btn-small internal" rel="tooltip" target="_blank" \
+title="${field.label}" href="${field.value}">${field.label}</a>
+            % endfor
+        </div>
+        % endif
+    % endfor
+</%def>
+
+
+<%def name="field_name(field)" filter="trim">
+    % if depth > 0:
+        <%self:field_default field="${field}"/>
+    % endif
+</%def>
+
+
+<%def name="field_site_web_link(poi, fields)" filter="trim">
+<%
+site_web_link = model.pop_first_field(fields, 'link', u'Site web')
+site_web_url = None
+if site_web_link is not None and site_web_link.relation != 'parent':
+    site_web_poi = model.Poi.instance_by_id.get(site_web_link.value)
+    if site_web_poi is not None:
+        for field in site_web_poi.generate_all_fields():
+            if field.id == 'url':
+                site_web_url = field.value
+                break
+%>
+    % if site_web_url is not None:
+        <div class="field">
+            <b class="field-label">${_('Site web')} :</b>
+            <a class="btn btn-margin btn-primary btn-small internal" rel="tooltip" target="_blank" \
+title="${_('Transport offer website.')}" href="${site_web_url}">${_('www')}</a>
+        </div>
+    % endif
+</%def>
+
+
+<%def name="field_transport_offers_links(field)" filter="trim">
+<%
+    if field is None:
+        return u''
+    targets = [
+        target
+        for target in (
+            model.Poi.instance_by_id.get(target_id)
+            for target_id in field.value
+            if target_id is not None
             )
+        if target is not None
+        ]
+    if not targets:
+        return u''
 
-        covered_territories_field = data['poi'].get_first_field(u'territories', u'Territoire couvert')
-        territories = []
-        if covered_territories_field is not None and covered_territories_field.value:
-            territories = sorted(
-                [
-                    ramdb.territory_by_id[territory_id]
-                    for territory_id in covered_territories_field.value
-                    if ramdb.territory_by_id.get(territory_id)
-                    ],
+    territories_id = set()
+    transport_offers_infos = []
+    for offer in targets:
+        offer_territories_field = offer.get_first_field(u'territories', u'Territoire couvert')
+        if offer_territories_field is not None:
+            for territory_id in offer_territories_field.value:
+                territories_id.add(territory_id)
+
+        offer_commercial_name_field = offer.get_first_field(u'name', u'Nom commercial')
+        offer_commercial_name = offer_commercial_name_field.value \
+            if offer_commercial_name_field is not None and offer_commercial_name_field.value is not None \
+            else _(u'Name not known')
+        offer_type_field = offer.get_first_field(u'select', u'Type de transport')
+        offer_type = offer_type_field.value \
+            if offer_type_field is not None and offer_type_field.value is not None \
+            else _(u'Transpot type not known')
+        offer_modes_field = offer.get_first_field(u'checkboxes', u'Mode de transport')
+        offer_modes = u', '.join(mode for mode in offer_modes_field.value) \
+            if offer_modes_field is not None and offer_modes_field.value is not None \
+            else None
+        offer_offical_information_service = offer.get_first_field(u'link', u'Service d\'info officiel')
+        print offer_offical_information_service
+        transport_offers_infos.append((
+            offer_commercial_name,
+            offer_type,
+            offer_modes,
+            offer_offical_information_service,
+            ))
+    transport_offers_infos = sorted(
+        transport_offers_infos,
+        key = lambda transport_offer_infos: conf['transport_types_order'].index(
+            strings.slugify(transport_offer_infos[1])
+            ) if conf['transport_types_order'].count(strings.slugify(transport_offer_infos[1])) > 0
+            else len(conf['transport_types_order']),
+        )
+
+    covered_territories_field = data['poi'].get_first_field(u'territories', u'Territoire couvert')
+    territories = []
+    if covered_territories_field is not None and covered_territories_field.value:
+        territories = sorted(
+            [
+                ramdb.territory_by_id[territory_id]
+                for territory_id in covered_territories_field.value
+                if ramdb.territory_by_id.get(territory_id)
+                ],
+        key = lambda territory: getattr(territory, 'population', 0),
+        )
+    else:
+        territories = sorted(
+            [
+                ramdb.territory_by_id[territory_id]
+                for territory_id in territories_id
+                if ramdb.territory_by_id.get(territory_id)
+                ],
             key = lambda territory: getattr(territory, 'population', 0),
             )
-        else:
-            territories = sorted(
-                [
-                    ramdb.territory_by_id[territory_id]
-                    for territory_id in territories_id
-                    if ramdb.territory_by_id.get(territory_id)
-                    ],
-                key = lambda territory: getattr(territory, 'population', 0),
-                )
 %>\
         <div class="field">
             <b class="field-label">${_('Covered Territory')} : </b>
@@ -205,45 +321,38 @@ from etalagepassim import conf, conv, model, ramdb, ramindexes, urls
         </div>
         <div class="field">
             <b class="field-label">${_('Transport Offers')}</b>
-            <table class="table table-bordered table-condensed">
-                <tr>
-                    <th>${_('Name')}</th>
-                    <th>${_('Transport Type')}</th>
-                    <th>${_('Transport Mode')}</th>
-                </tr>
-        % for offer_commercial_name, offer_type, offer_modes in transport_offers_infos:
-                <tr>
-                    <td>${offer_commercial_name}</td>
-                    <td>${offer_type}</td>
-                    <td>${offer_modes}</td>
-                </tr>
-        % endfor
-            </table>
-        </div>
-    % else:
-        <div class="field">
-            <b class="field-label">${field.label}</b>
-        % if len(targets) == 1:
-<%
-            target = targets[0]
-%>\
-            <%self:fields fields="${target.generate_all_fields()}" poi="${target}"/>
+    % if len(transport_offers_infos) > 3:
+            <button type="button" class="btn btn-margin btn-small btn-primary" data-toggle="collapse" \
+data-target="#transport-offers-toggle">
+                <i class="icon-plus icon-white"></i> ${_("List")}
+            </button>
+            <div id="transport-offers-toggle" class="collapse">
+    % endif
+                <table class="table table-bordered table-condensed">
+                    <tr>
+                        <th>${_('Name')}</th>
+                        <th>${_('Transport Type')}</th>
+                        <th>${_('Transport Mode')}</th>
+                    </tr>
+    % for offer_commercial_name, offer_type, offer_modes, offer_offical_information_service in transport_offers_infos:
+                    <tr>
+        % if poi.is_multimodal_info_service() and offer_offical_information_service is not None:
+                        <td><a class="internal" \
+href="${urls.get_url(ctx, 'organismes', poi.name, offer_offical_information_service.value)}">
+                            ${offer_commercial_name}
+                        </a></td>
         % else:
-            <ul>
-            % for target in targets:
-                <li>
-                   <%self:fields fields="${target.generate_all_fields()}" poi="${target}"/>
-                </li>
-            % endfor
-            </ul>
+                        <td>${offer_commercial_name}</td>
         % endif
+                        <td>${offer_type}</td>
+                        <td>${offer_modes}</td>
+                    </tr>
+    % endfor
+                </table>
+    % if len(transport_offers_infos) > 3:
+            </div>
+    % endif
         </div>
-    % endif
-</%def>
-<%def name="field_name(field)" filter="trim">
-    % if depth > 0:
-        <%self:field_default field="${field}"/>
-    % endif
 </%def>
 
 
@@ -606,79 +715,19 @@ placeholder="${_(u'Type your email…')}">
 </%def>
 
 
-<%def name="poi_first_fields(poi, fields)" filter="trim">
-        <%self:field field="${model.pop_first_field(fields, 'last-update', u'Dernière mise à jour')}"/>
-<%
-site_web_link = model.pop_first_field(fields, 'link', u'Site web')
-site_web_url = None
-if site_web_link is not None and site_web_link.relation != 'parent':
-    site_web_poi = model.Poi.instance_by_id.get(site_web_link.value)
-    if site_web_poi is not None:
-        for field in site_web_poi.generate_all_fields():
-            if field.id == 'url':
-                site_web_url = field.value
-                break
-%>
-    % if site_web_url is not None:
-        <div class="field">
-            <b class="field-label">${_('Site web')} :</b>
-            <a class="btn btn-primary btn-small internal" rel="tooltip" target="_blank" title="${_('Transport offer website.')}" \
-href="${site_web_url}">${_('www')}</a>
-        </div>
-    % endif
-<%
-    mobile_applications_link = list(model.iter_fields(fields, 'link', u'Application mobile'))
-%>
-    % for mobile_application_link in mobile_applications_link:
-<%
-mobile_application_url_fields = None
-if mobile_application_link is not None and mobile_application_link.relation != 'parent':
-    mobile_application_poi = model.Poi.instance_by_id.get(mobile_application_link.value)
-    mobile_application_fields = mobile_application_poi.generate_all_fields()
-    mobile_application_url_fields = list(model.iter_fields(mobile_application_fields, 'url'))
-    mobile_application_name = None
-    if len(mobile_applications_link) > 1:
-        for field in mobile_application_fields:
-            if field.id == 'name':
-                mobile_application_name = field.value
-                break
-%>
-        % if mobile_application_url_fields is not None and len(mobile_application_url_fields) > 0:
-        <div class="field">
-            <b class="field-label">${_(u'Mobile applications')}\
-${u' ({})'.format(mobile_application_name) if mobile_application_name is not None else u''} :</b>
-            % for field in mobile_application_url_fields:
-            <a class="btn btn-primary btn-small internal" rel="tooltip" target="_blank" title="${field.label}" \
-href="${field.value}">${field.label}</a>
-            % endfor
-        </div>
-        % endif
-    % endfor
-        <%self:field field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
-<%
-information_desk_link = model.pop_first_field(fields, 'link', u'Guichet d\'information')
-if information_desk_link is not None and information_desk_link.relation != 'parent':
-    information_desk_poi = model.Poi.instance_by_id.get(information_desk_link.value)
-else:
-    information_desk_poi = None
-%>
-    % if information_desk_poi is not None:
-        <div class="field">
-            <b class="field-label">${_('Information desk')} :</b>
-        % for field in information_desk_poi.generate_all_fields():
-            % if field.id in ['adr', 'geo', 'tel']:
-            <%self:field field="${field}"/>
-            % endif
-        % endfor
-        </div>
-    % endif
+<%def name="links()" filter="trim">
+<link rel="canonical" href="${urls.get_full_url(ctx, 'organismes', poi.slug, poi._id)}">
+</%def>
+
+
+<%def name="other_fields(poi, fields)" filter="trim">
 <%
 model.pop_first_field(fields, 'name', u'Nom du service')
 open_data_field = model.pop_first_field(fields, 'link', u'Open data')
 service_web_field = model.pop_first_field(fields, 'link', u'Service web')
 %>
     % if open_data_field is not None or service_web_field is not None:
-    <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#fields-toggle">
+    <button type="button" class="btn btn-margin btn-primary" data-toggle="collapse" data-target="#fields-toggle">
         <i class="icon-plus icon-white"></i> ${_("Other Available Services")}
     </button>
     <div id="fields-toggle" class="collapse">
@@ -686,6 +735,19 @@ service_web_field = model.pop_first_field(fields, 'link', u'Service web')
         <%self:field field="${service_web_field}"/>
     </div>
     % endif
+</%def>
+
+
+<%def name="poi_first_fields(poi, fields)" filter="trim">
+        <%self:field field="${model.pop_first_field(fields, 'last-update', u'Dernière mise à jour')}"/>
+        <%self:field_site_web_link poi="${poi}" fields="${fields}"/>
+        <%self:field_mobile_application_link poi="${poi}" fields="${fields}"/>
+        <%self:field_transport_offers_links field="${model.pop_first_field(fields, 'links', u'Offres de transport')}"/>
+        <%self:field_information_desk_link poi="${poi}" fields="${fields}"/>
+##6.5 : Faire apparaitre le nouveau service "marque blanche" dans la liste des "autres services"
+##    * Ce services et un "copier/coller" de code HTML/Javascript
+##    * Le nom et le schéma de ce nouveaux service est "Comarquage"
+        <%self:other_fields poi="${poi}" fields="${fields}"/>
 </%def>
 
 
@@ -701,12 +763,13 @@ service_web_field = model.pop_first_field(fields, 'link', u'Service web')
         if field.value is not None:
             names.append(field.value)
         fields.remove(field)
-##    title_description = _('Multimodal information service') if poi.is_multimodal_info_service() \
-##        else ramdb.schema_title_by_name[poi.schema_name]
     field = model.pop_first_field(fields, 'image', u'Logo')
 %>\
             <h4>
-                ${_(u'Detailed Sheet For')} \
+    % if poi.is_multimodal_info_service():
+        ${_('Multimodal')}
+    % endif
+        ${_(u'Information Service')} \
 <strong class="poi-name-label">${names[0]}</strong>${u' ({0})'.format(u', '.join(names[1:])) if names[1:] else u''}
     % if field is not None and field.value is not None:
                 <img alt="" class="logo hidden-phone" src="${field.value}">
