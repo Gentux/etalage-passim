@@ -147,6 +147,8 @@ rel="tooltip" title="${_('Use results as a HTML component in your website')}">${
             continue
         if data['coverage'] == 'National' and territory.__class__.__name__ != 'Country':
             continue
+        if ids_by_niveau.get(strings.slugify(coverage)) is None:
+            continue
 %>
         % if data['coverage'] != 'National':
         <h4>${_("{0} Interest Traveler Info Services for {1}").format(coverage, territory.main_postal_distribution_str)}
