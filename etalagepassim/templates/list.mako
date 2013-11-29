@@ -173,7 +173,7 @@ rel="tooltip" title="${_('Use results as a HTML component in your website')}">${
                         ),
                     model.Poi.instance_by_id.get(info_service_id)
                     )
-                for info_service_id in ids_by_niveau.get(strings.slugify(coverage))
+                for info_service_id in (ids_by_niveau.get(strings.slugify(coverage)) or [])
                 ],
             key = lambda info_services_tuple: info_services_tuple[0],
             )
