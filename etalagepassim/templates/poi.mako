@@ -724,14 +724,16 @@ placeholder="${_(u'Type your email…')}">
 <%
 model.pop_first_field(fields, 'name', u'Nom du service')
 open_data_field = model.pop_first_field(fields, 'link', u'Open data')
+comarquage_field = model.pop_first_field(fields, 'link', u'Comarquage')
 service_web_field = model.pop_first_field(fields, 'link', u'Service web')
 %>
-    % if open_data_field is not None or service_web_field is not None:
+    % if open_data_field is not None or service_web_field is not None or comarquage_field is not None:
     <button type="button" class="btn btn-margin btn-primary" data-toggle="collapse" data-target="#fields-toggle">
         <i class="icon-plus icon-white"></i> ${_("Other Available Services")}
     </button>
     <div id="fields-toggle" class="collapse">
         <%self:field field="${open_data_field}"/>
+        <%self:field field="${comarquage_field}"/>
         <%self:field field="${service_web_field}"/>
     </div>
     % endif
