@@ -119,6 +119,12 @@ textarea {
 
 
 <%def name="title_content()" filter="trim">
-${_(u'Share')} - ${parent.title_content()}
+<%
+    search_title = ''
+    if data['term'] is not None and isinstance(data['term'], model.Territory):
+        search_title = data['term'].main_postal_distribution_str
+    else:
+        search_title = _('France')
+%>\
+${_(u'Share')} - ${search_title} - ${parent.title_content()}
 </%def>
-

@@ -297,5 +297,12 @@ title="${_('Transport offer website.')}" href="${web_site_by_id[info_service._id
 
 
 <%def name="title_content()" filter="trim">
-${_(u'List')} - ${parent.title_content()}
+<%
+    search_title = ''
+    if data['term'] is not None and isinstance(data['term'], model.Territory):
+        search_title = data['term'].main_postal_distribution_str
+    else:
+        search_title = _('France')
+%>\
+${_(u'List')} - ${search_title} - ${parent.title_content()}
 </%def>
