@@ -29,6 +29,8 @@ address {
 }
 .poi-field-subfields {
     margin-left: 20px;
+}
+.poi-field-subfields b {
     color: #888;
 }
 
