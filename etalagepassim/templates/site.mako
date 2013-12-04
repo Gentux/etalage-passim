@@ -112,6 +112,7 @@ from etalagepassim import conf, urls
 <%def name="metas()" filter="trim">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="directory,transport,annuaire de services,France">
 </%def>
 
 
