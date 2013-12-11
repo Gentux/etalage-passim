@@ -286,10 +286,6 @@ def load_environment(global_conf, app_conf):
             u'images.markers.url': conv.default(urlparse.urljoin(conf['cdn_url'], '/images/markers/')),
             u'images.misc.url': conv.default(urlparse.urljoin(conf['cdn_url'], '/images/misc/')),
             u'jquery.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/jquery/jquery-1.9.1.min.js')),
-            u'jquery-ui.css': conv.default(
-                urlparse.urljoin(conf['cdn_url'], '/jquery-ui/1.8.16/themes/smoothness/jquery-ui.css')
-                ),
-            u'jquery-ui.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/jquery-ui/1.8.16/jquery-ui.min.js')),
             u'json2.js': conv.default(urlparse.urljoin(conf['cdn_url'], '/easyxdm/latest/json2.js')),
             u'leaflet.css': conv.default(urlparse.urljoin(conf['cdn_url'], '/leaflet/leaflet-0.5.1/leaflet.css')),
             u'leaflet.ie.css': conv.default(urlparse.urljoin(conf['cdn_url'], '/leaflet/leaflet-0.5.1/leaflet.ie.css')),

@@ -52,7 +52,6 @@ from etalagepassim import conf, urls
     % endif
     <link rel="stylesheet" href="${conf['bootstrap-responsive.css']}">
     <link rel="stylesheet" href="${conf['typeahead.css']}">
-    <link rel="stylesheet" href="${conf['jquery-ui.css']}">
     <link rel="stylesheet" href="/css/site.css">
     % if ctx.container_base_url is not None and ctx.gadget_id is not None:
     <link rel="stylesheet" href="/css/gadget.css">
@@ -167,7 +166,7 @@ $(function () {
     % if ctx.container_base_url is not None and ctx.gadget_id is not None:
     initGadget();
     % endif
-    $("a[href=#]").on('click', function (e) {
+    $("a[href=#][class!=dropdown-toggle]").on('click', function (e) {
         e.preventDefault();
         return false;
     });
