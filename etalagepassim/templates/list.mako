@@ -96,8 +96,6 @@ from etalagepassim import conf, conv, model, ramdb, urls
                 <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'National')}" \
 rel="tooltip" title="${_('Search services for whole France')}">${_('France')}</a>
                 <a class="btn btn-primary" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}" \
-rel="tooltip" title="${_('Download searched information in CSV format.')}">${_('CSV')}</a>
-                <a class="btn btn-primary" href="${urls.get_url(ctx, 'gadget', **url_args)}" \
 rel="tooltip" title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
             </div>
         </div>
