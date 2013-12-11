@@ -215,6 +215,18 @@ Passim.info
                         <li><a href="/contribute">${_('Contribute')}</a></li>
                         <li><a href="/data">${_('Reuse')}</a></li>
                         <li><a href="/help">${_('Help')}</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Cartographie<b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/donnees/sim.htm">Service d'information Multimodale</a></li>
+                                <li><a href="/donnees/reg.htm">Service d'information par région</a></li>
+                                <li><a href="/donnees/dep.htm">Service d'information par départements</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/donnees/offres.htm">Offres de transport</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
