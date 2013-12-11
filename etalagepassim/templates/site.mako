@@ -216,12 +216,12 @@ Passim.info
                         <li><a href="/help">${_('Help')}</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                Cartographie<b class="caret"></b>
+                                Cartes<b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="/donnees/html/sim.htm">Service d'information Multimodale</a></li>
-                                <li><a href="/donnees/html/reg.htm">Service d'information par région</a></li>
-                                <li><a href="/donnees/html/dep.htm">Service d'information par départements</a></li>
+                                <li><a href="/donnees/html/reg.htm">Indicateurs par région</a></li>
+                                <li><a href="/donnees/html/dep.htm">Indicateurs par départements</a></li>
                                 <li class="divider"></li>
                                 <li><a href="/donnees/html/offres.htm">Offres de transport</a></li>
                             </ul>
