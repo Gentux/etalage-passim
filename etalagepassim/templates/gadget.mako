@@ -50,7 +50,7 @@ textarea {
         if name not in ('container_base_url', 'gadget') and value not in (None, [], '')
         )
     gadget_params = {
-        'path': 'liste' if data['term'] is not None else conf['default_tab'],
+        'path': 'liste' if data['term'] is not None or data['coverage'] is not None else conf['default_tab'],
         }
     gadget_params.update(url_args)
 %>\
