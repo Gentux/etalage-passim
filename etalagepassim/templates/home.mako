@@ -65,7 +65,7 @@ from etalagepassim import conf, conv, model, ramdb, urls
             <div class="btn-action pull-right">
                 <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'National')}" rel="tooltip" \
 title="${_('Search services for whole France')}">${_('France')}</a>
-                <a class="btn btn-primary" href="/donnees" rel="tooltip" \
+                <a class="btn btn-primary" href="/donnees/csv" rel="tooltip" \
 title="${_('Download PASSIM data in CSV format.')}">${_('CSV')}</a>
                 <a class="btn" href="${urls.get_url(ctx, 'gadget', **url_args)}" rel="tooltip" \
 title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
