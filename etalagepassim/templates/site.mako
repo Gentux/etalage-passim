@@ -52,7 +52,6 @@ from etalagepassim import conf, urls
     % endif
     <link rel="stylesheet" href="${conf['bootstrap-responsive.css']}">
     <link rel="stylesheet" href="${conf['typeahead.css']}">
-    <link rel="stylesheet" href="${conf['jquery-ui.css']}">
     <link rel="stylesheet" href="/css/site.css">
     % if ctx.container_base_url is not None and ctx.gadget_id is not None:
     <link rel="stylesheet" href="/css/gadget.css">
@@ -167,7 +166,7 @@ $(function () {
     % if ctx.container_base_url is not None and ctx.gadget_id is not None:
     initGadget();
     % endif
-    $("a[href=#]").on('click', function (e) {
+    $("a[href=#][class!=dropdown-toggle]").on('click', function (e) {
         e.preventDefault();
         return false;
     });
@@ -215,6 +214,18 @@ Passim.info
                         <li><a href="/contribute">${_('Contribute')}</a></li>
                         <li><a href="/data">${_('Reuse')}</a></li>
                         <li><a href="/help">${_('Help')}</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Cartes<b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/donnees/html/sim.htm">Service d'information Multimodale</a></li>
+                                <li><a href="/donnees/html/reg.htm">Indicateurs par région</a></li>
+                                <li><a href="/donnees/html/dep.htm">Indicateurs par départements</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/donnees/html/offres.htm">Offres de transport</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>

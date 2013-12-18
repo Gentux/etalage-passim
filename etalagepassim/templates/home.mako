@@ -44,14 +44,6 @@ from etalagepassim import conf, conv, model, ramdb, urls
         <%self:last_updated_pois/>
         % endif
     % endif
-    % if ctx.container_base_url is None and (inputs.get('term') is None or inputs.get('term') != 'FRANCE'):
-        <p>
-            <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'National')}" rel="tooltip" \
-title="${_('Search services for whole France')}">
-                <i class="icon-globe icon-white"></i> ${_('Search service for whole France')}
-            </a>
-        </p>
-    % endif
 </%def>
 
 
@@ -73,9 +65,9 @@ title="${_('Search services for whole France')}">
             <div class="btn-action pull-right">
                 <a class="btn btn-primary" href="${urls.get_url(ctx, 'liste', coverage = 'National')}" rel="tooltip" \
 title="${_('Search services for whole France')}">${_('France')}</a>
-                <a class="btn btn-primary" href="${urls.get_url(ctx, 'export', 'annuaire', 'csv', **url_args)}" rel="tooltip" \
-title="${_('Download searched information in CSV format.')}">${_('CSV')}</a>
-                <a class="btn btn-primary" href="${urls.get_url(ctx, 'gadget', **url_args)}" rel="tooltip" \
+                <a class="btn btn-primary" href="/donnees/csv" rel="tooltip" \
+title="${_('Download PASSIM data in CSV format.')}">${_('CSV')}</a>
+                <a class="btn" href="${urls.get_url(ctx, 'gadget', **url_args)}" rel="tooltip" \
 title="${_('Use results as a HTML component in your website')}">${_('HTML')}</a>
                 <a class="btn btn-warning btn-feed" href="${urls.get_url(ctx, 'feed')}" target="_blank" \
 title="${_('RSS Feed')}"><i class="icon-feed"></i></a>
