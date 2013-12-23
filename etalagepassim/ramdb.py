@@ -43,8 +43,9 @@ categories_slug_by_word = {}
 category_by_slug = {}
 category_slug_by_pivot_code = {}
 last_timestamp = None
-read_write_lock = threading2.SHLock()
 log = logging.getLogger(__name__)
+read_write_lock = threading2.SHLock()
+regions = []
 schema_title_by_name = {}
 territories_id_by_ancestor_id = {}
 territories_id_by_postal_distribution = {}
@@ -135,6 +136,7 @@ def load():
         'name',
         'population',
         ]
+    regions_set = set()
     for territory_bson in territories_collection.find(territories_query, territories_fields_list):
         main_postal_distribution = territory_bson.get('main_postal_distribution')
         if main_postal_distribution is None:
@@ -156,10 +158,14 @@ def load():
         for ancestor_id in territory_bson['ancestors_id']:
             territories_id_by_ancestor_id.setdefault(ancestor_id, set()).add(territory_id)
         territory_id_by_kind_code[(territory_bson['kind'], territory_bson['code'])] = territory_id
+        if territory_bson['kind'] == 'RegionOfFrance':
+            regions_set.add(territory)
         territories_id_by_postal_distribution[(
             main_postal_distribution['postal_code'],
             main_postal_distribution['postal_routing'],
             )] = territory_id
+    for region in sorted(regions_set, key = lambda t: t.slug):
+        regions.append(region)
 
     schema_title_by_name.clear()
     for db in model.dbs:
