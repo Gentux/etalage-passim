@@ -44,9 +44,9 @@ from etalagepassim import conf, conv, model, ramdb, urls
         <%self:last_updated_pois/>
         % endif
     % endif
-    <p class="lead">${_('Information Services by Region :')}<p>
+    <p class="lead">${_(u'Information Services by Region :')}<p>
     % for region in ramdb.regions:
-        <a class="btn btn-primary btn-region" rel="tooltip" title="${_('Search services for {}').format(region.name)}" \
+        <a class="btn btn-primary btn-region" rel="tooltip" title="${_(u'Search services for {}').format(region.name)}" \
 href="${urls.get_url(ctx, 'liste', term = region.main_postal_distribution['postal_routing'])}">
             ${region.name}
         </a>
