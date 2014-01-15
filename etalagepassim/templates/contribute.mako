@@ -76,8 +76,9 @@ You are welcome to contribute by submitting us :
 * Any enhancement proposal
 * Any correction or complement for a particular service description page
 
-Thank you a lot ! Also, if you are interested in contributing more regularly, we may create an account for you on the
-back-office content management site.
+Thank you a lot !<br>
+Also, if you are interested in contributing more regularly, we may create an account for you on the back-office content
+management site.
 ''')) | n}
         <div class="hide fade modal" id="input-modal" role="dialog">
             <form class="form" action="/mail" method="GET">

@@ -41,14 +41,15 @@ PASSIM is managed by
 <br>
 The web platform is maintained by [Easter-eggs](http://www.easter-eggs.com). All software used for PASSIM is
 [open source](http://gitorious.org/passim/etalage-passim).<br>
-For more information: [see CETE Med web site](http://www.cete-mediterranee.fr/tt13/www/article.php3?id_article=348).
 
-PASSIM content is published on [http://www.data.gouv.fr](http://www.data.gouv.fr) under
+PASSIM content is published on
+[http://www.data.gouv.fr](https://www.data.gouv.fr/dataset/passim-annuaire-des-services-d-information-transport) under
 [Etalab Open Licence](http://www.data.gouv.fr/Licence-Ouverte-Open-Licence).
 
 PASSIM is frequently verified and completed but may still include errors. If you find any false or incomplete
 information, we thank you in advance for [contacting us](http://www.passim.info/contact) or
 [contributing to improving the content](http://www.passim.info/contribute)<br>
+
 This web site includes links towards third-party sites and services, which are provided only for your convenience.<br>
 Logos and trademarks are property of their owners.
 ''')) | n}

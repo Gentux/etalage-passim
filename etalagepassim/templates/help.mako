@@ -53,16 +53,19 @@ Transport, long distance transport, on-demand public transport, handicapped pers
 bike sharing, car-sharing, ride-sharing, taxis, traffic and parking info, ports and airports...).<br>
 You can click on a particular service to see its detailed description and of course access directly to the web site for
 the service of interest.<br>
-On the right, there is a link towards the list of services covering the whole country (metropolitan France).
+There is also a
+[link towards the list of services covering the whole country (France métropolitaine)](http://www.passim.info/liste?coverage=National)
+and similar buttons (at screen bottom) listing the services relevant for each Région.<br>
+Finally you can have a global look at the traveller info coverage from the Maps menu.
 
 You may also look for a particular information service name (if it is known, the name will appear in the menu list).
 
-If you think a service is incomplete, false or should be delete, please click on the *contribute* button on page
-bottom.<br>
+If you think a service description is incomplete, false or should be deleted, please click on the *contribute* button on
+page bottom.<br>
 You are invited to [ask any question or make any remark](http://www.passim.info/contact) or to
 [propose a new service to be included](http://www.passim.info/contribute).<br>
 Also, you are welcome to [reuse PASSIM content in your applications or services](http://www.passim.info/data).
 
-Thank you for using PASSIM and thank in advance for your comments!
+Thank you for using PASSIM and thanks in advance for your comments!
 ''')) | n}
 </%def>
