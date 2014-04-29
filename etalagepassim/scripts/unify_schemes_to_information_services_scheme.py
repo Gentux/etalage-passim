@@ -73,117 +73,11 @@ def main():
         ])
     schema_title_by_schema_name = dict([(schema['name'], schema['title']) for schema in db.schemas.find()])
     selected_pois_id = set()  # ID of POIs which will be removed after processed
-    merging_fields_by_schema_name = {
-        'ApplicationMobile': [
-            ('name', [(u'label', u'Intitulé')]),
-            ('url', [(u'label', u'Web mobile')]),
-            ('url', [(u'label', u'iPhone')]),
-            ('url', [(u'label', u'Android')]),
-            ('url', [(u'label', u'Blackberry')]),
-            ('url', [(u'label', u'Windows mobile')]),
-            ('url', [(u'label', u'Symbian')]),
-            ('autocompleters', [(u'label', u'Types d\'informations')]),
-            ('autocompleters', [(u'label', u'Langues')]),
-            ('text-block', [(u'label', u'Notes')]),
-            ],
-        'CalculDItineraires': [
-            ('url', [('label', u'URL')]),
-            ('boolean', [('label', u'Calcul CO2')]),
-            ('checkboxes', [('label', u'Comparaison de modes')]),
-            ('checkboxes', [('label', u'Rabattement vers TC')]),
-            ('boolean', [('label', u'Prise en compte des perturbations')]),
-            ('boolean', [('label', u'Prise en compte du temps réel')]),
-            ('text-block', [('label', u'Notes')]),
-            ],
-        'CentreAppel': [
-            ('name', [('label', u'Intitulé')]),
-            ('tel', [('label', u'Téléphone')]),
-            ('text-block', [('label', u'Horaires d\'ouverture')]),
-            ('text-block', [('label', u'Notes')]),
-            ],
-        'Comarquage': [
-            ('autocompleters', [('label', u'Type de marque')]),
-            ('url', [('label', u'URL')]),
-            ('text-block', [('label', u'Note')]),
-            ],
-        'Gadget': [
-            ('name', [('label', u'Intitulé')]),
-            ('url', [('label', u'URL')]),
-            ('autocompleters', [('label', u'Types d\'informations')]),
-            ('text-block', [('label', u'Notes')]),
-            ],
-        'GuichetInformation': [
-            ('name', [('label', u'Intitulé')]),
-            ('adr', [('label', u'Adresse')]),
-            ('tel', [('label', u'Téléphone')]),
-            ('fax', [('label', u'Fax')]),
-            ('email', [('label', u'Courriel')]),
-            ('text-block', [('label', u'Horaires d\'ouverture')]),
-            ('geo', [('label', u'Géolocalisation')]),
-            ('text-block', [('label', u'Notes')]),
-            ],
-        'InformationTechnique': [
-            ('name', [('label', u'Intitulé')]),
-            ('text-block', [('label', u'Notes')]),
-            ('url', [('label', u'Site Web du système')]),
-            ('url', [('label', u'Accès au serveur de documentation')]),
-            ],
-        'OffreTransport': [
-            ('name', [('label', u'Nom commercial')]),
-            ('select', [('label', u'Niveau')]),
-            ('territories', [('label', u'Territoire couvert')]),
-            ('select', [('label', u'Type de transport')]),
-            ('checkboxes', [('label', u'Mode de transport')]),
-            ('link', [('label', u'Service d\'info officiel')]),
-            ('text-block', [('label', u'Accessibilité')]),
-            ('text-block', [('label', u'Temps réel')]),
-            ('text-block', [('label', u'Notes')]),
-            ],
-        'OpenData': [
-            ('name', [('label', u'Intitulé')]),
-            ('url', [('label', u'URL de la page d\'accueil du portail Open Data')]),
-            ('url', [('label', u'URL de la page TC')]),
-            ('checkboxes', [('label', u'Types d\'informations')]),
-            ('checkboxes', [('label', u'Licence')]),
-            ('url', [('label', u'URL de la licence')]),
-            ('text-block', [('label', u'Notes')]),
-            ],
-        'OperateurServiceInformation': [
-            ('name', [('label', u'Intitulé')]),
-            ('select', [('label', u'Type d\'opérateur')]),
-            ('text-block', [('label', u'Notes')]),
-            ],
-        'PageWeb': [
-            ('name', [('label', u'Intitulé')]),
-            ('url', [('label', u'URL')]),
-            ('select', [('label', u'Type d\'information')]),
-            ('text-block', [('label', u'Notes')]),
-            ],
-        'ServiceInfo': [
-            ('name', [('label', u'Nom du service')]),
-            ('text-inline', [('label', u'Alias')]),
-            ('link', [('label', u'Opérateur')]),
-            ('links', [('label', u'Offres de transport')]),
-            ('boolean', [('label', u'Service d\'information multimodale')]),
-            ('select', [('label', u'Niveau')]),
-            ('territories', [('label', u'Territoire couvert')]),
-            ('image', [('label', u'Logo')]),
-            ('text-block', [('label', u'Notes')]),
-            ],
-        'ServiceWeb': [
-            ('name', [('label', u'Intitulé')]),
-            ('url', [('label', u'URL')]),
-            ('autocompleters', [('label', u'Types d\'informations')]),
-            ('text-inline', [('label', u'Licence')]),
-            ('text-block', [('label', u'Notes')]),
-            ],
-        'SiteWeb': [
-            ('url', [('label', u'URL')]),
-            ('checkboxes', [('label', u'Types d\'informations')]),
-            ('autocompleters', [('label', u'Langues')]),
-            ('text-block', [('label', u'Notes')]),
-            ],
-        }
+
+    merging_fields_by_schema_name = {}
+    for schema_name in db.schemas.distinct('name'):
+        for field in db.schemas.find_one({'name': schema_name})['fields']:
+            merging_fields_by_schema_name.setdefault(schema_name, []).append((field['id'], [('label', field['label'])]))
 
     for index, poi in enumerate(db.pois.find({
             'metadata.deleted': {'$exists': False},
@@ -193,7 +87,7 @@ def main():
         if information_service_id is None:
             continue
 
-        for field_id, metadata in merging_fields_by_schema_name[poi['metadata']['schema-name']]:
+        for field_id, metadata in merging_fields_by_schema_name.get(poi['metadata']['schema-name'], []):
             field_metadata_dict = field_metadata(poi, field_id, metadata)
             value = field_value(poi, field_id, metadata)
             if field_metadata_dict is None or value is None:
