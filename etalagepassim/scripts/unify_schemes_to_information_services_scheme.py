@@ -16,6 +16,7 @@ import pymongo
 
 
 app_name = os.path.splitext(os.path.basename(__file__))[0]
+ignored_schemas_name = ['GuichetInformation']
 log = logging.getLogger(app_name)
 
 
@@ -29,6 +30,18 @@ def add_field_to_poi(poi, field_id, value, metadata):
         poi_copy['metadata'][field_id].append(metadata)
     poi_copy['metadata']['positions'].append(field_id)
     return poi_copy
+
+
+def add_field_to_schema(schema, field_id, metadata):
+    schema_copy = copy.deepcopy(schema)
+    if metadata['label'] in [field['label'] for field in schema['fields']]:
+        return schema
+    schema_copy['fields'].append({
+        key: value
+        for key, value in metadata.iteritems()
+    })
+    schema_copy['fields'][-1]['id'] = field_id
+    return schema_copy
 
 
 def field_metadata(poi, field_id, label_dict_pairs, default = None):
@@ -48,6 +61,17 @@ def field_value(poi, field_id, label_dict_pairs, default = None):
             )
     poi_label_index = label_index(poi, field_id, label_dict_pairs)
     return default if poi_label_index is None else poi[field_id][poi_label_index]
+
+
+def get_schemas_information(db):
+    merging_fields_by_schema_name = {}
+    for schema_name in db.schemas.distinct('name'):
+        if schema_name in ignored_schemas_name:
+            continue
+        for field in db.schemas.find_one({'name': schema_name})['fields']:
+            merging_fields_by_schema_name.setdefault(schema_name, []).append((field['id'], [('label', field['label'])]))
+
+    return merging_fields_by_schema_name
 
 
 def label_index(poi, field_id, label_dict_pairs):
@@ -71,14 +95,11 @@ def main():
         (item['_id'], item)
         for item in db.pois.find({'metadata.deleted': {'$exists': False}, 'metadata.schema-name': 'ServiceInfo'})
         ])
+    information_service_schema = db.schemas.find_one({'name': 'ServiceInfo'})
     schema_title_by_schema_name = dict([(schema['name'], schema['title']) for schema in db.schemas.find()])
     selected_pois_id = set()  # ID of POIs which will be removed after processed
 
-    merging_fields_by_schema_name = {}
-    for schema_name in db.schemas.distinct('name'):
-        for field in db.schemas.find_one({'name': schema_name})['fields']:
-            merging_fields_by_schema_name.setdefault(schema_name, []).append((field['id'], [('label', field['label'])]))
-
+    merging_fields_by_schema_name = get_schemas_information(db)
     for index, poi in enumerate(db.pois.find({
             'metadata.deleted': {'$exists': False},
             'metadata.schema-name': {'$ne': 'ServiceInfo'},
@@ -97,6 +118,11 @@ def main():
                     schema_title_by_schema_name[poi['metadata']['schema-name']],
                     field_metadata_dict['label'],
                     )
+            information_service_schema = add_field_to_schema(
+                information_service_schema,
+                field_id,
+                field_metadata_dict,
+                )
             information_services_by_id[information_service_id] = add_field_to_poi(
                 information_services_by_id[information_service_id],
                 field_id,
@@ -105,6 +131,7 @@ def main():
                 )
             selected_pois_id.add(poi['_id'])
 
+    db.schemas.save(information_service_schema)
     for poi in information_services_by_id.itervalues():
         db.pois.save(poi)
     for poi_id in selected_pois_id:
