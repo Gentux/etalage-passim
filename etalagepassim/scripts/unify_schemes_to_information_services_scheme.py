@@ -146,6 +146,8 @@ def main():
                 value,
                 field_metadata_dict,
                 )
+            if schema_name in information_service_schema['children']:
+                information_service_schema['children'].remove(schema_name)
             selected_pois_id.add(poi['_id'])
 
     db.schemas.save(information_service_schema)
