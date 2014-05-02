@@ -44,9 +44,17 @@ def add_field_to_schema(schema, field_id, metadata):
     return schema_copy
 
 
-def field_metadata(poi, field_id, label_dict_pairs, default = None):
+def field_metadata(poi, field_id, label_dict_pairs, default = None, schema_title = None):
     poi_label_index = label_index(poi, field_id, label_dict_pairs)
-    return default if poi_label_index is None else poi['metadata'][field_id][poi_label_index]
+    if poi_label_index is None:
+        return None
+    return dict([
+        (
+            key,
+            u'{} - {}'.format(schema_title, value) if key == 'label' else value,
+            )
+        for key, value in poi['metadata'][field_id][poi_label_index].iteritems()
+        ])
 
 
 def field_value(poi, field_id, label_dict_pairs, default = None):
@@ -108,16 +116,17 @@ def main():
         if information_service_id is None:
             continue
 
-        for field_id, metadata in merging_fields_by_schema_name.get(poi['metadata']['schema-name'], []):
-            field_metadata_dict = field_metadata(poi, field_id, metadata)
+        schema_name = poi['metadata']['schema-name']
+        for field_id, metadata in merging_fields_by_schema_name.get(schema_name, []):
+            field_metadata_dict = field_metadata(
+                poi,
+                field_id,
+                metadata,
+                schema_title = schema_title_by_schema_name[schema_name],
+                )
             value = field_value(poi, field_id, metadata)
             if field_metadata_dict is None or value is None:
                 continue
-            if 'label' in field_metadata_dict:
-                field_metadata_dict['label'] = u'{} - {}'.format(
-                    schema_title_by_schema_name[poi['metadata']['schema-name']],
-                    field_metadata_dict['label'],
-                    )
             information_service_schema = add_field_to_schema(
                 information_service_schema,
                 field_id,
