@@ -37,9 +37,17 @@ def add_field_to_schema(schema, field_id, metadata):
     if metadata['label'] in [field['label'] for field in schema['fields']]:
         return schema
     schema_copy['fields'].append({
+        u'id': None,
+        u'label': None,
+        u'protected': u'0',
+        u'required': u'0',
+        u'tooltip': u'',
+        u'value': u''
+    })
+    schema_copy['fields'][-1].update({
         key: value
         for key, value in metadata.iteritems()
-    })
+        })
     schema_copy['fields'][-1]['id'] = field_id
     return schema_copy
 
