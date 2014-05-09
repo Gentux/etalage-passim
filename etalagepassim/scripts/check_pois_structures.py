@@ -24,8 +24,8 @@ import sys
 import pymongo
 
 
-app_name = os.path.splitext(os.path.basename(__file__))[0]
-log = logging.getLogger(app_name)
+APP_NAME = os.path.splitext(os.path.basename(__file__))[0]
+log = logging.getLogger(APP_NAME)
 
 
 def add_field_to_poi(poi, field_id, value, metadata):
@@ -49,6 +49,15 @@ def are_links_correct(poi):
         except requests.ConnectionError:
             yield u'URL {} for poi {} is invalid, Connection Error'.format(url, poi['_id'])
             continue
+        except requests.exceptions.TooManyRedirects:
+            yield u'URL {} for poi {} is invalid, Connection Error'.format(url, poi['_id'])
+            continue
+        except requests.exceptions.ContentDecodingError:
+            yield u'URL {} for poi {} is invalid, Connection Error'.format(url, poi['_id'])
+            continue
+        except requests.exceptions.InvalidURL:
+            yield u'URL {} for poi {} is invalid, Connection Error'.format(url, poi['_id'])
+            continue
 
         if not response.ok:
             yield u'URL {} for poi {} is invalid, status code = {}'.format(url, poi['_id'], response.status_code)
@@ -56,17 +65,28 @@ def are_links_correct(poi):
 
 def field_orders_match(poi, schema):
     """Vérify that all field are specified by scheme."""
-    for index, field_id in enumerate(poi['metadata']['positions']):
-        if index >= len(schema['fields']):
-            yield u'POI {} has too much fields'.format(poi['_id'])
-            continue
+    poi_metadata_copy = copy.deepcopy(poi['metadata'])
+    poi_fields_tuples = [
+        (field_id, poi_metadata_copy[field_id].pop(0).get('label'))
+        for field_id in poi['metadata']['positions']
+        ]
+    schema_fields_tuples = [
+        (field['id'], field['label'])
+        for field in schema.get('fields', [])
+        ]
+    if len(poi['metadata']['positions']) >= len(schema['fields']):
+        yield u'POI {} has too much fields'.format(poi['_id'])
+        return
 
-        if field_id != schema['fields'][index]['id']:
-            yield u'Field {} in poi {} is not in order or absent from scheme {}'.format(
-                field_id,
-                poi['_id'],
-                schema['name'],
-                )
+    last_field_index = 0
+    for field_tuple in poi_fields_tuples:
+        if field_tuple not in schema_fields_tuples:
+            yield u'Field {} in POI {} is not in schema'.format(field_tuple, poi['_id'])
+            continue
+        if schema_fields_tuples.index(field_tuple) < last_field_index:
+            yield u'Field {} in POI {} is in right order'.format(field_tuple, poi['_id'])
+            continue
+        last_field_index = schema_fields_tuples.index(field_tuple)
 
 
 def are_field_unique(poi):
