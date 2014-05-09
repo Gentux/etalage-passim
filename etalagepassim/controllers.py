@@ -1063,13 +1063,10 @@ def index_list(req):
                 if field.id == 'select' and strings.slugify(field.label) == 'niveau':
                     ids_by_niveau.setdefault(strings.slugify(field.value), set()).add(poi._id)
 
-            if field.id == 'link' and strings.slugify(field.label) == 'site-web':
-                web_site = model.Poi.instance_by_id.get(field.value)
-                if web_site is None:
-                    continue
-                for web_site_field in web_site.fields:
-                    if web_site_field.id == 'url' and strings.slugify(web_site_field.label) == 'url':
-                        web_site_by_id[poi._id] = web_site_field.value
+            if field.id == 'url' and strings.slugify(field.label) == 'site-web-url':
+                web_site_by_id[poi._id] = field.value
+            elif field.id == 'url' and web_site_by_id.get(poi._id) is None:
+                web_site_by_id[poi._id] = field.value
 
     multimodal_info_services = model.Poi.sort_and_paginate_pois_list(
         ctx,

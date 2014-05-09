@@ -223,21 +223,13 @@ title="${field.label}" href="${field.value}">${field.label}</a>
 
 <%def name="field_site_web_link(poi, fields)" filter="trim">
 <%
-site_web_link = model.pop_first_field(fields, 'link', u'Site web')
-site_web_url = None
-if site_web_link is not None and site_web_link.relation != 'parent':
-    site_web_poi = model.Poi.instance_by_id.get(site_web_link.value)
-    if site_web_poi is not None:
-        for field in site_web_poi.generate_all_fields():
-            if field.id == 'url':
-                site_web_url = field.value
-                break
+site_web_field = model.pop_first_field(fields, 'url', u'Site web - URL')
 %>
-    % if site_web_url is not None:
+    % if site_web_field is not None:
         <div class="field">
             <b class="field-label">${_('Site web')} :</b>
             <a class="btn btn-margin btn-primary btn-small internal" rel="tooltip" target="_blank" \
-title="${_('Transport offer website.')}" href="${site_web_url}">${_('www')}</a>
+title="${_('Transport offer website.')}" href="${site_web_field.value}">${_('www')}</a>
         </div>
     % endif
 </%def>
@@ -280,7 +272,6 @@ title="${_('Transport offer website.')}" href="${site_web_url}">${_('www')}</a>
             if offer_modes_field is not None and offer_modes_field.value is not None \
             else None
         offer_offical_information_service = offer.get_first_field(u'link', u'Service d\'info officiel')
-        print offer_offical_information_service
         transport_offers_infos.append((
             offer_commercial_name,
             offer_type,
