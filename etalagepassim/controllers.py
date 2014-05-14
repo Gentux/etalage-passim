@@ -1046,17 +1046,20 @@ def index_list(req):
                                 break
                             else:
                                 PTU_postal_routing = territory.main_postal_distribution.get('postal_routing')
-                                for child_territory_id in ramdb.territories_id_by_ancestor_id.get(territory_id):
-                                    child_territory = ramdb.territory_by_id.get(child_territory_id)
-                                    if child_territory.__class__.__name__ != 'CommuneOfFrance':
-                                        continue
-                                    child_territory_postal_routing = child_territory.main_postal_distribution.get(
-                                        'postal_routing'
-                                        )
-                                    if PTU_postal_routing is not None \
-                                            and PTU_postal_routing == child_territory_postal_routing:
-                                        ids_by_territory_id.setdefault(child_territory_id, set()).add(poi._id)
-                                        break
+                                if PTU_postal_routing is not None:
+                                    for child_territory_id in ramdb.territories_id_by_ancestor_id.get(territory_id):
+                                        child_territory = ramdb.territory_by_id.get(child_territory_id)
+                                        if child_territory.__class__.__name__ != 'CommuneOfFrance':
+                                            continue
+                                        child_territory_postal_routing = child_territory.main_postal_distribution.get(
+                                            'postal_routing'
+                                            )
+                                        if all(map(
+                                                lambda word: word in child_territory_postal_routing.split(),
+                                                PTU_postal_routing.split(),
+                                                )):
+                                            ids_by_territory_id.setdefault(child_territory_id, set()).add(poi._id)
+                                            break
                     else:
                         ids_by_territory_id.setdefault(national_territory_id, set()).add(poi._id)
 
