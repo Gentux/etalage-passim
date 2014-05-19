@@ -16,6 +16,7 @@ For each POIs, verify if :
 
 import argparse
 import copy
+from itertools import chain
 import logging
 import os
 import requests
@@ -47,20 +48,20 @@ def are_links_correct(poi):
         try:
             response = requests.get(url)
         except requests.ConnectionError:
-            yield u'URL {} for poi {} is invalid, Connection Error'.format(url, poi['_id'])
+            yield u'URL {} is invalid, Connection Error'.format(url)
             continue
         except requests.exceptions.TooManyRedirects:
-            yield u'URL {} for poi {} is invalid, Connection Error'.format(url, poi['_id'])
+            yield u'URL {} is invalid, Connection Error'.format(url)
             continue
         except requests.exceptions.ContentDecodingError:
-            yield u'URL {} for poi {} is invalid, Connection Error'.format(url, poi['_id'])
+            yield u'URL {} is invalid, Connection Error'.format(url)
             continue
         except requests.exceptions.InvalidURL:
-            yield u'URL {} for poi {} is invalid, Connection Error'.format(url, poi['_id'])
+            yield u'URL {} is invalid, Connection Error'.format(url)
             continue
 
         if not response.ok:
-            yield u'URL {} for poi {} is invalid, status code = {}'.format(url, poi['_id'], response.status_code)
+            yield u'URL {} is invalid, status code = {}'.format(url, response.status_code)
 
 
 def field_orders_match(poi, schema):
@@ -74,17 +75,14 @@ def field_orders_match(poi, schema):
         (field['id'], field['label'])
         for field in schema.get('fields', [])
         ]
-    if len(poi['metadata']['positions']) >= len(schema['fields']):
-        yield u'POI {} has too much fields'.format(poi['_id'])
-        return
 
     last_field_index = 0
     for field_tuple in poi_fields_tuples:
         if field_tuple not in schema_fields_tuples:
-            yield u'Field {} in POI {} is not in schema'.format(field_tuple, poi['_id'])
+            yield u'Field {} not in schema'.format(field_tuple)
             continue
         if schema_fields_tuples.index(field_tuple) < last_field_index:
-            yield u'Field {} in POI {} is in right order'.format(field_tuple, poi['_id'])
+            yield u'Field {} not in right order'.format(field_tuple)
             continue
         last_field_index = schema_fields_tuples.index(field_tuple)
 
@@ -98,7 +96,7 @@ def are_field_unique(poi):
         field_labels = set()
         for field_metadata in poi['metadata'][field_id]:
             if field_metadata['label'] in field_labels:
-                yield u'Duplicate field {} in poi {}.'.format(field_id, poi['_id'])
+                yield u'Duplicate field {}.'.format(field_id)
                 continue
             field_labels.add(field_metadata['label'])
 
@@ -128,14 +126,18 @@ def main():
             if schema is None:
                 log.error(u'Schema {} doesn\'t exists'.format(schema_name))
                 continue
-        for error in are_links_correct(poi) or []:
-            log.error(error)
-        for error in field_orders_match(poi, schema) or []:
-            log.error(error)
-        for error in are_field_unique(poi) or []:
-            log.error(error)
-        for error in are_field_and_value_matches(poi, schema) or []:
-            log.error(error)
+        poi_errors = list(
+            chain(
+                are_links_correct(poi) or [],
+                field_orders_match(poi, schema) or [],
+                are_field_unique(poi) or [],
+                are_field_and_value_matches(poi, schema) or [],
+                )
+            )
+        if len(poi_errors) > 0:
+            print u"Errors for POI : {}".format(poi['_id'])
+            for error in poi_errors:
+                print '{}{}'.format(' ' * 4, error)
 
     return 0
 
