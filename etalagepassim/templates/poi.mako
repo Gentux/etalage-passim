@@ -184,33 +184,22 @@ else:
 
 <%def name="field_mobile_application_link(poi, fields)" filter="trim">
 <%
-    mobile_applications_link = list(model.iter_fields(fields, 'link', u'Application mobile'))
+    mobile_applications_url_field = [
+        field
+        for field in fields
+        if field.id == 'url' and field.label.startswith(u'Application mobile')
+        ]
+    mobile_application_name_field = model.get_first_field(fields, 'name', u'Application mobile - Intitulé')
+    mobile_application_name = mobile_application_name_field.value if mobile_application_name_field is not None else None
 %>
-    % for mobile_application_link in mobile_applications_link:
-<%
-mobile_application_url_fields = None
-if mobile_application_link is not None and mobile_application_link.relation != 'parent':
-    mobile_application_poi = model.Poi.instance_by_id.get(mobile_application_link.value)
-    mobile_application_fields = mobile_application_poi.generate_all_fields()
-    mobile_application_url_fields = list(model.iter_fields(mobile_application_fields, 'url'))
-    mobile_application_name = None
-    if len(mobile_applications_link) > 1:
-        for field in mobile_application_fields:
-            if field.id == 'name':
-                mobile_application_name = field.value
-                break
-%>
-        % if mobile_application_url_fields is not None and len(mobile_application_url_fields) > 0:
         <div class="field">
             <b class="field-label">${_(u'Mobile applications')}\
 ${u' ({})'.format(mobile_application_name) if mobile_application_name is not None else u''} :</b>
-            % for field in mobile_application_url_fields:
+    % for field in mobile_applications_url_field:
             <a class="btn btn-margin btn-primary btn-small internal" rel="tooltip" target="_blank" \
 title="${field.label}" href="${field.value}">${field.label}</a>
-            % endfor
-        </div>
-        % endif
     % endfor
+        </div>
 </%def>
 
 
