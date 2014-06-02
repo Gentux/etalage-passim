@@ -46,17 +46,8 @@ def are_links_correct(poi):
     for url in poi.get('url', []):
         log.debug(u'Testing URL : {}'.format(url))
         try:
-            response = requests.get(url)
-        except requests.ConnectionError:
-            yield u'URL {} is invalid, Connection Error'.format(url)
-            continue
-        except requests.exceptions.TooManyRedirects:
-            yield u'URL {} is invalid, Connection Error'.format(url)
-            continue
-        except requests.exceptions.ContentDecodingError:
-            yield u'URL {} is invalid, Connection Error'.format(url)
-            continue
-        except requests.exceptions.InvalidURL:
+            response = requests.get(url, timeout = 5)
+        except Exception:
             yield u'URL {} is invalid, Connection Error'.format(url)
             continue
 
@@ -111,33 +102,28 @@ def main():
     parser = argparse.ArgumentParser(description = __doc__)
     parser.add_argument('csv_filename', nargs = '?', help = 'CSV File name.')
     parser.add_argument('-d', '--database_name', default = 'souk_passim', help = 'Name of database used')
+    parser.add_argument('-u', '--url', default = 'http://localhost:5000', help = 'URL or Petitpois instance.')
     parser.add_argument('-v', '--verbose', action = 'store_true', help = 'Increase output verbosity')
 
     args = parser.parse_args()
     logging.basicConfig(level = logging.DEBUG if args.verbose else logging.WARNING, stream = sys.stdout)
     db = pymongo.Connection()[args.database_name]
 
-    schema_by_name = dict([(schema['name'], schema) for schema in db.schemas.find()])
-    for poi in db.pois.find({'metadata.deleted': {'$exists': False}}):
-        schema_name = poi['metadata']['schema-name']
-        schema = schema_by_name.get(schema_name)
-        if schema is None:
-            schema = schema_by_name[schema_name] = db.schemas.find_one({'name': schema_name})
-            if schema is None:
-                log.error(u'Schema {} doesn\'t exists'.format(schema_name))
-                continue
-        poi_errors = list(
-            chain(
-                are_links_correct(poi) or [],
-                field_orders_match(poi, schema) or [],
-                are_field_unique(poi) or [],
-                are_field_and_value_matches(poi, schema) or [],
+    for schema in db.schemas.find():
+        print u"Checking Schema : {}".format(schema['name'])
+        for poi in db.pois.find({'metadata.schema-name': schema['name'], 'metadata.deleted': {'$exists': False}}):
+            poi_errors = list(
+                chain(
+                    are_links_correct(poi) or [],
+                    field_orders_match(poi, schema) or [],
+                    are_field_unique(poi) or [],
+                    are_field_and_value_matches(poi, schema) or [],
+                    )
                 )
-            )
-        if len(poi_errors) > 0:
-            print u"Errors for POI : {}".format(poi['_id'])
-            for error in poi_errors:
-                print '{}{}'.format(' ' * 4, error)
+            if len(poi_errors) > 0:
+                print u"{}Errors for POI : {}/poi/view/{}".format(' ' * 4, args.url, poi['_id']).encode('utf-8')
+                for error in poi_errors:
+                    print u'{}{}'.format(' ' * 8, error).encode('utf-8')
 
     return 0
 
