@@ -18,6 +18,58 @@ import pymongo
 app_name = os.path.splitext(os.path.basename(__file__))[0]
 log = logging.getLogger(app_name)
 
+INFORMATION_SERVICES_FIELDS = [
+    u"Nom du service",
+    u"Alias",
+    u"Opérateur",
+    u"Offres de transport",
+    u"Service d'information multimodale",
+    u"Niveau",
+    u"Territoire couvert",
+    u"Logo",
+    u"Notes",
+    u"Site web - URL",
+    u"Site web - Types d'informations",
+    u"Site web - Notes",
+    u"Site web - Langues",
+    u"Application mobile - Intitulé",
+    u"Application mobile - iPhone",
+    u"Application mobile - Android",
+    u"Application mobile - Types d'informations",
+    u"Application mobile - Web mobile",
+    u"Application mobile - Notes",
+    u"Application mobile - Blackberry",
+    u"Application mobile - Windows mobile",
+    u"Application mobile - Langues",
+    u"Centre d'appel - Intitulé",
+    u"Centre d'appel - Téléphone",
+    u"Centre d'appel - Notes",
+    u"Centre d'appel - Horaires d'ouverture",
+    u"Guichet d'information - Intitulé",
+    u"Guichet d'information - Adresse",
+    u"Guichet d'information - Téléphone",
+    u"Guichet d'information - Géolocalisation",
+    u"Guichet d'information - Fax",
+    u"Guichet d'information - Courriel",
+    u"Guichet d'information - Horaires d'ouverture",
+    u"Guichet d'information - Notes",
+    u"Open data - Intitulé",
+    u"Open data - URL de la page d'accueil du portail Open Data",
+    u"Open data - URL de la page TC",
+    u"Open data - Types d'informations",
+    u"Open data - Licence",
+    u"Open data - URL de la licence",
+    u"Open data - Notes",
+    u"Service web - Intitulé",
+    u"Service web - URL",
+    u"Service web - Types d'informations",
+    u"Service web - Licence",
+    u"Service web - Notes",
+    u"Comarquage - Type de marque",
+    u"Comarquage - URL",
+    u"Comarquage - Note",
+    ]
+
 
 def field_value(poi, field_id, label_dict_pairs, default = None):
     if field_id == 'territories':
@@ -50,36 +102,37 @@ def main():
     logging.basicConfig(level = logging.DEBUG if args.verbose else logging.WARNING, stream = sys.stdout)
     db = pymongo.Connection()[args.database_name]
 
-    schema_by_name = dict([(schema['name'], schema) for schema in db.schemas.find()])
-    for poi in db.pois.find({'metadata.deleted': {'$exists': False}}):
-        schema_name = poi['metadata']['schema-name']
-        schema = schema_by_name.get(schema_name)
-        if schema is None:
-            schema = schema_by_name[schema_name] = db.schemas.find_one({'name': schema_name})
-            if schema is None:
-                log.error(u'Schema {} doesn\'t exists'.format(schema_name))
-                continue
+    schema_by_name = {}
+    for schema in db.schemas.find():
+        if schema['name'] == 'ServiceInfo':
+            schema['fields'] = sorted(
+                schema['fields'],
+                key = lambda field: INFORMATION_SERVICES_FIELDS.index(field['label']),
+                )
+            db.schemas.save(schema)
+        schema_by_name[schema['name']] = schema
 
-        poi_metadata_copy = copy.deepcopy(poi['metadata'])
-        poi_fields_tuples = [
-            (field_id, poi_metadata_copy[field_id].pop(0).get('label'))
-            for field_id in poi['metadata']['positions']
-            ]
-        schema_fields_tuples = [
-            (field['id'], field['label'])
-            for field in schema.get('fields', [])
-            ]
-        new_positions = []
-        for field_tuple in schema_fields_tuples:
-            if field_tuple in poi_fields_tuples:
+        for poi in db.pois.find({'metadata.schema-name': schema['name'], 'metadata.deleted': {'$exists': False}}):
+            poi_metadata_copy = copy.deepcopy(poi['metadata'])
+            poi_fields_tuples = [
+                (field_id, poi_metadata_copy[field_id].pop(0).get('label'))
+                for field_id in poi['metadata']['positions']
+                ]
+            schema_fields_tuples = [
+                (field['id'], field['label'])
+                for field in schema.get('fields', [])
+                ]
+            new_positions = []
+            for field_tuple in schema_fields_tuples:
+                if field_tuple in poi_fields_tuples:
+                    new_positions.append(field_tuple[0])
+                    poi_fields_tuples.pop(poi_fields_tuples.index(field_tuple))
+
+            for field_tuple in poi_fields_tuples:
                 new_positions.append(field_tuple[0])
-                poi_fields_tuples.pop(poi_fields_tuples.index(field_tuple))
-
-        for field_tuple in poi_fields_tuples:
-            new_positions.append(field_tuple[0])
-        if poi['metadata']['positions'] != new_positions:
-            poi['metadata']['positions'] = new_positions
-            db.pois.save(poi)
+            if poi['metadata']['positions'] != new_positions:
+                poi['metadata']['positions'] = new_positions
+                db.pois.save(poi)
     return 0
 
 
