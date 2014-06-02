@@ -16,7 +16,7 @@ import pymongo
 
 
 app_name = os.path.splitext(os.path.basename(__file__))[0]
-ignored_schemas_name = ['GuichetInformation']
+ignored_schemas_name = []
 log = logging.getLogger(app_name)
 
 
