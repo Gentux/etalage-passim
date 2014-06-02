@@ -133,7 +133,8 @@ def main():
                 schema_title = schema_title_by_schema_name[schema_name],
                 )
             value = field_value(poi, field_id, metadata)
-            if field_metadata_dict is None or value is None:
+            if field_metadata_dict is None or value is None or \
+                    label_index(poi, field_id, field_metadata_dict.items()) is not None:
                 continue
             information_service_schema = add_field_to_schema(
                 information_service_schema,
