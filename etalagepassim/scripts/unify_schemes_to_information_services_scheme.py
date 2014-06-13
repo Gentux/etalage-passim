@@ -32,34 +32,25 @@ def add_field_to_poi(poi, field_id, value, metadata):
     return poi_copy
 
 
-def add_field_to_schema(schema, field_id, metadata):
+def add_field_to_schema(schema, field_id, metadata, old_schema):
     schema_copy = copy.deepcopy(schema)
     if metadata['label'] in [field['label'] for field in schema['fields']]:
         return schema
-    schema_copy['fields'].append({
-        u'id': None,
-        u'label': None,
-        u'protected': u'0',
-        u'required': u'0',
-        u'tooltip': u'',
-        u'value': u''
-    })
-    schema_copy['fields'][-1].update({
-        key: value
-        for key, value in metadata.iteritems()
-        })
-    schema_copy['fields'][-1]['id'] = field_id
+    for field in schema['fields']:
+        if field['id'] == field_id and field['label'].endswith(metadata.get('label').split(' - ')[0]):
+            break
+    schema_copy['fields'].append(copy.deepcopy(field))
     return schema_copy
 
 
-def field_metadata(poi, field_id, label_dict_pairs, default = None, schema_title = None):
+def field_metadata(poi, field_id, label_dict_pairs, default = None, schema = None):
     poi_label_index = label_index(poi, field_id, label_dict_pairs)
     if poi_label_index is None:
         return None
     return dict([
         (
             key,
-            u'{} - {}'.format(schema_title, value) if key == 'label' else value,
+            u'{} - {}'.format(schema['title'], value) if key == 'label' else value,
             )
         for key, value in poi['metadata'][field_id][poi_label_index].iteritems()
         ])
@@ -112,7 +103,7 @@ def main():
         for item in db.pois.find({'metadata.deleted': {'$exists': False}, 'metadata.schema-name': 'ServiceInfo'})
         ])
     information_service_schema = db.schemas.find_one({'name': 'ServiceInfo'})
-    schema_title_by_schema_name = dict([(schema['name'], schema['title']) for schema in db.schemas.find()])
+    schema_by_schema_name = dict([(schema['name'], schema) for schema in db.schemas.find()])
     selected_pois_id = set()  # ID of POIs which will be removed after processed
 
     merging_fields_by_schema_name = get_schemas_information(db)
@@ -130,7 +121,7 @@ def main():
                 poi,
                 field_id,
                 metadata,
-                schema_title = schema_title_by_schema_name[schema_name],
+                schema = schema_by_schema_name[schema_name],
                 )
             value = field_value(poi, field_id, metadata)
             if field_metadata_dict is None or value is None or \
@@ -140,6 +131,7 @@ def main():
                 information_service_schema,
                 field_id,
                 field_metadata_dict,
+                schema_by_schema_name[schema_name]
                 )
             information_services_by_id[information_service_id] = add_field_to_poi(
                 information_services_by_id[information_service_id],
