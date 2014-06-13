@@ -36,10 +36,12 @@ def add_field_to_schema(schema, field_id, metadata, old_schema):
     schema_copy = copy.deepcopy(schema)
     if metadata['label'] in [field['label'] for field in schema['fields']]:
         return schema
-    for field in schema['fields']:
-        if field['id'] == field_id and field['label'].endswith(metadata.get('label').split(' - ')[0]):
+    for field in old_schema['fields']:
+        if field['id'] == field_id and field['label'] == metadata.get('label').split(' - ')[1]:
+            field_copy = copy.deepcopy(field)
+            field_copy['label'] = metadata['label']
+            schema_copy['fields'].append(field_copy)
             break
-    schema_copy['fields'].append(copy.deepcopy(field))
     return schema_copy
 
 
