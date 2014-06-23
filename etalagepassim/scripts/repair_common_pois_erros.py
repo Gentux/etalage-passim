@@ -167,51 +167,6 @@ def main():
             if poi['metadata']['positions'] != new_positions:
                 poi['metadata']['positions'] = new_positions
                 db.pois.save(poi)
-
-#QUESTION : est-il encore possible de prendre en compte des modifs ? Notamment l'idée serait de figer des listes
-#   actuellement dans des Autocompléteurs en les mettant dans des Menus ou Cases à cocher. Cela implique de prendre les
-#   valeurs actuelles pour ces champs qui ne sont pas dans la liste, et d'ajouter dans le script de vérif peut être le
-#   test que la valeur du champ correspond bien au type (valeurs dans la liste)
-
-#    - une fois que c'est Ok en pre-prod (validation Cerema)-> (1) archivage de la BD (dump mongodb) (2) archivage du
-#       contenu aussi sous forme de tableau CSV (3) Romain execute les scripts en production
-#    - à partir de là, les collègues du Cerema notamment pourront reprendre la mise à jour dans ce nouveau modèle
-#    - à chaque mise à jour du modèle Offre ou du modèle Service d'info, on fera de même un archivage des données et
-#       des scripts, et une mise à jour des scripts permettant de passer à la nouvelle version des modèles
-
-#-2- Romain importe les communes du Piémont dans la copie de Territoria de passim, en préproduction ; on valide le
-#   comportement du front et du back (notamment par rapport à l'autocompléteur des noms de territoires), puis on passe
-#   en production, et on peut prévenir les partenaires alpinfonet qu'ils peuvent essayer de saisir
-
-#-3- Laurent Chevereau a désormais obtenu des collègues la mise à jour officielle des PTU :
-#   http://www.certu.fr/liste-des-reseaux-de-transport-a1267.html .
-#   Je vais repartir de ce tableau pour mettre à jour les scripts générant fichiers SHP utilisés par les scripts
-#   d'export KML et SHP chaque nuit. Dès que c'est Ok, Romain pourra (1) mettre à jour Territoria avec les PTU 2014
-#   (je suppose que les communes sont déjà mises à jour avec les données Insee les + récentes?) (2) mettre à jour le
-#   serveur
-
-#-4- points restant à traiter :
-#   scripts logos,
-#   captcha,
-#   Google CSE,
-#   petitpois en multilingue,
-#   accès aux logs du serveur web pour regarder les stats de temps en temps,
-#   doc d'install et tests unitaires
-#   serveur de tuiles OSM des cartes passim à remplacer,
-#   vérifier que etalage affiche bien tous les services sur des noms de communes du genre PUY EN VELAY (LE)...
-
-#-5- je n'ai toujours pas accès au SSH .
-#   Ci-joint ma clé publique, Romain peux-tu vérifier que c'est la bonne pour ton serveur, merci?
-
-#Laurent a envoyé ses propositions de mise à jour du modèle service d'info (en bleu):
-
-#- il s'agit surtout de remplacer des champs autocompléteur en cases à cocher :
-#   site web - langues, appli mobile - langues, appli mobile - types d'info, comarquage - type de marque (valeurs dans
-#   la bulle d'aide du champ)
-#- bien qu'en bleu dans le tableau .ODS joint, open data - types d'info et licence (sur la base de la fiche open data)
-#   sont déjà des cases à cocher dans le modèle SI
-#Le seul autocompléteur multiple qui reste serait Type d'info de service web.
-#Est-ce que c'est encore faisable ? Sinon on peut faire en deux temps.
     return 0
 
 
