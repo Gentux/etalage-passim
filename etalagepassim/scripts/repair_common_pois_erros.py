@@ -19,11 +19,21 @@ app_name = os.path.splitext(os.path.basename(__file__))[0]
 log = logging.getLogger(app_name)
 
 OBSOLETE_SCHEME_NAMES = [
+    u'ApplicationMobile',
+    u'CalculDItineraires',
+    u'CentreAppel',
+    u'Comarquage',
     u'Gadget',
-    u'InformationTechnique',
     u'GuichetInformation',
+    u'InformationTechnique',
+    u'OpenData',
+    u'OperateurServiceInformation',
+    u'PageWeb',
+    u'ServiceWeb',
     u'SiteWeb',
 ]
+
+
 INFORMATION_SERVICES_FIELDS = [
     u"Nom du service",
     u"Alias",
@@ -80,8 +90,7 @@ INFORMATION_SERVICES_FIELDS = [
 def delete_scheme(schema, db):
     db.schemas.remove({'_id': schema['_id']})
     for poi in db.pois.find({'metadata.schema-name': schema['name']}):
-        poi['metadata']['deleted'] = True
-        db.pois.save(poi)
+        db.pois.remove({'_id': poi['_id']})
 
 
 def field_value(poi, field_id, label_dict_pairs, default = None):
@@ -105,6 +114,33 @@ def label_index(poi, field_id, label_dict_pairs):
     return None
 
 
+def reorder_poi_fields(poi, schema):
+    poi_metadata_copy = copy.deepcopy(poi['metadata'])
+    poi_fields_tuples = [
+        (field_id, poi_metadata_copy[field_id].pop(0).get('label'))
+        for field_id in poi['metadata']['positions']
+        ]
+    schema_fields_tuples = [
+        (field['id'], field['label'])
+        for field in schema.get('fields', [])
+        ]
+    new_positions = []
+    for field_tuple in schema_fields_tuples:
+        if field_tuple in poi_fields_tuples:
+            new_positions.append(field_tuple[0])
+            poi_fields_tuples.pop(poi_fields_tuples.index(field_tuple))
+    for field_tuple in poi_fields_tuples:
+        new_positions.append(field_tuple[0])
+    return new_positions
+
+
+def sort_schema_field(schema):
+    return sorted(
+        schema['fields'],
+        key = lambda field: INFORMATION_SERVICES_FIELDS.index(field.get('label')),
+        )
+
+
 def main():
     parser = argparse.ArgumentParser(description = __doc__)
     parser.add_argument('csv_filename', nargs = '?', help = 'CSV File name.')
@@ -118,34 +154,16 @@ def main():
     schema_by_name = {}
     for schema in db.schemas.find():
         if schema['name'] == 'ServiceInfo':
-            schema['fields'] = sorted(
-                schema['fields'],
-                key = lambda field: INFORMATION_SERVICES_FIELDS.index(field['label']),
-                )
+            schema['fields'] = sort_schema_field(schema)
             db.schemas.save(schema)
         elif schema['name'] in OBSOLETE_SCHEME_NAMES:
             delete_scheme(schema, db)
             continue
         schema_by_name[schema['name']] = schema
 
-        for poi in db.pois.find({'metadata.schema-name': schema['name'], 'metadata.deleted': {'$exists': False}}):
-            poi_metadata_copy = copy.deepcopy(poi['metadata'])
-            poi_fields_tuples = [
-                (field_id, poi_metadata_copy[field_id].pop(0).get('label'))
-                for field_id in poi['metadata']['positions']
-                ]
-            schema_fields_tuples = [
-                (field['id'], field['label'])
-                for field in schema.get('fields', [])
-                ]
-            new_positions = []
-            for field_tuple in schema_fields_tuples:
-                if field_tuple in poi_fields_tuples:
-                    new_positions.append(field_tuple[0])
-                    poi_fields_tuples.pop(poi_fields_tuples.index(field_tuple))
+        for poi in db.pois.find({'metadata.schema-name': schema['name']}):
+            new_positions = reorder_poi_fields(poi, schema)
 
-            for field_tuple in poi_fields_tuples:
-                new_positions.append(field_tuple[0])
             if poi['metadata']['positions'] != new_positions:
                 poi['metadata']['positions'] = new_positions
                 db.pois.save(poi)
