@@ -131,21 +131,22 @@ rel="tooltip" title="${_('Use results as a HTML component in your website')}">${
 %>
     % for territory in territories:
 <%
-        coverage = {
-            'ArrondissementOfFrance': _('local'),
-            'CommuneOfFrance': _('local'),
-            'Country': _('national'),
-            'DepartmentOfFrance': _('departmental'),
-            'RegionOfFrance': _('regional'),
-            'UrbanTransportsPerimeterOfFrance': _('local'),
-            }.get(territory.__class__.__name__)
+        coverages = {
+            'ArrondissementOfFrance': 'local',
+            'CommuneOfFrance': 'local',
+            'Country': 'national',
+            'DepartmentOfFrance': 'departmental',
+            'RegionOfFrance': 'regional',
+            'UrbanTransportsPerimeterOfFrance': 'local',
+            }
+        coverage = _(coverages.get(territory.__class__.__name__))
         if data['coverage'] is None and coverage == _('national'):
             coverage = None
         if coverage is None:
             continue
         if data['coverage'] == 'National' and territory.__class__.__name__ != 'Country':
             continue
-        if ids_by_niveau.get(strings.slugify(coverage)) is None:
+        if ids_by_niveau.get(coverages.get(territory.__class__.__name__)) is None:
             continue
 %>
         % if data['coverage'] != 'National':
@@ -173,7 +174,7 @@ rel="tooltip" title="${_('Use results as a HTML component in your website')}">${
                         ),
                     model.Poi.instance_by_id.get(info_service_id)
                     )
-                for info_service_id in (ids_by_niveau.get(strings.slugify(coverage)) or [])
+                for info_service_id in (ids_by_niveau.get(coverages.get(territory.__class__.__name__)) or [])
                 ],
             key = lambda info_services_tuple: info_services_tuple[0],
             )

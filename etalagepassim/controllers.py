@@ -1064,7 +1064,13 @@ def index_list(req):
                         ids_by_territory_id.setdefault(national_territory_id, set()).add(poi._id)
 
                 if field.id == 'select' and strings.slugify(field.label) == 'niveau':
-                    ids_by_niveau.setdefault(strings.slugify(field.value), set()).add(poi._id)
+                    ids_by_niveau_key = {
+                        'locale': 'local',
+                        'national': 'national',
+                        'departemental': 'departmental',
+                        'regional': 'regional',
+                        }.get(strings.slugify(field.value))
+                    ids_by_niveau.setdefault(ids_by_niveau_key, set()).add(poi._id)
 
             if field.id == 'url' and strings.slugify(field.label) == 'site-web-url':
                 web_site_by_id[poi._id] = field.value
