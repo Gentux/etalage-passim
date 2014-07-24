@@ -61,7 +61,7 @@ etalagepassim.form = (function ($) {
                     window.location.href = options.callbackUrl;
                 }
             }).fail(function(jqXHR, textStatus, errorThrown) {
-                alert('Error : Your email has been sent. Please accept our apologies.');
+                alert('Error : Your email has not been sent. Please accept our apologies.');
             });
         });
     }
