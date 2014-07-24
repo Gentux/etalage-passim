@@ -35,7 +35,39 @@ etalagepassim.form = (function ($) {
         });
     }
 
+    function initContactForm(options) {
+        $(options.formSelector).submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                data: $(this).serializeArray(),
+                dataType: 'json',
+                method: 'get',
+                url: '/mail'
+            }).done(function(data, textStatus, jqXHR) {
+                if (data.errors) {
+                    $.each($(options.formSelector).find(':input'), function(i, input) {
+                        if (data.errors[input.id]) {
+                            $(options.formSelector).find('#input-error-' + input.id).text(data.errors[input.id]);
+                        }
+                        else {
+                            $(options.formSelector).find('#input-error-' + input.id).empty();
+                        }
+                    });
+                    if (data.errors.captcha) {
+                        Recaptcha.reload();
+                    }
+                }
+                else {
+                    window.location.href = options.callbackUrl;
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                alert('Error : Your email has been sent. Please accept our apologies.');
+            });
+        });
+    }
+
     return {
+        initContactForm: initContactForm,
         initSearchForm: initSearchForm
     };
 })(jQuery);

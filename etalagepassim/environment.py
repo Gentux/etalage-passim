@@ -165,6 +165,8 @@ def load_environment(global_conf, app_conf):
                 ),
             u'plugins_conf_file': conv.default(None),
             u'realm': conv.default(u'Passim'),
+            u'recaptcha.private_key': conv.pipe(conv.cleanup_line, conv.not_none),
+            u'recaptcha.public_key': conv.pipe(conv.cleanup_line, conv.not_none),
             u'require_subscription': conv.pipe(conv.guess_bool, conv.default(False)),
             u'reset_on_poi_update': conv.pipe(conv.guess_bool, conv.default(False)),
             # Whether this application serves its own static files.

@@ -42,8 +42,6 @@ I am [an end-user, a company...]
 My e-mail address: [xxx@yyy.org]
 
 My message: ...
-
-
 ''')
 %>
     <h4>${_('Contact')}</h4>
@@ -61,7 +59,6 @@ Thank you for any question, remark or enhancement proposal.
 ''')) | n}
         <div class="hide fade modal" id="input-modal" role="dialog">
             <form class="form" action="/mail" method="GET">
-                <input name="callback-url" type="hidden" value="contact">
                 <fieldset>
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" >×</button>
@@ -70,17 +67,31 @@ Thank you for any question, remark or enhancement proposal.
                     <div class="modal-body">
                         <label><b>${_('Email')} :</b></label>
                         <input class="input-xxlarge"  id="email" name="email" type="text" \
-placeholder="${_(u'Type your email…')}">
+placeholder="${_(u'Type your email…')}" required>
+                        <span class="text-error" id="input-error-email"></span>
 
                         <label><b>${_('Subject')} :</b></label>
-                        <input class="input-xxlarge" id="subject" name="subject" type="text" value="${subject}">
+                        <input class="input-xxlarge" id="subject" name="subject" type="text" value="${subject}" required>
+                        <span class="text-error" id="input-error-subject"></span>
 
                         <label><b>${_('Body')} :</b></label>
-                        <textarea id="body" name="body">${body}</textarea>
+                        <textarea id="body" name="body" required>${body}</textarea>
+                        <span class="text-error" id="input-error-body"></span>
+
+                        <script type="text/javascript"
+                                src="http://www.google.com/recaptcha/api/challenge?k=${conf['recaptcha.public_key']}">
+                        </script>
+                        <noscript>
+                          <iframe src="http://www.google.com/recaptcha/api/noscript?k=${conf['recaptcha.public_key']}"
+                                  height="300" width="500" frameborder="0"></iframe><br>
+                          <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+                          <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+                        </noscript>
+
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" value="send"/>Send</button>
+                        <button type="button" class="btn" data-dismiss="modal">${_('Cancel')}</button>
+                        <button type="submit" class="btn btn-primary" value="send"/>${_('Send')}</button>
                     </div>
                 </fieldset>
             </form>
@@ -89,9 +100,22 @@ placeholder="${_(u'Type your email…')}">
 </%def>
 
 
+<%def name="scripts()" filter="trim">
+    <%parent:scripts/>
+    <script src="/js/form.js"></script>
+    <script>
+    var RecaptchaOptions = {
+        lang : '${ctx.lang[0][:2]}',
+        theme : 'clean'
+    };
+    </script>
+</%def>
+
+
 <%def name="scripts_domready_content()" filter="trim">
     <%parent:scripts_domready_content/>
     $(".contact-text a").on("click", function() {
         $("#input-modal").modal("show");
     });
+    etalagepassim.form.initContactForm({formSelector: '#input-modal form', callbackUrl: '/contact'});
 </%def>

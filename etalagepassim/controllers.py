@@ -35,7 +35,7 @@ import zipfile
 
 from biryani import strings
 
-from . import conf, contexts, conv, model, pagers, ramdb, templates, urls, wsgihelpers
+from . import captcha, conf, contexts, conv, model, pagers, ramdb, templates, urls, wsgihelpers
 
 
 log = logging.getLogger(__name__)
@@ -1185,12 +1185,16 @@ def mail(req):
         email = params.get('email'),
         subject = params.get('subject'),
         body = params.get('body'),
-        callback_url = params.get('callback-url'),
         )
 
     data, errors = conv.inputs_to_mail_data(inputs, state = ctx)
+    if not errors:
+        recaptcha_response = captcha.submit(req)
+        if not recaptcha_response.is_valid:
+            errors = {'captcha': recaptcha_response.error_code}
     if errors is not None:
-        raise wsgihelpers.bad_request(ctx, explanation = ctx._('Error: {0}').format(errors))
+        return wsgihelpers.respond_json(ctx, {'errors': errors})
+
     data['to'] = conf['data_email']
     smtp = smtplib.SMTP(conf['smtp_server'])
     smtp.sendmail(
@@ -1199,12 +1203,11 @@ def mail(req):
         unicode(templates.render(ctx, '/contact-mail.mako', data = data).strip()).encode('utf-8')
         )
     smtp.quit()
-    ctx.session['message'] = ctx._('Your email has been sent')
+
+    ctx.session['message'] = ctx._('Your email has been sent.')
     ctx.session.save()
-    return wsgihelpers.redirect(
-        ctx,
-        location = urls.get_url(ctx, data['callback_url'])
-        )
+
+    return wsgihelpers.respond_json(ctx, {})
 
 
 def make_router():

@@ -232,7 +232,6 @@ inputs_to_mail_data = pipe(
         'email': pipe(input_to_email, not_none),
         'subject': pipe(cleanup_line, not_none),
         'body': pipe(cleanup_line, not_none),
-        'callback_url': test_in(['contact', 'contribute']),
         }),
     rename_item('email', 'from'),
     )
