@@ -38,7 +38,13 @@ etalagepassim.search = (function ($) {
                 remote: {
                     dataType: 'jsonp',
                     filter: function(json) {
-                        return json.data.items;
+                        return $.map(json.data.items, function(item) {
+                            var prefix = 'FR';
+                            if (item.kind.match(/.*Italy$/)) {
+                                prefix = 'IT';
+                            }
+                            return prefix + ' - ' + item.main_postal_distribution
+                        });
                     },
                     url: territoriaQuery + '&term=%QUERY'
                 },
