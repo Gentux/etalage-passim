@@ -1065,6 +1065,7 @@ def index_list(req):
 
                 if field.id == 'select' and strings.slugify(field.label) == 'niveau':
                     ids_by_niveau_key = {
+                        'local': 'local',
                         'locale': 'local',
                         'national': 'national',
                         'departemental': 'departmental',
